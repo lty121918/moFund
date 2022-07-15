@@ -1,0 +1,497 @@
+<template>
+	<view class="course">
+		<view class="course-title">
+			<image class="course-title-img" src="/static/default.png"></image>
+			<view class="course-title-content">
+				<view>
+					<view class="fz36 fwb">篮球启蒙课A</view>
+					<view class="pt16">
+						<text class="color fz24">￥</text>
+						<text class="color fz32">50.0</text>
+						<text class="fz24">起/节/人</text>
+					</view>
+				</view>
+				<view class="course-title-content-right">
+					<view class="text-c course-title-content-r2">
+						<view class="color fz28">10</view>
+						<view class="color999 fz24">课时</view>
+					</view>
+					<view class="text-c course-title-content-r2">
+						<view class="color fz28">8</view>
+						<view class="color999 fz24">人数</view>
+
+					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 推荐拼班 -->
+		<view class="course-nearby">
+			<view class="course-head-address" @click="$utils.router.navTo($page.Search)">
+				<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
+				<text> 福田区</text>
+				<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
+			</view>
+			<view class="course-nearby-content" v-for="item in 3" :key="item">
+				<image class="course-nearby-content-img" src="/static/notData.png" mode="aspectFit"></image>
+				<view>
+					<view class="course-nearby-content-center">
+						<text class="course-nearby-content-num">4人班</text>
+						<text>Do.Ting.le</text>
+					</view>
+					<!-- 上课周期 -->
+					<view class="course-nearby-content-cycle">
+						<image class="course-nearby-content-cycle-img" src="/static/class/cycle.png" mode="widthFix">
+						</image>
+						<text>6月28日 ~ 7月7日</text>
+					</view>
+					<!-- 上课时段 -->
+					<view class="course-nearby-content-cycle">
+						<image class="course-nearby-content-cycle-img" src="/static/class/time.png" mode="widthFix">
+						</image>
+						<text>9:00~10:30</text>
+					</view>
+				</view>
+				<view v-if="item == 0">
+					<view class="course-nearby-content-button" @click="$utils.router.navTo($page.OrderInfo)">加入拼班</view>
+					<view class="course-nearby-content-success">差1人拼成</view>
+				</view>
+				<view v-else>
+					<view class="course-nearby-content-button bg-color2">已拼满</view>
+				</view>
+			</view>
+		</view>
+
+		<!-- 详情 + 评价 -->
+		<view class="course-detail">
+			<!-- tab -->
+			<view class="course-detail-tab">
+				<view class="course-detail-tab-item" @click="handleTab(1)"
+					:class="[active==1?'course-detail-tab-active':'']">课程详情</view>
+				<view class="course-detail-tab-item" @click="handleTab(2)"
+					:class="[active==2?'course-detail-tab-active':'']">用户评价</view>
+			</view>
+			<view class="course-detail-content" v-if="active==1">
+				<text>人数:小学生1-8人，大班1-6人，中班1-5人场地:家长提供可露天安全就好</text>
+				<view class="pt16 fwb">
+					教学内容
+				</view>
+				<text>
+					大班及以上的小朋友，不同水平可以混班家长需要在边上看护保证安全请家长给孩子购买意外险费用各自在平台支付
+					本活动为公益价，方便团长工作，大家按需要交费，个人请假不退费
+				</text>
+				<view class="pt16">
+					拍球教学
+				</view>
+				<text>单手大力原地拍球，连续性为目标双手大力原地拍球，连续性为目标双球交换过裆拍球</text>
+			</view>
+			<view class="" v-if="active==2">
+				<view class="course-detail-evaluate" v-for="item in 5" :key="item">
+					<image class="course-detail-evaluate-img" src="/static/mine/head-urlm.png" mode="scaleToFill">
+					</image>
+					<view>
+						<view class="course-detail-evaluate-info">
+							<view class="course-detail-evaluate-info2">
+								<text class="color4 fz28">李晓明</text>
+								<view class="course-detail-evaluate-info3">
+									<image v-for="item in 5" :key="item" class="course-detail-evaluate-info-img"
+										src="/static/class/eva.png" mode="scaleToFill"></image>
+								</view>
+							</view>
+							<view class="fz24 color2">2022-06-12</view>
+						</view>
+						<view class="course-detail-evaluate-text">
+							老师不错，挺负责的，孩子也喜欢老师不错，挺负责的，孩子也喜欢老师不错，挺负责的，孩子也喜欢
+						</view>
+					</view>
+				</view>
+				<view class="course-detail-evaluate-more" @click="$utils.router.navTo($page.Evaluate)">
+					<text>查看更多</text>
+					<image class="course-detail-evaluate-more-img" src="/static/class/more.png" mode=""></image>
+				</view>
+			</view>
+		</view>
+		<!-- 我要拼班 -->
+		<view class="course-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+		<view class="course-footer">
+			<view class="course-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
+				我要拼班
+			</view>
+		</view>
+		<popup-pin ref="popupPin" @check="check"></popup-pin>
+		<PopupDate ref="popupDate"></PopupDate>
+	</view>
+</template>
+
+<script>
+	import PopupPin from '../components/PopupPin/PopupPin.vue'
+	import PopupDate from '../components/PopupDate/PopupDate'
+	import mixin from '@/mixin.js'
+	export default {
+		mixins: [mixin],
+		components: {
+			PopupPin,
+			PopupDate
+		},
+		data() {
+			return {
+				active: 1
+			}
+		},
+		onLoad() {
+			uni.setNavigationBarTitle({
+				title: '修改标题'
+			})
+		},
+		methods: {
+			check() {
+				this.$refs.popupDate.handleShow(true)
+			},
+			submit() {
+				this.$refs.popupPin.handleShow()
+				uni.showToast({
+					title: `校验通过`
+				})
+			},
+			handleTab(val) {
+				console.log(val);
+				this.active = val
+			},
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.course {
+		min-height: 100vh;
+		background: #EEF1FA;
+
+		&-title {
+			position: relative;
+			margin-bottom: 42rpx;
+
+			&-img {
+				width: 750rpx;
+				height: 424rpx;
+			}
+
+			&-content {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				position: absolute;
+				left: 32rpx;
+				bottom: -42rpx;
+				padding: 24rpx 32rpx;
+				width: 686rpx;
+				box-sizing: border-box;
+				height: 152rpx;
+				background: #FFFFFF;
+				border-radius: 16rpx;
+
+				&-right {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 222rpx;
+					height: 96rpx;
+					background: rgba(236, 238, 245, 0.5);
+					border-radius: 14rpx;
+					text-align: center;
+				}
+
+				&-r2 {
+					width: 50%;
+
+					&:first-child {
+						position: relative;
+
+						&:before {
+							content: '';
+							position: absolute;
+							top: 50%;
+							right: 0;
+							margin-top: -27rpx;
+							width: 2rpx;
+							height: 54rpx;
+							background-color: #E8E8E8;
+						}
+					}
+				}
+			}
+		}
+
+		&-head {
+
+			&-address {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				padding: 32rpx 0rpx;
+				font-size: 28rpx;
+				font-weight: 500;
+				color: #141D3D;
+				border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+
+				&-img {
+					margin-right: 16rpx;
+					width: 18rpx;
+					height: 24rpx;
+				}
+
+				&-icon {
+					margin-top: 4rpx;
+					margin-left: 12rpx;
+					width: 12rpx;
+					height: 8rpx;
+				}
+			}
+		}
+
+		// 附近拼班
+		&-nearby {
+			margin-top: 82rpx;
+			z-index: 9;
+			margin-left: 32rpx;
+			padding: 0 32rpx;
+			width: 686rpx;
+			box-sizing: border-box;
+			background: #FFFFFF;
+			border-radius: 16rpx;
+
+			&-content {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				padding: 32rpx 0;
+				// width: 686rpx;
+				min-height: 180rpx;
+				box-sizing: border-box;
+				background: #FFFFFF;
+				border-radius: 16rpx;
+				border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+
+				&:last-child {
+					border-bottom: none;
+				}
+
+				&-img {
+					flex-shrink: 0;
+					margin-right: 22rpx;
+					width: 140rpx;
+					height: 132rpx;
+					border-radius: 12rpx;
+				}
+
+				&-center {
+					display: flex;
+					justify-content: flex-start;
+					align-items: flex-start;
+					flex-shrink: 0;
+					width: 305rpx;
+					font-size: 32rpx;
+					font-weight: 600;
+					color: #141D3D;
+				}
+
+				&-num {
+					margin-right: 10rpx;
+					padding: 4rpx 8rpx;
+					background: rgba(222, 80, 31, 0.1);
+					border-radius: 6rpx;
+					font-size: 20rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #DE501F;
+				}
+
+				&-cycle {
+					margin-top: 10rpx;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #838899;
+
+					&-img {
+						margin-right: 10rpx;
+						width: 24rpx;
+						height: 24rpx;
+					}
+				}
+
+				&-button {
+					flex-shrink: 0;
+					margin-left: 28rpx;
+					width: 124rpx;
+					height: 52rpx;
+					background: #DE501F;
+					border-radius: 12rpx;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #FFFFFF;
+					line-height: 52rpx;
+					text-align: center;
+				}
+
+				&-success {
+					margin-top: 10rpx;
+					text-align: right;
+					font-size: 24rpx;
+					font-family: SourceHanSansSC-Regular, SourceHanSansSC;
+					font-weight: 400;
+					color: #838899;
+				}
+			}
+		}
+
+
+		// 课程详情
+		&-detail {
+			padding: 0 32rpx 20rpx 32rpx;
+			margin-left: 32rpx;
+			margin-top: 80rpx;
+			width: 686rpx;
+			// min-height: 702rpx;
+			box-sizing: border-box;
+			background: #FFFFFF;
+			border-radius: 16rpx;
+
+			&-tab {
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+
+				&-item {
+					padding: 30rpx;
+					font-weight: 600;
+					font-size: 28rpx;
+
+					&:first-child {
+						padding-left: 0;
+					}
+				}
+
+				&-active {
+					position: relative;
+					color: #DE501F;
+
+					&:before {
+						content: '';
+						position: absolute;
+						left: 50%;
+						bottom: 20rpx;
+						margin-left: -24rpx;
+						width: 24rpx;
+						height: 4rpx;
+						background: #DE501F;
+						border-radius: 3rpx;
+					}
+				}
+			}
+
+			&-content {
+				padding: 30rpx 0;
+				font-size: 28rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #333333;
+			}
+
+			&-evaluate {
+				display: flex;
+				justify-content: flex-start;
+				align-items: flex-start;
+				padding: 32rpx 0;
+				border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+
+				&-img {
+					flex-shrink: 0;
+					margin-right: 28rpx;
+					width: 88rpx;
+					height: 88rpx;
+				}
+
+				&-text {
+					margin-top: 10rpx;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #838899;
+				}
+
+				&-info {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+
+					&-img {
+						margin-right: 8rpx;
+						width: 24rpx;
+						height: 24rpx;
+					}
+				}
+
+				&-info2 {
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+				}
+
+				&-info3 {
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					margin-left: 22rpx;
+				}
+
+				&-more {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					margin-top: 20rpx;
+					height: 56rpx;
+					font-size: 24rpx;
+					font-family: PingFangSC-Regular, PingFang SC;
+					font-weight: 400;
+					color: #838899;
+
+					&-img {
+						margin-left: 8rpx;
+						height: 20rpx;
+						width: 22rpx;
+					}
+				}
+			}
+		}
+
+		&-footer2 {
+			height: 250rpx;
+		}
+
+		&-footer {
+			position: fixed;
+			bottom: 0;
+			width: 750rpx;
+			padding: 32rpx 30rpx;
+			box-sizing: border-box;
+			background: #FFFFFF;
+			box-shadow: 0rpx 0rpx 8rpx 0rpx rgba(0, 0, 0, 0.1);
+			border-radius: 36rpx 36rpx 0rpx 0rpx;
+
+			&-button {
+				width: 690rpx;
+				height: 92rpx;
+				background: #DE501F;
+				border-radius: 16rpx;
+				font-size: 32rpx;
+				font-family: PingFangSC-Medium, PingFang SC;
+				font-weight: 500;
+				color: #FFFFFF;
+				text-align: center;
+				line-height: 92rpx;
+			}
+
+		}
+	}
+</style>
