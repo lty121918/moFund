@@ -155,6 +155,10 @@
 
 		}]
 	}],
+	"requiredPrivateInfos": [
+		"choosePoi",
+		"chooseAddress"
+	],
 	"globalStyle": {
 		"pageOrientation": "portrait",
 		"navigationBarTextStyle": "white",

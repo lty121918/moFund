@@ -71,7 +71,7 @@ const requestBefore = (config) => {
 	let routes = getCurrentPages() //获取当前页面栈
 	let curRoute = routes[routes.length - 1].route //获取当前页面的路由
 	let isLogin = curRoute !== 'pages/login/login'
-	if (!config.header['Authorization'] && isLogin) {
+	if (!config.header['Authorization'] && isLogin && DEV_CONFIG.IS_VERIFICATION) {
 		utils.userInfo.login()
 	}
 	config.url = baseUrl + config.url
@@ -105,7 +105,7 @@ const response = async (result) => {
 				duration: 2000
 			});
 		}
-		if (curRoute !== 'pages/login/login' && curRoute !== 'pages/login/FirstLogin') {
+		if (curRoute !== 'pages/login/login' && curRoute !== 'pages/login/FirstLogin' && DEV_CONFIG.IS_VERIFICATION) {
 			utils.userInfo.login()
 		}
 	} else if (code === 312 && curRoute !== 'pages/login/login') {
@@ -134,9 +134,11 @@ uni.addInterceptor('request', {
 	},
 	success(args) {
 		// 请求成功后，修改code值为1
+		console.log('请求成功后数据：',args.data);
 		response(args)
 	},
 	fail(err) {
+		console.log('请求失败后数据：',args);
 		responseErr(err)
 	},
 	complete(res) {

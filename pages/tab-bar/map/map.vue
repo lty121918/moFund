@@ -14,7 +14,8 @@
 						</cover-view>
 					</block>
 				</cover-view>
-				<cover-view class="popup-map" @click="isShow=false" v-show="isShow" :style="{ height: `calc(100vh - ${safeAreaHeight+50}px)` }">
+				<cover-view class="popup-map" @click="isShow=false" v-show="isShow"
+					:style="{ height: `calc(100vh - ${safeAreaHeight+50}px)` }">
 					<cover-view class="popup-content" @click.stop>
 						<cover-view class="home-title">
 							<cover-view class="home-title-item">
@@ -25,7 +26,8 @@
 						</cover-view>
 
 						<cover-view class="course">
-							<cover-view class="course-list-item" v-for="item in 10" :key="item"  @click="$utils.router.navTo($page.CourseDetail)">
+							<cover-view class="course-list-item" v-for="item in 10" :key="item"
+								@click="$utils.router.navTo($page.CourseDetail)">
 								<cover-image class="course-list-item-img" src="/static/notData.png" mode="aspectFit">
 								</cover-image>
 								<cover-view class="course-list-item-surplus">
@@ -73,82 +75,49 @@
 		mixins: [mixin],
 		data() {
 			return {
-				isShow:false,
-				latitude: 39.890, // 地图默认显示的维度
-				longitude: 116.39752, // 地图默认显示的纬度
-				markers: [{ // 标记点
-					id: 1,
-					latitude: 39.890,
-					longitude: 116.39752,
-					joinCluster: true,
-					title: "点击提示1",
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: "ALWAYS"
-					},
-					with: '20',
-					heigth: '20',
-					iconPath: '/static/map/icon.png'
-				}, {
-					id: 2,
-					latitude: 39.891,
-					longitude: 116.39752,
-					joinCluster: true,
-					title: "点击提示1",
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: "ALWAYS"
-					},
-					with: '20',
-					heigth: '20',
-					iconPath: '/static/map/icon.png'
-				}, {
-					id: 3,
-					latitude: 39.892,
-					longitude: 116.39752,
-					joinCluster: true,
-					title: "点击提示1",
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: "ALWAYS"
-					},
-					with: '20',
-					heigth: '20',
-					iconPath: '/static/map/icon.png'
-				}, {
-					id: 4,
-					latitude: 39.893,
-					longitude: 116.39752,
-					joinCluster: true,
-					title: "点击提示1",
-					customCallout: {
-						anchorX: 0,
-						anchorY: 0,
-						display: "ALWAYS"
-					},
-					with: '20',
-					heigth: '20',
-					iconPath: '/static/map/icon.png'
-				}, ]
+				isShow: false,
+				latitude: 24.485193, // 地图默认显示的维度
+				longitude: 118.179483, // 地图默认显示的纬度
+				markers: [
+					// {
+					// 	id: 1,
+					// 	latitude: 24.485193, // 地图默认显示的维度
+					// 	longitude: 118.179483, // 地图默认显示的纬度
+					// 	title: '11',
+					// 	joinCluster: true,
+					// 	customCallout: {
+					// 		anchorX: 0,
+					// 		anchorY: 0,
+					// 		display: "ALWAYS",
+					// 	},
+					// 	with: '20',
+					// 	heigth: '20',
+					// 	iconPath: '/static/map/icon.png'
+					// }
+				],
+
 			}
 		},
 		computed: {
 			...mapGetters(['active']),
 		},
 		onShow() {
+			console.log('11111111111111111111111111111111');
 			const self = this
-			uni.getLocation({
-				type: 'gcj02',
-				success: function(res) {
-					// self.latitude = res.latitude
-					// self.longitude = res.longitude
-					console.log('当前位置的经度：' + res.longitude);
-					console.log('当前位置的纬度：' + res.latitude);
-				}
-			});
+			self.getData()
+			// uni.getLocation({
+			// 	type: 'gcj02',
+			// 	success: function(res) {
+			// 		self.latitude = res.latitude
+			// 		self.longitude = res.longitude
+			// 		console.log('当前位置的经度：' + res.longitude);
+			// 		console.log('当前位置的纬度：' + res.latitude);
+			// 		self.getData()
+			// 	},
+			// 	fail:function(e){
+			// 		console.log(e);
+			// 	}
+			// });
 
 		},
 		created() {
@@ -159,9 +128,43 @@
 		},
 		methods: {
 			...mapMutations(['SET_ACTIVE']),
+			/**
+			 * @function 点击坐标获取当前校区的商品
+			 * @param {Object} e
+			 */
 			markertap(e) {
 				console.log(e.detail);
 				this.isShow = true
+			},
+			/**
+			 * @function 获取当前的所有校区
+			 */
+			getData() {
+				const self = this
+				this.$http['map'].getCampus().then(res => {
+					if (res.code == 200) {
+						let data = []
+						res.data.forEach((item,index) => {
+							data.push({
+								...item,
+								id: index,
+								latitude: 24.485193+(index*0.0001) || item.lat,
+								longitude: 118.179483+(index*0.0001) || item.lng,
+								title: item.campusName,
+								joinCluster: true,
+								customCallout: {
+									anchorX: 0,
+									anchorY: 0,
+									display: "ALWAYS",
+								},
+								with: '20',
+								heigth: '20',
+								iconPath: '/static/map/icon.png'
+							})
+						})
+						self.markers = data
+					}
+				})
 			}
 		}
 	}

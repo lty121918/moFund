@@ -7,7 +7,7 @@
 		<view class="class-content-bottom">
 			<view class="class-content-left">
 				<image class="class-content-img" src="/static/notData.png" mode="widthFix"></image>
-				<view class="class-content-section">已上45/45节</view>
+				<!-- <view class="class-content-section">已上45/45节</view> -->
 			</view>
 			<view class="">
 				<!-- 班级名称 -->
