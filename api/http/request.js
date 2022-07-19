@@ -63,7 +63,7 @@ const requestBefore = (config) => {
 		config.header['Content-Type'] = "application/x-www-form-urlencoded"
 	}
 	// 添加token
-	config.header['Origin-Client-Code'] = 'WX_ORGANIZATION'//'WX_ORGANIZATION'
+	config.header['Origin-Client-Code'] = 'WX'
 	const Authorization = utils.util.getCache('Authorization');
 	if (Authorization) {
 		config.header['Authorization'] = 'Bearer ' + Authorization
@@ -138,7 +138,7 @@ uni.addInterceptor('request', {
 		response(args)
 	},
 	fail(err) {
-		console.log('请求失败后数据：',args);
+		console.log('请求失败后数据：',err);
 		responseErr(err)
 	},
 	complete(res) {

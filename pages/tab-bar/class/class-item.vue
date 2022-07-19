@@ -14,23 +14,23 @@
 				<view class="class-content-info">
 					<view class="class-content-info-title">
 						<text class="class-content-info-num">4人班</text>
-						<text>篮球启蒙课A</text>
+						<text>{{item.className}}</text>
 					</view>
 					<view class="color">
 						<text class="fz24">￥</text>
-						<text class="fz32">50.00</text>
+						<text class="fz32">{{item.price}}</text>
 						<text class="color3 fz24">/节</text>
 					</view>
 				</view>
 				<!-- 上课周期 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/cycle.png" mode="widthFix"></image>
-					<text>上课周期：2022-07-01~2022</text>
+					<text>上课周期：{{item.startDate}}~{{item.endDate}}</text>
 				</view>
 				<!-- 上课时段 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/time.png" mode="widthFix"></image>
-					<text>上课时段：每天9:00~10:30</text>
+					<text>上课时段：每天{{item.startPeriod}}~{{item.endPeriod}}</text>
 				</view>
 				<!-- 教练 -->
 				<view class="class-content-cycle">
@@ -43,6 +43,15 @@
 </template>
 
 <script>
+	export default{
+		prop:{
+			item:{
+				default: ()=>{
+					return {}
+				}
+			}
+		}
+	}
 </script>
 
 <style lang="scss" scoped>

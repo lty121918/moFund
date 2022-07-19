@@ -33,17 +33,36 @@ const state = {
 			iconActive: '/static/tab-bar/mine-hl.png',
 			path: '/pages/tab-bar/mine/mine'
 		}
-	]
+	],
+
+	campus:null,
+	location:{
+		latitude: null,
+		longitude: null
+	}
+	
 }
 
 const getters = {
 	active: state => state.active,
 	animate: state => state.animate,
 	tabbars: state => state.tabbars,
-	teach:state => state.teach
+	teach:state => state.teach,
+	campus:state => state.campus,
+	location:state => state.location
 }
 
 const mutations = {
+	SET_STORAGE(state, {data = null,str='campus'}) {
+		if (data) {
+			state[str] = data;
+			uni.setStorageSync(str, JSON.stringify(data));
+		} else {
+			if (uni.getStorageSync(str)) {
+				state.campusId = JSON.parse(uni.getStorageSync(str));
+			}
+		}
+	},
 	SET_ACTIVE(state, data) {
 		state.active = data
 	},

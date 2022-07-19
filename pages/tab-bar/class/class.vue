@@ -1,6 +1,6 @@
 <template>
 	<view class="class">
-		
+
 		<y-list ref="yList" :setData="search">
 			<template slot-scope="{data}">
 				<!-- 教师端 -->
@@ -22,7 +22,7 @@
 				</view>
 				<!-- 教师端 end-->
 				<view v-for="(item,index) in data" :key="index">
-					<class-item></class-item>
+					<class-item :item="item"></class-item>
 				</view>
 			</template>
 		</y-list>
@@ -48,6 +48,9 @@
 		computed: {
 			...mapGetters(['active']),
 		},
+		onShow() {
+			this.getMounted()
+		},
 		created() {
 			const active = 'class'
 			if (this.active !== active) {
@@ -60,22 +63,31 @@
 
 		},
 		mounted() {
-			this.$refs.yList.init()
 		},
 		methods: {
+			getMounted(){this.$refs.yList.init()},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
-			search() {
+			search(val) {
+				const self = this
 				console.log('class请求');
 				return new Promise(async (resolve, reject) => {
-					let data = []
-					for (let i = 0; i < 2; i++) {
-						data.push({})
-					}
-					resolve({
-						data,
-						totalRows: 10
+					self.$http['classes'].getClassList({
+						...val
+					}).then(res => {
+						let data = []
+						if (res.code == 200) {
+							res.data.forEach(item=>{
+								data.push(item)
+							})
+								
+						}
+						resolve({
+							data,
+							totalRows: 10
+						})
 					})
+
 				})
 			},
 
@@ -87,13 +99,15 @@
 	.class {
 		min-height: 100vh;
 		background: #EEF1FA;
-		&-title{
+
+		&-title {
 			display: flex;
 			font-size: 28rpx;
 			font-family: PingFangSC-Medium, PingFang SC;
 			font-weight: 500;
 			color: #141D3D;
-			&-item{
+
+			&-item {
 				margin-right: 40rpx;
 			}
 		}

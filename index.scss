@@ -147,6 +147,19 @@
 .ml12{
 	margin-left: 12rpx;
 }
+	
+.o-over{
+	overflow: hidden; /*超出隐藏*/
+	text-overflow: ellipsis;/*隐藏后添加省略号*/
+	white-space: nowrap;/*强制不换行*/
+}
+.t-over{
+	overflow: hidden;//超出文本隐藏
+	text-overflow: ellipsis;//溢出显示省略号
+	display: -webkit-box;//设置为弹性盒子
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;//只显示两行
+}
 // 通用标题头部
 .home-title{
 	display: flex;

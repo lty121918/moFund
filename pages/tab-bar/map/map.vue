@@ -21,36 +21,33 @@
 							<cover-view class="home-title-item">
 								<cover-image class="home-title-img" src="/static/home/icon.png" mode="aspectFit">
 								</cover-image>
-								<cover-view>金山校区</cover-view>
+								<cover-view>{{campusName}}</cover-view>
 							</cover-view>
 						</cover-view>
 
 						<cover-view class="course">
-							<cover-view class="course-list-item" v-for="item in 10" :key="item"
+							<cover-view class="course-list-item" v-for="item in data" :key="item"
 								@click="$utils.router.navTo($page.CourseDetail)">
-								<cover-image class="course-list-item-img" src="/static/notData.png" mode="aspectFit">
+								<cover-image class="course-list-item-img" :src="item.coverImage|| '/static/notData.png'"
+									mode="aspectFit">
 								</cover-image>
-								<cover-view class="course-list-item-surplus">
-									<cover-view>剩余</cover-view>
-									<cover-view class="color fz32">10</cover-view>
-									<cover-view>件</cover-view>
-								</cover-view>
 								<cover-view class="">
-									<cover-view class="course-list-item-title">篮球启蒙课A</cover-view>
+									<cover-view class="course-list-item-title t-over">{{item.productName}}</cover-view>
 									<cover-view class="course-list-item-price">
 										<cover-view class="color fz24">￥</cover-view>
-										<cover-view class="color fz32">50.00
+										<cover-view class="color fz32">{{item.price}}
 											<cover-view class="kong"></cover-view>
 										</cover-view>
 										<cover-view class="fz24">/节</cover-view>
-										<cover-view class="course-list-item-payment">245人付款</cover-view>
+										<cover-view class="course-list-item-payment">{{item.paymentNumber}}人付款
+										</cover-view>
 									</cover-view>
 									<cover-view class="course-list-item-info">
 										<cover-view class="course-list-item-apply">
-											4-5岁适用
+											{{item.minAge}}-{{item.maxAge}}岁适用
 										</cover-view>
 										<cover-view class="course-list-item-pin">
-											100+拼班
+											{{item.spellingClassNumber}}拼班
 										</cover-view>
 									</cover-view>
 								</cover-view>
@@ -78,23 +75,9 @@
 				isShow: false,
 				latitude: 24.485193, // 地图默认显示的维度
 				longitude: 118.179483, // 地图默认显示的纬度
-				markers: [
-					// {
-					// 	id: 1,
-					// 	latitude: 24.485193, // 地图默认显示的维度
-					// 	longitude: 118.179483, // 地图默认显示的纬度
-					// 	title: '11',
-					// 	joinCluster: true,
-					// 	customCallout: {
-					// 		anchorX: 0,
-					// 		anchorY: 0,
-					// 		display: "ALWAYS",
-					// 	},
-					// 	with: '20',
-					// 	heigth: '20',
-					// 	iconPath: '/static/map/icon.png'
-					// }
-				],
+				markers: [],
+				campusName: '',
+				data: [] //社区的课程列表
 
 			}
 		},
@@ -102,22 +85,21 @@
 			...mapGetters(['active']),
 		},
 		onShow() {
-			console.log('11111111111111111111111111111111');
 			const self = this
-			self.getData()
-			// uni.getLocation({
-			// 	type: 'gcj02',
-			// 	success: function(res) {
-			// 		self.latitude = res.latitude
-			// 		self.longitude = res.longitude
-			// 		console.log('当前位置的经度：' + res.longitude);
-			// 		console.log('当前位置的纬度：' + res.latitude);
-			// 		self.getData()
-			// 	},
-			// 	fail:function(e){
-			// 		console.log(e);
-			// 	}
-			// });
+			// self.getData()
+			uni.getLocation({
+				type: 'gcj02',
+				success: function(res) {
+					self.latitude = res.latitude
+					self.longitude = res.longitude
+					console.log('当前位置的经度：' + res.longitude);
+					console.log('当前位置的纬度：' + res.latitude);
+					self.getData()
+				},
+				fail: function(e) {
+					console.log(e);
+				}
+			});
 
 		},
 		created() {
@@ -134,22 +116,41 @@
 			 */
 			markertap(e) {
 				console.log(e.detail);
+				const campus = this.markers.find(item => item.id == e.detail.markerId)
+				this.campusName = campus.campusName
+				// this.$http['course'].getCourseList(campus.campusId).then(res => {
+				// 	if (res.codo == 200) {
 				this.isShow = true
+				this.data = [{
+					campusId: "1",
+					coverImage: "",
+					maxAge: 20,
+					minAge: 10,
+					paymentNumber: 100,
+					price: 10,
+					productId: "1",
+					productName: "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
+					spellingClassNumber: 120
+				}]
+				// 	}
+				// })
+
 			},
 			/**
 			 * @function 获取当前的所有校区
 			 */
 			getData() {
 				const self = this
+
 				this.$http['map'].getCampus().then(res => {
 					if (res.code == 200) {
 						let data = []
-						res.data.forEach((item,index) => {
+						res.data.forEach((item, index) => {
 							data.push({
 								...item,
 								id: index,
-								latitude: 24.485193+(index*0.0001) || item.lat,
-								longitude: 118.179483+(index*0.0001) || item.lng,
+								latitude: 24.485193 + (index * 0.0001) || item.lat,
+								longitude: 118.179483 + (index * 0.0001) || item.lng,
 								title: item.campusName,
 								joinCluster: true,
 								customCallout: {
@@ -212,8 +213,24 @@
 		font-size: 14px;
 	}
 
+
+
+
+	@keyframes fadenum {
+		/*设置内容由显示变为隐藏*/
+
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+
+	}
+
 	.popup {
 		&-map {
+			animation: fadenum 0.3s;
 			position: fixed;
 			top: 0;
 			width: 750rpx;
@@ -267,8 +284,9 @@
 				}
 
 				&-title {
-					width: 300rpx;
-					min-height: 86rpx;
+					display: inline-block;
+					width: 420rpx;
+					height: 86rpx;
 					font-size: 36rpx;
 					font-family: PingFangSC-Medium, PingFang SC;
 					font-weight: 500;
@@ -293,7 +311,8 @@
 					display: flex;
 					justify-content: space-around;
 					margin-top: 22rpx;
-					width: 296rpx;
+					// width: 296rpx;
+					width: 300rpx;
 					height: 44rpx;
 					background: rgba(20, 29, 61, 0.05);
 					color: rgba(20, 29, 61, 0.5);
@@ -306,7 +325,8 @@
 				}
 
 				&-apply {
-					width: 148rpx;
+					// width: 148rpx;
+					padding: 0 12rpx;
 					height: 44rpx;
 					line-height: 44rpx;
 					background: rgba(20, 29, 61, 0.1);
@@ -317,27 +337,13 @@
 					width: 148rpx;
 					line-height: 44rpx;
 				}
-
-
-				&-surplus {
-					position: absolute;
-					right: 24rpx;
-					top: 24rpx;
-					display: flex;
-					justify-content: flex-end;
-					align-items: center;
-					font-size: 22rpx;
-					font-family: PingFangSC-Regular, PingFang SC;
-					font-weight: 400;
-					color: #141D3D;
-				}
 			}
 		}
 	}
 
 	.kong {
 		display: inline-block;
-		line-height: 40rpx;
+		line-height: 20rpx;
 		width: 10rpx;
 	}
 </style>

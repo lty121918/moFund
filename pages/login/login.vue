@@ -53,8 +53,7 @@
 			getphonenumber: debounce(function(e) {
 				uni.login({
 					success: async (res) => {
-						console.log('JS_CODE', res.code);
-						console.log('CODE', e.detail.code)
+						console.log('CODE：', e.detail.code, 'JS_CODE：', res.code)
 						if (!e.detail.code) {
 							return false
 						}

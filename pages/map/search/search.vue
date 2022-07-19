@@ -1,7 +1,7 @@
 <template>
 	<view class="search">
 		<view class="search-content">
-			<uni-easyinput v-model="customFormData.name" placeholder="搜索校区" suffixIcon="search"/>
+			<uni-easyinput v-model="customFormData.name" placeholder="搜索校区" suffixIcon="search" />
 			<view class="pt16">
 				<view class="search-content-item" v-for="(item,index) in 5" :key="index" @click="back">
 					<view class="search-content-name">
@@ -34,15 +34,23 @@
 
 			}
 		},
-		created() {
-		},
+		created() {},
 		methods: {
-			back(){
-				this.$utils.router.navBackData({community:{value:'哈哈'}})
+			search() {
+				// this.$http['map'].getSearchList({
+
+				// }).then()
 			},
-			handleMore(){
+			back() {
+				this.$utils.router.navBackData({
+					community: {
+						value: '哈哈'
+					}
+				})
+			},
+			handleMore() {
 				uni.showToast({
-					title:'查看更多'
+					title: '查看更多'
 				})
 			}
 		}
@@ -50,7 +58,7 @@
 </script>
 
 <style scoped lang="scss">
-	.not-search{
+	.not-search {
 		margin-top: 22rpx;
 		text-align: right;
 		font-size: 24rpx;
@@ -58,20 +66,23 @@
 		font-weight: 400;
 		color: #DE501F;
 	}
+
 	.search {
 		padding: 32rpx;
 		min-height: 100vh;
 		box-sizing: border-box;
 		background: #EEF1FA;
-		&-content{
+
+		&-content {
 			padding: 32rpx 30rpx;
 			width: 686rpx;
-			
+
 			height: calc(100vh - 64rpx);
 			box-sizing: border-box;
 			background: #FFFFFF;
 			border-radius: 16rpx;
-			&-item{
+
+			&-item {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
@@ -82,24 +93,29 @@
 				font-weight: 400;
 				color: #141D3D;
 			}
-			&-name{
+
+			&-name {
 				display: flex;
-				width: 332rpx ;
+				width: 332rpx;
 			}
-			&-img{
+
+			&-img {
 				margin-left: 12rpx;
 				width: 28rpx;
 				height: 28rpx;
 			}
-			&-city{
+
+			&-city {
 				text-align: center;
 				width: 130rpx;
 			}
-			&-distance{
+
+			&-distance {
 				text-align: right;
 				width: 160rpx;
 			}
 		}
+
 		&-more {
 			display: flex;
 			justify-content: center;
@@ -110,7 +126,7 @@
 			font-family: PingFangSC-Regular, PingFang SC;
 			font-weight: 400;
 			color: #838899;
-		
+
 			&-img {
 				margin-left: 8rpx;
 				height: 20rpx;
@@ -118,11 +134,13 @@
 			}
 		}
 	}
-	/deep/.uni-icons{
+
+	/deep/.uni-icons {
 		color: #DE501F !important;
 	}
-	/deep/.is-input-border{
-		border-radius: 8rpx!important;
-		border: 2rpx solid #F3F3F5!important;
+
+	/deep/.is-input-border {
+		border-radius: 8rpx !important;
+		border: 2rpx solid #F3F3F5 !important;
 	}
 </style>

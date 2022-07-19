@@ -27,7 +27,7 @@
 			<view class="home-title">
 				<view class="home-title-item">
 					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
-					<text>热门活动</text>
+					<text>社区课程</text>
 				</view>
 				<view class="home-title-item" @click="$utils.router.navTo($page.Course)">
 					<text class="home-title-name">全部</text>
@@ -101,13 +101,17 @@
 			uni.setNavigationBarTitle({
 				title: '首页'
 			})
-			this.getData()
+			
 		},
 		methods: {
+			getMounted(){this.getData()},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			getData() {
 				console.log('数据请求home');
+				// Promise.all([promise1, promise2, promise3]).then(res=>{
+				// 	console.log('所有请求',res);
+				// })
 			},
 		}
 	}

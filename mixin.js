@@ -1,7 +1,8 @@
 //新建一个js文件用于混入
 const SAFE_AREA_INSET_BOTTOM = 34
 import {
-	mapMutations
+	mapMutations,
+	mapGetters
 } from 'vuex'
 const minxin = {
 	data() {
@@ -33,6 +34,7 @@ const minxin = {
 		}
 	},
 	computed: {
+		...mapGetters(['campus']),
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
@@ -56,7 +58,7 @@ const minxin = {
 		}
 	},
 	methods: {
-		...mapMutations(['SET_TEACH']),
+		...mapMutations(['SET_TEACH','SET_STORAGE']),
 		getTeach() {
 			let isTeach = this.$utils.util.getCache('role')
 			console.log('1是2否教练', isTeach);
