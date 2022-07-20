@@ -1,21 +1,21 @@
 <template>
 	<view class="search">
 		<view class="search-content">
-			<uni-easyinput v-model="customFormData.name" placeholder="搜索校区" suffixIcon="search" />
+			<uni-easyinput @blur="search" v-model="campusName" placeholder="搜索校区" suffixIcon="search" />
 			<view class="pt16">
-				<view class="search-content-item" v-for="(item,index) in 5" :key="index" @click="back">
+				<view class="search-content-item" v-for="(item,index) in campusList" :key="index" @click="back(item)">
 					<view class="search-content-name">
-						<text>保利中央公馆</text>
+						<text>{{item.campusName}}</text>
 						<image class="search-content-img" src="/static/home/location2.png" mode="widthFix"></image>
 					</view>
 					<view class="search-content-city">
-						武昌
+						{{item.areaName || '-'}}
 					</view>
 					<view class="search-content-distance dis-color">
-						距离＜99Km
+						距离{{item.distance2}}
 					</view>
 				</view>
-				<view class="search-more" @click="handleMore">
+				<view class="search-more" @click="handleMore" v-if="!isShowMore">
 					<text>查看更多</text>
 					<image class="search-more-img" src="/static/class/more.png" mode=""></image>
 				</view>
@@ -28,30 +28,66 @@
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
 			return {
-
+				campusName:'',
+				campusList:[],
+				isShowMore:false
 			}
+		},
+		onLoad() {
+			this.isShowMore = false
+			this.search()
 		},
 		created() {},
 		methods: {
-			search() {
-				// this.$http['map'].getSearchList({
-
-				// }).then()
-			},
-			back() {
-				this.$utils.router.navBackData({
-					community: {
-						value: '哈哈'
-					}
+		   async search() {
+				// 获取社区
+				this.SET_STORAGE({
+					str: 'location'
 				})
+				let res2 = await this.$http['map'].getSearchList({
+					lat: this.location.latitude,
+					lng: this.location.longitude,
+					campusName:this.campusName
+				})
+				if (res2.code == 200) {
+					let list = res2.data
+					list.forEach(item=>{
+						if(item.distance>1200){
+							item.distance2 = '>1.2Km'
+						} else if(item.distance<500){
+							item.distance2 = '500m<'
+						} else {
+							item.distance2 = `${item.distance}m`
+						}
+					})
+					if(this.isShowMore || list.length<=5){
+						this.isShowMore = true
+						this.campusList = list
+					} else{
+						this.campusList = list.slice(0, 5)
+					}
+					
+					
+				}
+			},
+			back(data) {
+				this.SET_STORAGE({
+					str: 'campus',
+					data
+				})
+				this.$utils.router.navBackData()
 			},
 			handleMore() {
+				this.isShowMore = true
 				uni.showToast({
 					title: '查看更多'
 				})
+				this.search()
 			}
 		}
 	}

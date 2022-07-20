@@ -22,7 +22,7 @@
 				</view>
 				<!-- 教师端 end-->
 				<view v-for="(item,index) in data" :key="index">
-					<class-item :item="item"></class-item>
+					<class-item :data="item"></class-item>
 				</view>
 			</template>
 		</y-list>

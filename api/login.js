@@ -3,15 +3,8 @@ import { post,get } from './http/index'
 import apis from '@/apis'
 
 export const login = params => {
-	return post(apis._auth_teach_login, params)
+	return post(apis._auth_wx_login, params)
 }
-export const login2 = params => {
-	return post(apis._auth_login, params)
-}
-export const isWatch = params => {
-	return get(apis._common_teach_is_watch, params)
-}
-
 // 退出登录
 export const authLogout = params => post(apis._auth_logout, params)
 

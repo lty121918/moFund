@@ -13,29 +13,29 @@
 				<!-- 班级名称 -->
 				<view class="class-content-info">
 					<view class="class-content-info-title">
-						<text class="class-content-info-num">4人班</text>
-						<text>{{item.className}}</text>
+						<text class="class-content-info-num">{{data.typeName}}</text>
+						<text>{{data.className}}</text>
 					</view>
 					<view class="color">
 						<text class="fz24">￥</text>
-						<text class="fz32">{{item.price}}</text>
+						<text class="fz32">{{data.price}}</text>
 						<text class="color3 fz24">/节</text>
 					</view>
 				</view>
 				<!-- 上课周期 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/cycle.png" mode="widthFix"></image>
-					<text>上课周期：{{item.startDate}}~{{item.endDate}}</text>
+					<text>上课周期：{{data.startDate}}~{{data.endDate}}</text>
 				</view>
 				<!-- 上课时段 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/time.png" mode="widthFix"></image>
-					<text>上课时段：每天{{item.startPeriod}}~{{item.endPeriod}}</text>
+					<text>上课时段：每天{{data.startPeriod}}~{{data.endPeriod}}</text>
 				</view>
 				<!-- 教练 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/coach.png" mode="widthFix"></image>
-					<text>教练：唐小明</text>
+					<text>教练：{{data.staffName}}</text>
 				</view>
 			</view>
 		</view>
@@ -44,8 +44,8 @@
 
 <script>
 	export default{
-		prop:{
-			item:{
+		props:{
+			data:{
 				default: ()=>{
 					return {}
 				}

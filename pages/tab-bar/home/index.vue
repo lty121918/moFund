@@ -4,27 +4,21 @@
 		<view class="home-head">
 			<view class="home-head-address" @click="$utils.router.navTo($page.Search)">
 				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFit"></image>
-				<text> 福田区</text>
+				<text> {{campus.campusName}}</text>
 				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFit"></image>
 			</view>
 			<view class="home-head-swiper">
 				<swiper class="swiper" circular :indicator-dots="false" :autoplay="true" :interval="5000"
 					:duration="500">
-					<swiper-item>
-						<view class="swiper-item uni-bg-red">A</view>
-					</swiper-item>
-					<swiper-item>
-						<view class="swiper-item uni-bg-green">B</view>
-					</swiper-item>
-					<swiper-item>
-						<view class="swiper-item uni-bg-blue">C</view>
+					<swiper-item v-for="item in banner" :key="item.id">
+						<image class="home-head-img" :src="url+item.imageUrl" mode="heightFix"></image>
 					</swiper-item>
 				</swiper>
 			</view>
 		</view>
 		<!-- 热门活动 -->
 		<view class="home-activity">
-			<view class="home-title">
+			<view class="home-title" v-if="courseList.length>0">
 				<view class="home-title-item">
 					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
 					<text>社区课程</text>
@@ -35,12 +29,13 @@
 				</view>
 			</view>
 			<view class="home-activity-content">
-				<view class="home-activity-content-item" v-for="item in 3" :key="item" @click="$utils.router.navTo($page.CourseDetail)">
-					<image class="home-activity-content-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<view class="home-activity-content-title">篮球启蒙1</view>
-					<view class="home-activity-content-msg">666团</view>
+				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
+					@click="$utils.router.navTo($page.CourseDetail)">
+					<image class="home-activity-content-img" :src="item.coverImage||'/static/notData.png'" mode="aspectFit"></image>
+					<view class="home-activity-content-title t-over">{{item.productName}}</view>
+					<!-- <view class="home-activity-content-msg">&nbsp;</view> -->
 					<view class="home-activity-content-price">
-						<text>￥60</text>
+						<text>￥{{item.price}}</text>
 						<image class="home-activity-content-icon" src="/static/home/right.png" mode="aspectFit"></image>
 					</view>
 				</view>
@@ -49,7 +44,7 @@
 
 		<!-- 附近拼班 -->
 		<view class="home-nearby">
-			<view class="home-title">
+			<view class="home-title" v-if="spellClassList.length>0">
 				<view class="home-title-item">
 					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
 					<text>附近拼班</text>
@@ -59,15 +54,19 @@
 					<image class="home-title-icon" src="/static/left.png" mode="aspectFit"></image>
 				</view>
 			</view>
-			<view class="home-nearby-content" v-for="item in 30" :key="item" @click="$utils.router.navTo($page.OrderInfo)">
-				<image class="home-nearby-content-img" src="/static/notData.png" mode="aspectFit"></image>
+			<view class="home-nearby-content" v-for="(item,index) in spellClassList" :key="index"
+				@click="$utils.router.navTo($page.OrderInfo)">
+				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
 				<view class="home-nearby-content-center">
-					<view>Do.Ting.le</view>
+					<view>{{item.nickName}}</view>
 					<view class="home-nearby-content-class">
-						<view class="home-nearby-content-name">启蒙班</view>
+						<view class="home-nearby-content-name">{{item.spellType}}</view>
 						<view class="home-nearby-content-url">
-							<image v-for="item in 5" :key="item" class="home-nearby-content-icon"
-								src="/static/home/default-url.png" mode="aspectFit"></image>
+							<image v-for="row in item.weChatUserList" :key="row.studentId"
+								class="home-nearby-content-icon" :src="row.avatar" mode="aspectFit">
+							</image>
+							<image class="home-nearby-content-icon" src="/static/home/default-url.png" mode="aspectFit">
+							</image>
 						</view>
 					</view>
 				</view>
@@ -88,12 +87,20 @@
 	} from 'vuex'
 	export default {
 		data() {
-			return {}
+			return {
+				banner: [], // 轮播图
+				courseList: [], // 社区课程
+				spellClassList: [] // 附件拼班
+			}
 		},
 		computed: {
-			...mapGetters(['active']),
+			...mapGetters(['active', 'location', 'campus']),
+			url() {
+				return this.$url
+			}
 		},
 		created() {
+			console.log()
 			const active = 'home'
 			if (this.active !== active) {
 				this.SET_ACTIVE(active)
@@ -101,17 +108,118 @@
 			uni.setNavigationBarTitle({
 				title: '首页'
 			})
-			
+
 		},
 		methods: {
-			getMounted(){this.getData()},
-			...mapMutations(['SET_ACTIVE']),
+			getMounted() {
+				this.getData()
+			},
+			...mapMutations(['SET_ACTIVE', 'SET_STORAGE']),
 			// 模拟请求数据
-			getData() {
+			async getData() {
+				this.SET_STORAGE({
+					str: 'campus'
+				})
 				console.log('数据请求home');
-				// Promise.all([promise1, promise2, promise3]).then(res=>{
-				// 	console.log('所有请求',res);
-				// })
+				this.SET_STORAGE({
+					str: 'location'
+				})
+				const {
+					getSearchList,
+					getBanner
+				} = this.$http['map']
+				const {
+					getCourseList,
+					getSpellClassList
+				} = this.$http['classes']
+				// 轮播图
+				let res1 = await getBanner()
+				if (res1.code == 200) {
+					this.banner = res1.data
+				}
+				// 获取社区
+				let res2 = await getSearchList({
+					lat: this.location.latitude,
+					lng: this.location.longitude
+				})
+				if (res2.code == 200) {
+					let list = res2.data
+					if (!this.campus) {
+						this.SET_STORAGE({
+							str: 'campus',
+							data: list[0]
+						})
+					} else {
+						const isTrue = list.some(item => item.campusId == this.campus.campusId)
+						if (!isTrue) {
+							this.SET_STORAGE({
+								str: 'campus',
+								data: list[0]
+							})
+						}
+					}
+				}
+				// 获取课程
+				let res3 = await getCourseList({
+					campusId: this.campus.campusId
+				})
+				if (res3.code == 200) {
+					const data = [
+						...res3.data,
+						{
+							"campusId": "",
+							"coverImage": "",
+							"maxAge": 0,
+							"minAge": 0,
+							"paymentNumber": 0,
+							"price": 0,
+							"productId": "",
+							"productName": "篮球启蒙篮球启蒙篮球启蒙篮球启蒙",
+							"spellingClassNumber": 0
+						}
+					]
+					if (data.length > 4) {
+						this.courseList = data.slice(0, 4)
+					} else {
+						this.courseList = data
+					}
+
+				}
+				// 获取当前社区拼班
+				let res4 = await getSpellClassList({
+					campusId: this.campus.campusId
+				})
+				if (res4.code == 200) {
+					this.spellClassList = [
+						...res4.data,
+						{
+							"campusId": "",
+							"classInfoId": "",
+							"headUrl": this.$utils.util.defaultAvatarUrl,
+							"nickName": "挖哈哈哈哈哈哈哈",
+							"organizationId": "",
+							"price": 0,
+							"productId": "",
+							"productName": "",
+							"productSellPriceRelId": "",
+							"spellType": "启蒙班",
+							"weChatUserList": [{
+								"age": "",
+								"avatar": this.$utils.util.defaultAvatarUrl,
+								"classInfoId": "",
+								"classStudentId": "",
+								"gender": "",
+								"studentId": "",
+								"studentName": "",
+								"wxUserId": ""
+							}],
+							"wxUserId": ""
+						}
+					]
+				}
+
+
+
 			},
 		}
 	}
@@ -167,13 +275,15 @@
 			}
 
 			&-swiper {
-				position: absolute;
-				left: 32rpx;
-				bottom: -132rpx;
+				margin-top: 20rpx;
 				width: 686rpx;
 				height: 376rpx;
 				background: #D8D8D8;
 				border-radius: 16rpx;
+			}
+
+			&-img {
+				height: 376rpx;
 			}
 		}
 
@@ -205,6 +315,7 @@
 				}
 
 				&-title {
+					height: 85rpx;
 					margin-top: 26rpx;
 					font-size: 32rpx;
 					font-weight: 500;

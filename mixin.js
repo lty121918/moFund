@@ -10,15 +10,11 @@ const minxin = {
 			isIphoneX: false,
 			safeAreaInsetBottom: true, //底部高度
 			isTeach: '', // 是否教练 1是2不是
-			community: {
-				value: '测试'
-			} //社区数据
 		}
 	},
 	watch: {
-		community: {
+		campus: {
 			handler(newValue, oldValue) {
-				console.log(newValue.value, oldValue.value)
 				this.getInit()
 			},
 			/**
@@ -34,12 +30,21 @@ const minxin = {
 		}
 	},
 	computed: {
-		...mapGetters(['campus']),
+		...mapGetters(['campus','location','city']),
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
 	},
 	onShow() {
+		this.SET_STORAGE({
+			str: 'campus'
+		})
+		this.SET_STORAGE({
+			str: 'location'
+		})
+		this.SET_STORAGE({
+			str: 'city'
+		})
 		this.getTeach()
 	},
 
@@ -58,7 +63,7 @@ const minxin = {
 		}
 	},
 	methods: {
-		...mapMutations(['SET_TEACH','SET_STORAGE']),
+		...mapMutations(['SET_TEACH', 'SET_STORAGE']),
 		getTeach() {
 			let isTeach = this.$utils.util.getCache('role')
 			console.log('1是2否教练', isTeach);
@@ -78,7 +83,7 @@ const minxin = {
 			this.$utils.router.swtTo(this.$page.Home)
 		},
 		// 社区初始化
-		getInit(){
+		getInit() {
 			console.log('重置/更新');
 		},
 		/**
@@ -104,6 +109,65 @@ const minxin = {
 				fail: function(err) {
 					console.log('支付失败:' + JSON.stringify(err));
 				}
+			})
+		},
+		getLocation() {
+			const self = this
+			return new Promise((resolve, reject) => {
+				uni.getLocation({
+					type: 'gcj02',
+					success: function(res) {
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						self.SET_STORAGE({
+							data: {
+								latitude: res.latitude,
+								longitude: res.longitude
+							},
+							str: 'location'
+						})
+						resolve({
+							latitude: res.latitude,
+							longitude: res.longitude
+						})
+					},
+					fail: function(e) {
+						console.log(e);
+						uni.getSetting({
+							success: res => {
+								if (typeof(res.authSetting['scope.userLocation']) != 'undefined' && !res.authSetting['scope.userLocation']) {
+									// 用户拒绝了授权
+									uni.showModal({
+										title: '提示',
+										content: '您拒绝了定位权限，将无法使用社区定位功能',
+										success: res => {
+											if (res.confirm) {
+												// 跳转设置页面
+												uni.openSetting({
+													success: res => {
+														if (res.authSetting['scope.userLocation']) {
+															// 授权成功，重新定位
+															uni.getLocation({
+																success: res => {}
+															});
+														} else {
+															// 没有允许定位权限
+															uni.showToast({
+																title: '您拒绝了定位权限，将无法使用社区定位功能',
+																icon: 'none'
+															});
+														}
+													}
+												});
+											}
+										}
+									});
+								}
+							}
+						});
+						reject(e)
+					}
+				});
 			})
 		}
 	},

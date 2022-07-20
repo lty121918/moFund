@@ -2,21 +2,24 @@
 	<view class="piece">
 		<view class="piece-head-address" @click="$utils.router.navTo($page.Search)">
 			<image class="piece-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-			<text> 福田区</text>
+			<text> {{campus.campusName}}</text>
 			<image class="piece-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
 		</view>
 		<y-list ref="yList" :scrollClass="'scroll-class2'" :setData="search">
 			<template slot-scope="{data}">
-				<view class="piece-content" v-for="item in 30" :key="item"
+				<view class="piece-content" v-for="item in data" :key="item.productSellPriceRelId"
 					@click="$utils.router.navTo($page.OrderInfo)">
 					<image class="piece-content-img" src="/static/notData.png" mode="aspectFit"></image>
 					<view class="piece-content-center">
-						<view>Do.Ting.le</view>
+						<view>{{item.nickName}}</view>
 						<view class="piece-content-class">
-							<view class="piece-content-name">启蒙班</view>
+							<view class="piece-content-name">{{item.spellType}}</view>
 							<view class="piece-content-url">
-								<image v-for="item in 5" :key="item" class="piece-content-icon"
-									src="/static/home/default-url.png" mode="aspectFit"></image>
+								<image v-for="item in item.weChatUserList" :key="item.studentId" class="piece-content-icon"
+									:src="row.avatar" mode="aspectFit"></image>
+								<image class="piece-content-icon" src="/static/home/default-url.png"
+									mode="aspectFit">
+								</image>
 							</view>
 						</view>
 					</view>
@@ -28,7 +31,9 @@
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
 			return {}
 		},
@@ -37,10 +42,38 @@
 		},
 		methods: {
 			search() {
+				const self = this
 				return new Promise(async (resolve, reject) => {
 					let data = []
-					for (let i = 0; i < 100; i++) {
-						data.push({})
+					// 获取当前社区拼班
+					let res = await self.$http['classes'].getSpellClassList({
+						campusId: self.campus.campusId
+					})
+					if (res.code == 200) {
+						data = res.data
+						data = [{
+							"campusId": "",
+							"classInfoId": "",
+							"headUrl": self.$utils.util.defaultAvatarUrl,
+							"nickName": "挖哈哈哈哈哈哈哈",
+							"organizationId": "",
+							"price": 0,
+							"productId": "",
+							"productName": "",
+							"productSellPriceRelId": "",
+							"spellType": "启蒙班",
+							"weChatUserList": [{
+								"age": "",
+								"avatar": self.$utils.util.defaultAvatarUrl,
+								"classInfoId": "",
+								"classStudentId": "",
+								"gender": "",
+								"studentId": "",
+								"studentName": "",
+								"wxUserId": ""
+							}],
+							"wxUserId": ""
+						}]
 					}
 					resolve({
 						data,
@@ -95,7 +128,7 @@
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
-			margin-bottom:32rpx;
+			margin-bottom: 32rpx;
 			padding: 24rpx;
 			width: 686rpx;
 			min-height: 180rpx;

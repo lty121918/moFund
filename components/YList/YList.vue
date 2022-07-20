@@ -35,7 +35,7 @@
 		},
 		data() {
 			return {
-				data: [{}],
+				data: [],
 				scrollTop: 0,
 				isMore: false,
 				queryParams: {

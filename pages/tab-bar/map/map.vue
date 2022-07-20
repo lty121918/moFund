@@ -118,22 +118,25 @@
 				console.log(e.detail);
 				const campus = this.markers.find(item => item.id == e.detail.markerId)
 				this.campusName = campus.campusName
-				// this.$http['course'].getCourseList(campus.campusId).then(res => {
-				// 	if (res.codo == 200) {
-				this.isShow = true
-				this.data = [{
-					campusId: "1",
-					coverImage: "",
-					maxAge: 20,
-					minAge: 10,
-					paymentNumber: 100,
-					price: 10,
-					productId: "1",
-					productName: "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
-					spellingClassNumber: 120
-				}]
-				// 	}
-				// })
+				this.$http['classes'].getCourseList(campus.campusId).then(res => {
+					if (res.code == 200) {
+						this.isShow = true
+						this.data = [
+							...res.data,
+							{
+								"campusId": "",
+								"coverImage": "",
+								"maxAge": 0,
+								"minAge": 0,
+								"paymentNumber": 0,
+								"price": 0,
+								"productId": "",
+								"productName": "篮球启蒙篮球启蒙篮球启蒙篮球启蒙",
+								"spellingClassNumber": 0
+							}
+						]
+					}
+				})
 
 			},
 			/**
@@ -141,7 +144,6 @@
 			 */
 			getData() {
 				const self = this
-
 				this.$http['map'].getCampus().then(res => {
 					if (res.code == 200) {
 						let data = []
@@ -149,8 +151,8 @@
 							data.push({
 								...item,
 								id: index,
-								latitude: 24.485193 + (index * 0.0001) || item.lat,
-								longitude: 118.179483 + (index * 0.0001) || item.lng,
+								latitude: item.lat,
+								longitude: item.lng,
 								title: item.campusName,
 								joinCluster: true,
 								customCallout: {
@@ -222,6 +224,7 @@
 		0% {
 			opacity: 0;
 		}
+
 		100% {
 			opacity: 1;
 		}

@@ -3,16 +3,16 @@
 
 		<view class="mine-head">
 			<view class="mine-head-flex">
-				<image class="mine-head-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
+				<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
 				<view>
 					<view>
-						<text class="mine-head-name">Do.Ting.le</text>
+						<text class="mine-head-name">{{userInfo.name}}</text>
 						<text class="mine-head-role" v-if="isTeach==2">家长</text>
 						<text class="mine-head-role mine-head-role2" v-if="isTeach==1">教练</text>
 					</view>
 					<view class="mine-head-balance">
 						<image class="mine-head-balance-img" src="/static/mine/balance.png" mode="aspectFit"></image>
-						<text>账户余额：￥2890.00</text>
+						<text>账户余额：￥{{userInfo.remainingSum}}</text>
 					</view>
 				</view>
 			</view>
@@ -105,6 +105,7 @@
 		data() {
 			return {
 				isGetData: false, // 数据加载
+				userInfo:{}
 			}
 		},
 		computed: {
@@ -126,6 +127,12 @@
 			// 模拟请求数据
 			getData() {
 				console.log('获取我的数据');
+				this.$http['mine'].getUserInfo().then(res=>{
+					console.log(res);
+					if(res.code==200){
+						this.userInfo = res.data
+					}
+				})
 			},
 		}
 	}
@@ -157,6 +164,7 @@
 				margin-right: 28rpx;
 				width: 90rpx;
 				height: 90rpx;
+				border-radius: 50%;
 			}
 
 			&-name {

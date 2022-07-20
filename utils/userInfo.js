@@ -1,3 +1,4 @@
+import CONFIG from "../config/config";
 class UserInfo {
 	constructor() {}
 	/**
@@ -14,6 +15,15 @@ class UserInfo {
 				console.error(err);
 			}
 		});
+	}
+	/**
+	 * @description 设置缓存
+	 * @param {*} key 缓存名称
+	 * @param {*} val 缓存值
+	 * @memberof Util
+	 */
+	setCache(key, val) {
+		uni.setStorageSync(CONFIG.CACHE_PREFIX + key, val);
 	}
 	/**
 	 * 重新登录

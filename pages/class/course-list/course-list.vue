@@ -2,34 +2,34 @@
 	<view class="course">
 		<view class="course-head-address" @click="$utils.router.navTo($page.Search)">
 			<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-			<text> 福田区</text>
+			<text> {{campus.campusName}}</text>
 			<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
 		</view>
 		<y-list ref="yList" :scrollClass="'scroll-class2'" :setData="search">
 			<template slot-scope="{data}">
 				<view class="course-list-item" v-for="item in data" :key="item"  @click="$utils.router.navTo($page.CourseDetail)">
-					<image class="course-list-item-img" src="/static/notData.png" mode="aspectFit"></image>
-					<view class="course-list-item-surplus">
+					<image class="course-list-item-img" :src="item.coverImage||'/static/notData.png'" mode="aspectFit"></image>
+				<!-- 	<view class="course-list-item-surplus">
 						<text>剩余</text>
 						<text class="color fz32">10</text>
 						<text>件</text>
-					</view>
+					</view> -->
 					<view class="">
-						<view class="course-list-item-title">篮球启蒙课A</view>
+						<view class="course-list-item-title">{{item.productName}}</view>
 						<view>
 							<text class="color">
 								<text class="fz24">￥</text>
-								<text class="fz32">50.0</text>
+								<text class="fz32">{{item.price}}</text>
 							</text>
 							<text class="fz24">/节</text>
-							<text class="course-list-item-payment">245人付款</text>
+							<text class="course-list-item-payment">{{item.paymentNumber}}人付款</text>
 						</view>
 						<view class="course-list-item-info">
 							<view class="course-list-item-apply">
-								4-5岁适用
+								{{item.minAge}}-{{item.maxAge}}岁适用
 							</view>
 							<view class="course-list-item-pin">
-								100+拼班
+								{{item.spellingClassNumber}}拼班
 							</view>
 						</view>
 					</view>
@@ -40,20 +40,44 @@
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
 			return {
 			}
 		},
 		mounted() {
-			this.$refs.yList.init()
+			this.getInit()
 		},
 		methods: {
+			getInit(){
+				this.$refs.yList.init()
+			},
 			search() {
+				const self = this
 				return new Promise(async (resolve, reject) => {
+					// 获取课程
+					let res = await self.$http['classes'].getCourseList({
+						campusId: self.campus.campusId
+					})
 					let data = []
-					for (let i = 0; i < 100; i++) {
-						data.push({})
+					if (res.code == 200) {
+						data = [
+							{
+								"campusId": "",
+								"coverImage": "",
+								"maxAge": 0,
+								"minAge": 0,
+								"paymentNumber": 0,
+								"price": 0,
+								"productId": "",
+								"productName": "篮球启蒙篮球启蒙篮球启蒙篮球启蒙",
+								"spellingClassNumber": 0
+							}
+						]
+						data = res.data
+					
 					}
 					resolve({
 						data,

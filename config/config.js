@@ -2,12 +2,13 @@ module.exports = {
 	DEFAULT_SYSTEM_TITLE: `极光体培`, // 系统默认的标题，如果到时候改从后端获取配置，会覆盖掉这个参数
 	CACHE_PREFIX: "DONGAO_", //本地缓存前缀
 	DOC_URL: 'http://172.20.1.25:8202/polar', // 接口文档地址
-	// BASE_URL_DEV: 'http://172.20.1.25:8202/polar', //本地dev环境接口
-	BASE_URL_DEV: 'http://172.20.14.94:8080/polar', //成霖本地接口
+	BASE_URL_DEV: 'http://172.20.1.25:8202/polar', //本地dev环境接口
+	// BASE_URL_DEV: 'http://172.20.14.94:8081/polar', //成霖本地接口
+	// BASE_URL_DEV: 'http://172.20.13.171:8081/polar', //金杰本地接口
 	BASE_URL: 'http://172.20.1.25:8202/polar', //测试环境接口 部署生产体验版接口
 	IMAGE_URL:'https://sport-exam.oss-cn-hangzhou.aliyuncs.com/', //测试&开发环境
 	// IMAGE_URL:'https://sport-exam.oss-cn-hangzhou.aliyuncs.com/', //生产环境
-	IS_VERIFICATION:false, //是否打开token校验 联调的时候需要
+	IS_VERIFICATION:true, //是否打开token校验 联调的时候需要
 	ROUTER_LIST: {
 		Login:'/pages/login/login', // 登录
 		Home:'/pages/tab-bar/home/home',// 首页

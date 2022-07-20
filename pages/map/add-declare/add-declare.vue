@@ -2,14 +2,14 @@
 	<view class="add-declare">
 		<view class="add-declare-content">
 			<uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData" labelWidth="100">
-				<uni-forms-item label="社区名称" required name="name">
-					<uni-easyinput maxlength="50" v-model="customFormData.name" placeholder="请输入社区名称" />
+				<uni-forms-item label="社区名称" required name="campusName">
+					<uni-easyinput maxlength="50" v-model="customFormData.campusName" placeholder="请输入社区名称" />
 				</uni-forms-item>
 				<uni-forms-item label="社区物业" required name="property">
-					<uni-easyinput  maxlength="200" v-model="customFormData.property" placeholder="请输入社区物业" />
+					<uni-easyinput type="textarea" maxlength="200" v-model="customFormData.property" placeholder="请输入社区物业" />
 				</uni-forms-item>
-				<uni-forms-item label="社区场地" required name="field">
-					<uni-easyinput maxlength="500" v-model="customFormData.field" placeholder="请输入社区场地" />
+				<uni-forms-item label="社区场地" required name="campusSpace">
+					<uni-easyinput type="textarea" maxlength="500" v-model="customFormData.campusSpace" placeholder="请输入社区场地" />
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -31,13 +31,13 @@
 			return {
 				// 自定义表单数据
 				customFormData: {
-					name: '',
+					campusName: '',
 					property: '',
-					field: ''
+					campusSpace: ''
 				},
 				// 自定义表单校验规则
 				customRules: {
-					name: {
+					campusName: {
 						rules: [{
 							required: true,
 							errorMessage: '请输入社区名称'
@@ -49,7 +49,7 @@
 							errorMessage: '请输入社区物业'
 						}]
 					},
-					field: {
+					campusSpace: {
 						rules: [{
 							required: true,
 							errorMessage: '请输入社区场地'
@@ -65,10 +65,13 @@
 		},
 		methods: {
 			submit(ref) {
+				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
-					uni.showToast({
-						title: `校验通过`
+					this.$http['map'].setCampusApply(this.customFormData).then(res=>{
+						if(res.code==200){
+							self.$utils.router.redTo(this.$page.Declare)
+						}
 					})
 				}).catch(err => {
 					console.log('err', err);
@@ -100,6 +103,7 @@
 		&-footer {
 			position: fixed;
 			bottom: 0;
+			z-index: 99;
 			width: 750rpx;
 			padding: 32rpx 30rpx;
 			box-sizing: border-box;
@@ -122,10 +126,12 @@
 		}
 	}
 	/deep/.uni-forms-item{
+		padding-top: 22rpx;
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		height: 106rpx;
+		align-items: flex-start;
+		box-sizing: border-box;
+		min-height: 106rpx;
 		margin-bottom: 0;
 		border-bottom: 2rpx solid #F3F3F5;
 	}
@@ -133,11 +139,15 @@
 		border: none;
 	}
 	/deep/.uni-easyinput__content-input{
-		text-align: right;
+		// text-align: right;
 	}
 	/deep/.uni-forms-item__error{
 		top: 70%;
 		left: unset;
 		right: 0;
+	}
+	/deep/.uni-easyinput__content-textarea{
+		margin: 20rpx 0;
+		// text-align: right;
 	}
 </style>

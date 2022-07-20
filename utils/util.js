@@ -9,6 +9,7 @@ import CONFIG from "../config/config";
  */
 class Util {
 	constructor() {}
+	defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
 	/**
 	 * @description 设置缓存
 	 * @param {*} key 缓存名称
