@@ -3,38 +3,15 @@
 
 		<y-list ref="yList" :setData="search">
 			<template slot-scope="{data}">
-				<!-- 教师端 -->
-				<view class="home-title" v-if="isTeach==1">
-					<view class="home-title-item">
-						<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
-						<text>热门活动</text>
-					</view>
-					<view class="class-title">
-						<view class="class-title-item">
-							<text>待开课: </text>
-							<text class="color pl12">0</text>
-						</view>
-						<view class="">
-							<text>进行中: </text>
-							<text class="color pl12">1</text>
-						</view>
-					</view>
-				</view>
-				<!-- 教师端 end-->
 				<view v-for="(item,index) in data" :key="index">
 					<class-item :data="item"></class-item>
 				</view>
 			</template>
 		</y-list>
-		<page-tabpars></page-tabpars>
 	</view>
 </template>
 
 <script>
-	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
 	import ClassItem from './class-item.vue'
 	import mixin from '@/mixin.js'
 	export default {
@@ -46,18 +23,9 @@
 			return {}
 		},
 		computed: {
-			...mapGetters(['active']),
 		},
 		onShow() {
-			this.getMounted()
-			const active = 'class'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
-			uni.setNavigationBarTitle({
-				title: '班级'
-			})
-			this.getTeach()
+			this.$refs.yList.init()
 		},
 		created() {
 			
@@ -65,8 +33,6 @@
 		mounted() {
 		},
 		methods: {
-			getMounted(){this.$refs.yList.init()},
-			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			search(val) {
 				const self = this
@@ -78,7 +44,6 @@
 						let data = []
 						if (res.code == 200) {
 							data = res.data || []
-							data = data.filter(item=>item.classStatus==0 || item.classStatus==1)
 						}
 						resolve({
 							data,

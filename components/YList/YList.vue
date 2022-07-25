@@ -31,7 +31,12 @@
 			},
 			scrollClass: {
 				default: 'scroll-class'
-			}
+			},
+			params: {
+				default: ()=>{
+					return {}
+				}
+			},
 		},
 		data() {
 			return {
@@ -94,7 +99,8 @@
 				return new Promise(async (resolve, reject) => {
 					this.isMore = false
 					const formData = {
-						...this.queryParams
+						...this.queryParams,
+						...this.params
 					}
 					const res = await this.setData(formData)
 					console.log('数据', res);

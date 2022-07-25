@@ -47,6 +47,14 @@
 			async nextToHome(data) {
 				// this.$utils.util.setCache("Authorization", data.accessToken)
 				this.SET_STORAGE({str:'Authorization',data:data.accessToken})
+				console.log('登录TOKEN:');
+				console.log('Bearer ' + data.accessToken);
+				uni.setClipboardData({
+					data: 'Bearer ' + data.accessToken,
+					success: function() {
+					},
+					
+				});
 				this.SET_STORAGE({str:'userInfo',data})
 				// console.log('1是2否教练', isTeach);
 				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)

@@ -4,10 +4,10 @@
 			<template slot-scope="{data}">
 				<view class="flex-bc coach-content" v-for="(item,index) in data" :key="index">
 					<view class="">
-						<view class="">申请时间：2022-06-10 17:2</view>
-						<view class="pt16">申请校区：中环校区</view>
+						<view class="">申请时间：{{item.time}}</view>
+						<view class="pt16">申请校区：{{item.campusName}}</view>
 					</view>
-					<view class="coach-status">待审核</view>
+					<!-- <view class="coach-status">待审核</view> -->
 				</view>
 			</template>
 		</y-list>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],
@@ -30,7 +31,7 @@
 		created() {
 
 		},
-		mounted() {
+		onShow() {
 			this.$refs.yList.init()
 		},
 		methods: {
@@ -39,10 +40,16 @@
 			},
 			// 模拟请求数据
 			search() {
+				const self = this
 				return new Promise(async (resolve, reject) => {
 					let data = []
-					for (let i = 0; i < 3; i++) {
-						data.push({})
+					const res = await self.$http['mine'].getCoach()
+					if(res.code==200){
+						data = res.data
+						data.forEach(item=>{
+							item.time = self.$utils.dateTime.getLocalTime(item.applyTime,'yyyy-MM-dd hh:mm:ss')
+							item.campusName= item.campusNames.join(',')
+						})
 					}
 					resolve({
 						data,

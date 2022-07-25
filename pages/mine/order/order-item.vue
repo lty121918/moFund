@@ -1,20 +1,20 @@
 <template>
 	<view class="class-content">
 		<view class="class-content-top">
-			<text class="fwb">订单编号：SF202206270001</text>
+			<text class="fwb">订单编号：{{item.orderNo}}</text>
 			<text class="color fw4">消费订单</text>
 		</view>
-		<image class="class-content-eval"  @click="handleChange" v-if="true" src="/static/mine/evaluate.png" mode="aspectFit"></image>
-		<view class="class-content-bottom" v-if="true">
+		<image class="class-content-eval"  @click="handleChange" v-if="item.type=='consume'" src="/static/mine/evaluate.png" mode="aspectFit"></image>
+		<view class="class-content-bottom" v-if="item.type=='consume'">
 			<view class="class-content-left">
-				<image class="class-content-img" src="/static/notData.png" mode="aspectFit"></image>
+				<image class="class-content-img" :src="item.coverImage" mode="aspectFit"></image>
 			</view>
 			<view class="">
-				<view class="class-content-cycle mt0">下单时间：2022-06-27 18:47:29</view>
-				<view class="class-content-cycle">订单课程：篮球启蒙A</view>
-				<view class="class-content-cycle">订单班级：启蒙A班</view>
-				<view class="class-content-cycle">订单学员：张真真</view>
-				<view class="class-content-cycle">订单金额：￥50.00</view>
+				<view class="class-content-cycle mt0">下单时间：{{item.operateTime}}</view>
+				<view class="class-content-cycle">订单课程：{{item.courseName}}</view>
+				<view class="class-content-cycle">订单班级：{{item.className}}</view>
+				<view class="class-content-cycle">订单学员：{{item.studentName}}</view>
+				<view class="class-content-cycle">订单金额：￥{{item.orderAmount}}</view>
 			</view>
 		</view>
 		<view class="class-content-bottom" v-else>
@@ -22,8 +22,8 @@
 				<image class="class-content-img2" src="/static/mine/recharge.png" mode="aspectFit"></image>
 			</view>
 			<view class="">
-				<view class="class-content-cycle mt0">下单时间：2022-06-27 18:47:29</view>
-				<view class="class-content-cycle">订单金额：￥50.00</view>
+				<view class="class-content-cycle mt0">下单时间：{{item.operateTime}}</view>
+				<view class="class-content-cycle">订单金额：￥{{item.orderAmount}}</view>
 			</view>
 		</view>
 	</view>
@@ -31,6 +31,13 @@
 
 <script>
 	export default {
+		props:{
+			item:{
+				default:()=>{
+					return {}
+				}
+			}
+		},
 		methods: {
 			handleChange() {
 				console.log('111111111111');

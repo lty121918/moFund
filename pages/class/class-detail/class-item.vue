@@ -50,6 +50,11 @@
 		props:{
 			isTeach:{
 				default: 1
+			},
+			data:{
+				default:()=>{
+					return {}
+				}
 			}
 		}
 	}

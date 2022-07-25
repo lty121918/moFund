@@ -4,21 +4,22 @@
 			<image class="course-title-img" src="/static/default.png"></image>
 			<view class="course-title-content">
 				<view>
-					<view class="fz36 fwb">篮球启蒙课A</view>
+					<view class="fz36 fwb">{{productInfo.productName}}A</view>
 					<view class="pt16">
 						<text class="color fz24">￥</text>
-						<text class="color fz32">50.0</text>
+						<text class="color fz32">{{productInfo.price}}</text>
 						<text class="fz24">起/节/人</text>
 					</view>
 				</view>
 				<view class="course-title-content-right">
-					<view class="text-c course-title-content-r2">
+					<!-- <view class="text-c course-title-content-r2">
 						<view class="color fz28">10</view>
 						<view class="color999 fz24">课时</view>
-					</view>
+					</view> -->
 					<view class="text-c course-title-content-r2">
+						<view class="color999 fz24">最多</view>
 						<view class="color fz28">8</view>
-						<view class="color999 fz24">人数</view>
+						<view class="color999 fz24">人</view>
 
 					</view>
 				</view>
@@ -26,34 +27,34 @@
 		</view>
 		<!-- 推荐拼班 -->
 		<view class="course-nearby">
-			<view class="course-head-address" @click="$utils.router.navTo($page.Search)">
+			<view class="course-head-address" @click="$utils.router.navTo($page.Search,{type:'no'})">
 				<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-				<text> 福田区</text>
+				<text> {{campusOther.campusName}}</text>
 				<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
 			</view>
-			<view class="course-nearby-content" v-for="item in 3" :key="item">
-				<image class="course-nearby-content-img" src="/static/notData.png" mode="aspectFit"></image>
+			<view class="course-nearby-content" v-for="item in productSpellClassList" :key="item">
+				<image class="course-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
 				<view>
 					<view class="course-nearby-content-center">
-						<text class="course-nearby-content-num">4人班</text>
-						<text>Do.Ting.le</text>
+						<text class="course-nearby-content-num">{{item.maxNum}}人班</text>
+						<text>{{item.nickName}}</text>
 					</view>
 					<!-- 上课周期 -->
 					<view class="course-nearby-content-cycle">
 						<image class="course-nearby-content-cycle-img" src="/static/class/cycle.png" mode="widthFix">
 						</image>
-						<text>6月28日 ~ 7月7日</text>
+						<text>{{item.startDate}} ~ {{item.endDate}}</text>
 					</view>
 					<!-- 上课时段 -->
 					<view class="course-nearby-content-cycle">
 						<image class="course-nearby-content-cycle-img" src="/static/class/time.png" mode="widthFix">
 						</image>
-						<text>9:00~10:30</text>
+						<text>{{item.startTime}}~{{item.endTime }}</text>
 					</view>
 				</view>
-				<view v-if="item == 0">
+				<view v-if="item.unUseNum > 0">
 					<view class="course-nearby-content-button" @click="$utils.router.navTo($page.OrderInfo)">加入拼班</view>
-					<view class="course-nearby-content-success">差1人拼成</view>
+					<view class="course-nearby-content-success">差{{item.unUseNum}}人拼成</view>
 				</view>
 				<view v-else>
 					<view class="course-nearby-content-button bg-color2">已拼满</view>
@@ -71,36 +72,25 @@
 					:class="[active==2?'course-detail-tab-active':'']">用户评价</view>
 			</view>
 			<view class="course-detail-content" v-if="active==1">
-				<text>人数:小学生1-8人，大班1-6人，中班1-5人场地:家长提供可露天安全就好</text>
-				<view class="pt16 fwb">
-					教学内容
-				</view>
-				<text>
-					大班及以上的小朋友，不同水平可以混班家长需要在边上看护保证安全请家长给孩子购买意外险费用各自在平台支付
-					本活动为公益价，方便团长工作，大家按需要交费，个人请假不退费
-				</text>
-				<view class="pt16">
-					拍球教学
-				</view>
-				<text>单手大力原地拍球，连续性为目标双手大力原地拍球，连续性为目标双球交换过裆拍球</text>
+				<rich-text :nodes="productDetail"></rich-text>
 			</view>
 			<view class="" v-if="active==2">
-				<view class="course-detail-evaluate" v-for="item in 5" :key="item">
-					<image class="course-detail-evaluate-img" src="/static/mine/head-urlm.png" mode="scaleToFill">
+				<view class="course-detail-evaluate" v-for="item in productEvaluate" :key="item.id">
+					<image class="course-detail-evaluate-img" :src="item.avatar" mode="scaleToFill">
 					</image>
 					<view>
 						<view class="course-detail-evaluate-info">
 							<view class="course-detail-evaluate-info2">
-								<text class="color4 fz28">李晓明</text>
+								<text class="color4 fz28">{{item.nickname}}</text>
 								<view class="course-detail-evaluate-info3">
 									<image v-for="item in 5" :key="item" class="course-detail-evaluate-info-img"
 										src="/static/class/eva.png" mode="scaleToFill"></image>
 								</view>
 							</view>
-							<view class="fz24 color2">2022-06-12</view>
+							<view class="fz24 color2">{{item.evaluationTime}}</view>
 						</view>
 						<view class="course-detail-evaluate-text">
-							老师不错，挺负责的，孩子也喜欢老师不错，挺负责的，孩子也喜欢老师不错，挺负责的，孩子也喜欢
+							{{item.content}}
 						</view>
 					</view>
 				</view>
@@ -134,22 +124,80 @@
 		},
 		data() {
 			return {
-				active: 1
+				active: 1,
+				productId: '', // 商品id
+				productSpellClassList: [], // 正在拼班列表
+				productInfo: {}, //商品信息
+				productDetail: '', // 商品详情
+				productEvaluate: [], //商品评价
+				campusOther: {}
 			}
 		},
-		onLoad() {
-			uni.setNavigationBarTitle({
-				title: '修改标题'
+		watch: {
+			campusOther:{
+				handler(){
+					this.getCourseDetail()
+				}
+			}
+		},
+		onLoad(e) {
+			console.log('商品id', e.productId);
+			this.SET_STORAGE({
+				str: 'campus'
 			})
+			this.productId = e.productId
+			this.campusOther = this.campus
+
+
 		},
 		methods: {
+			async getCourseDetail() {
+				console.log('campusOther', this.campusOther);
+				const {
+					getCourseDetails,
+					getProductDetails,
+					getProductEvaluate
+				} = this.$http['classes']
+				const res = await getCourseDetails({
+					productId: this.productId,
+					campusId: this.campusOther.campusId
+				})
+				if (res.code == 200) {
+					uni.setNavigationBarTitle({
+						title: res.data.productName
+					})
+					this.productInfo = res.data
+					this.productSpellClassList = [...res.data.productSpellClassList]
+				}
+				const res2 = await getProductDetails({
+					productId: this.productId
+				})
+				if (res2.code == 200) {
+					this.productDetail = res2.data
+				}
+				const res3 = await getProductEvaluate({
+					productId: this.productId
+				})
+				if (res3.code == 200) {
+					res3.data = res3.data.filter(item=>item)
+					res3.data.forEach(item => {
+						item.avatar = this.$url + item.avatar
+					})
+					if (res3.data.length > 5) {
+						this.productEvaluate = res3.data.slice(0, 5)
+					} else {
+						this.productEvaluate = res3.data
+					}
+				}
+
+			},
 			check() {
 				this.$refs.popupDate.handleShow(true)
 			},
 			submit() {
-				this.$refs.popupPin.handleShow()
-				uni.showToast({
-					title: `校验通过`
+				this.$refs.popupPin.handleShow({
+					productId: this.productId,
+					campusId: this.campusOther.campusId
 				})
 			},
 			handleTab(val) {
@@ -192,15 +240,20 @@
 					display: flex;
 					justify-content: center;
 					align-items: center;
-					width: 222rpx;
-					height: 96rpx;
+					flex-shrink: 0;
+					// width:111rpx;
+					padding: 0 20rpx;
+					height: 48rpx;
 					background: rgba(236, 238, 245, 0.5);
 					border-radius: 14rpx;
 					text-align: center;
 				}
 
 				&-r2 {
-					width: 50%;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					// width: 50%;
 
 					&:first-child {
 						position: relative;

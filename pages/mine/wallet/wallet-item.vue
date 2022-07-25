@@ -1,18 +1,18 @@
 <template>
 	<view class="wallet-content">
 		<view class="wallet-content-top">
-			<text class="fwb">流水号：JG202206290002</text>
-			<text class="color fw4">收入</text>
-			<!-- <text class="color2 fw4">支出</text> -->
+			<text class="fwb">流水号：{{item.tradeNo}}</text>
+			<text class="color fw4" v-if="!income">收入</text>
+			<text class="color2 fw4" v-if="income">支出</text>
 		</view>
 		<view class="mt32 fz28" >
-			<view>变动时间：2022-06-29 20:12:58</view>
-			<view class="mt16">交易类型：用户提现</view>
-			<view class="mt16" v-if="true">订单编号：SF202206270001</view>
+			<view>变动时间：{{item.operateTime}}</view>
+			<view class="mt16">交易类型：{{tradeTypeData[item.tradeType]}}</view>
+			<view class="mt16">订单编号：{{item.orderNo}}</view>
 			<view class="fz24 wallet-content-price wallet-content-priceActive">
-				<text>+</text>
+				<text>{{item.income?'+':'-'}}</text>
 				<text>￥</text>
-				<text class="fz32 fwb">500</text>
+				<text class="fz32 fwb">{{item.amount}}</text>
 			</view>
 		</view>
 	</view>
@@ -20,10 +20,18 @@
 
 <script>
 	export default {
-		methods: {
-			handleChange() {
-				console.log('111111111111');
-				this.$emit('change')
+		props:{
+			item:{
+				default:()=>{
+					return {}
+				}
+			}
+		},
+		data(){
+			return {
+				tradeTypeData:{
+					1:'充值',2:'提现',3:'课款缴费',4:'团长分佣',5:'教练分佣'
+				}
 			}
 		}
 	}

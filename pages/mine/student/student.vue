@@ -3,23 +3,23 @@
 		<y-list ref="yList" :scrollClass="'student-scroll-class'" :setData="search">
 			<template slot-scope="{data}">
 				<view class="flex-start mr32 ml32 mt32">
-					<image class="student-head-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
+					<image class="student-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
 					<view>
 						<view>
-							<text class="student-head-name">Do.Ting.le</text>
+							<text class="student-head-name">{{userInfo.name}}</text>
 							<text class="student-head-role">家长</text>
 						</view>
-						<view class="fz28 colorw mt16">13687341234</view>
+						<view class="fz28 colorw mt16">{{userInfo.phone}}</view>
 					</view>
 				</view>
 				<view class="flex-bc student-content" v-for="(item,index) in data" :key="index">
 					<view class="">
 						<view class="flex-sc">
-							<text>姓名：张真真 - 5岁</text>
-							<image class="student-sex" src="/static/sex-m.png" mode="widthFix"></image>
+							<text>姓名：{{item.studentName}} - {{item.age}}岁</text>
+							<image class="student-sex" :src="item.gender==1?'/static/sex-m.png':'/static/sex-w.png'" mode="widthFix"></image>
 						</view>
-						<view class="pt16">证件号码：350522201704122</view>
-						<view class="pt16">出生日期：2017-04-12</view>
+						<view class="pt16">证件号码：{{item.idCard}}</view>
+						<view class="pt16">出生日期：{{item.birthday}}</view>
 					</view>
 					<view class="student-status" @click="handleDel(item)">
 						<image class="student-head-del" src="/static/del.png" mode="aspectFit"></image>
@@ -40,25 +40,30 @@
 	export default {
 		mixins: [mixin],
 		data() {
-			return {}
+			return {
+			}
 		},
 		computed: {},
-		created() {
-
-		},
-		mounted() {
-			this.$refs.yList.init()
+		onShow() {
+			this.$refs.yList.init()	
 		},
 		methods: {
 			submit() {
 				this.$utils.router.navTo(this.$page.AddStudent)
 			},
-			handleDel(){
+			handleDel(item){
+				const self =this 
 				this.$utils.model.showMsgModal({
 					content:'确认要删除该学员嘛？',
 					showCancel:true,
 					confirmCallback:()=>{
 						console.log('确认');
+						self.$http['mine'].delStudent(item.id).then(res=>{
+							console.log(res);
+							if(res.code==200){
+								self.$refs.yList.init()
+							}
+						})
 					},
 					cancelCallback:()=>{
 						console.log('取消');
@@ -67,11 +72,14 @@
 			},
 			// 模拟请求数据
 			search() {
+				const self = this
 				return new Promise(async (resolve, reject) => {
 					let data = []
-					for (let i = 0; i < 10; i++) {
-						data.push({})
+					const res =await self.$http['mine'].getStudent()
+					if(res.code==200){
+						data = res.data
 					}
+					
 					resolve({
 						data,
 						totalRows: 10
@@ -130,6 +138,7 @@
 				margin-right: 28rpx;
 				width: 90rpx;
 				height: 90rpx;
+				border-radius: 50%;
 			}
 
 			&-name {

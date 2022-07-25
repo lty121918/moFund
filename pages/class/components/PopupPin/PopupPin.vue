@@ -4,7 +4,7 @@
 			<view class="popup-content">
 				<!-- 当前商品信息 -->
 				<view class="popup-nearby-content popup-content2">
-					<image class="popup-nearby-content-img" src="/static/notData.png" mode="aspectFit"></image>
+					<image class="popup-nearby-content-img" :sssrc="data.coverImage" mode="aspectFit"></image>
 					<view>
 						<view class="">
 							<text class="color fz24">￥</text>
@@ -71,7 +71,8 @@
 	export default {
 		data() {
 			return {
-				isMaskClick: true
+				isMaskClick: true,
+				data: {}
 			}
 		},
 		methods: {
@@ -85,8 +86,14 @@
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow() {
+			handleShow(val) {
 				this.$refs.popup.open('bottom')
+				this.$http['classes'].getSpellClass(val).then(res => {
+					if (res.code == 200) {
+						res.data.coverImage = this.$url + res.data.coverImage
+						this.data = res.data
+					}
+				})
 			},
 
 		}

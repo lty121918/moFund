@@ -2,19 +2,19 @@
 	<view class="add-coach">
 		<view class="add-coach-content">
 			<uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData" labelWidth="100">
-				<uni-forms-item label="姓名" required name="name">
-					<uni-easyinput maxlength="20" v-model="customFormData.name" placeholder="请输入姓名" />
+				<uni-forms-item label="姓名" required name="applyName">
+					<uni-easyinput maxlength="20" v-model="customFormData.applyName" placeholder="请输入姓名" />
 				</uni-forms-item>
 				<uni-forms-item label="证件号码" required name="idCard">
 					<uni-easyinput maxlength="20" v-model="customFormData.idCard" placeholder="请输入证件号码" />
 				</uni-forms-item>
-				<uni-forms-item label="手机号码" required name="phone">
-					<uni-easyinput maxlength="11" v-model="customFormData.phone" type="number" placeholder="请输入手机号码" />
+				<uni-forms-item label="手机号码" required name="applyPhone">
+					<uni-easyinput maxlength="11" v-model="customFormData.applyPhone" type="number" placeholder="请输入手机号码" />
 				</uni-forms-item>
-				<uni-forms-item label="服务社区" required name="community">
-					<view class="">
-						<uni-easyinput disabled :styles="{disableColor:'#fff',color: '#333',borderColor: '#e5e5e5'}"
-							v-model="customFormData.community" placeholder="请选择服务社区" />
+				<uni-forms-item label="服务社区" required name="campus">
+					<view class="" @click="handleShow">
+						<uni-easyinput disabled type="textarea" :styles="{disableColor:'#fff',color: '#333',borderColor: '#e5e5e5'}"
+							v-model="customFormData.campus" placeholder="请选择服务社区" />
 					</view>
 				</uni-forms-item>
 			</uni-forms>
@@ -26,27 +26,30 @@
 				提 交
 			</view>
 		</view>
+		<PopupCampus ref="popupCampus" @confirm="handleChange"/>
 	</view>
 </template>
 
 <script>
 	import Validate from '@/utils/validate.js'
 	import mixin from '@/mixin.js'
+	import PopupCampus from '../components/PopupCampus/PopupCampus.vue'
 	const validates = new Validate()
 	export default {
 		mixins: [mixin],
+		components:{PopupCampus},
 		data() {
 			return {
 				// 自定义表单数据
 				customFormData: {
-					name: '',
+					applyName: '',
 					idCard: '',
-					phone: '',
-					community: ''
+					applyPhone: '',
+					campus: ''
 				},
 				// 自定义表单校验规则
 				customRules: {
-					name: {
+					applyName: {
 						rules: [{
 							required: true,
 							errorMessage: '请输入姓名'
@@ -69,7 +72,7 @@
 							},
 						]
 					},
-					phone: {
+					applyPhone: {
 						rules: [{
 								required: true,
 								errorMessage: '请输入手机号码'
@@ -86,7 +89,7 @@
 							},
 						]
 					},
-					community: {
+					campus: {
 						rules: [{
 							required: true,
 							errorMessage: '请选择服务社区'
@@ -101,12 +104,27 @@
 			this.$refs.customForm.setRules(this.customRules)
 		},
 		methods: {
+			handleShow(){
+				this.$refs.popupCampus.toggle(this.customFormData.campusId)
+			},
+			handleChange(val){
+				console.log(val);
+				this.customFormData.campus = (val.data).join(',')
+				this.customFormData.campusId = val.value
+			},
 			submit(ref) {
+				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
-					uni.showToast({
-						title: `校验通过`
+					self.$http['mine'].setCoach({
+						...self.customFormData,
+					}).then(res=>{
+						console.log(res);
+						if(res.code==200){
+							self.$utils.router.navBack()
+						}
 					})
+					
 				}).catch(err => {
 					console.log('err', err);
 				})
@@ -163,10 +181,12 @@
 	}
 
 	/deep/.uni-forms-item {
+		padding-top: 22rpx;
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		height: 106rpx;
+		align-items: flex-start;
+		box-sizing: border-box;
+		min-height: 106rpx;
 		margin-bottom: 0;
 		border-bottom: 2rpx solid #F3F3F5;
 	}
@@ -191,5 +211,9 @@
 		color: #666 !important;
 		/deep/.uni-easyinput__placeholder-class {
 		}
+	}
+	/deep/.uni-easyinput__content-textarea{
+		margin: 20rpx 0;
+		text-align: right;
 	}
 </style>

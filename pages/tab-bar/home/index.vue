@@ -10,8 +10,10 @@
 			<view class="home-head-swiper">
 				<swiper class="swiper" circular :indicator-dots="false" :autoplay="true" :interval="5000"
 					:duration="500">
-					<swiper-item v-for="item in banner" :key="item.id">
-						<image class="home-head-img" :src="url+item.imageUrl" mode="heightFix"></image>
+					<swiper-item v-for="item in banner" :key="item.id" @click="hanldeNext(item)">
+						<view class="home-head-view">
+							<image class="home-head-img" :src="url+item.imageUrl" mode="heightFix"></image>
+						</view>
 					</swiper-item>
 				</swiper>
 			</view>
@@ -30,8 +32,8 @@
 			</view>
 			<view class="home-activity-content">
 				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
-					@click="$utils.router.navTo($page.CourseDetail)">
-					<image class="home-activity-content-img" :src="item.coverImage||'/static/notData.png'" mode="aspectFit"></image>
+					@click="$utils.router.navTo($page.CourseDetail,item)">
+					<image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image>
 					<view class="home-activity-content-title t-over">{{item.productName}}</view>
 					<!-- <view class="home-activity-content-msg">&nbsp;</view> -->
 					<view class="home-activity-content-price">
@@ -115,7 +117,7 @@
 				this.getData()
 			},
 			...mapMutations(['SET_ACTIVE', 'SET_STORAGE']),
-			// 模拟请求数据
+			// 请求数据
 			async getData() {
 				this.SET_STORAGE({
 					str: 'campus'
@@ -166,18 +168,10 @@
 				if (res3.code == 200) {
 					const data = [
 						...res3.data,
-						{
-							"campusId": "",
-							"coverImage": "",
-							"maxAge": 0,
-							"minAge": 0,
-							"paymentNumber": 0,
-							"price": 0,
-							"productId": "",
-							"productName": "篮球启蒙篮球启蒙篮球启蒙篮球启蒙",
-							"spellingClassNumber": 0
-						}
 					]
+					data.forEach(item=>{
+						item.coverImage = this.$url+item.coverImage
+					})
 					if (data.length > 4) {
 						this.courseList = data.slice(0, 4)
 					} else {
@@ -190,37 +184,17 @@
 					campusId: this.campus.campusId
 				})
 				if (res4.code == 200) {
+					res4.data.forEach(item=>{
+						item.headUrl = this.$url+item.headUrl
+					})
 					this.spellClassList = [
-						...res4.data,
-						{
-							"campusId": "",
-							"classInfoId": "",
-							"headUrl": this.$utils.util.defaultAvatarUrl,
-							"nickName": "挖哈哈哈哈哈哈哈",
-							"organizationId": "",
-							"price": 0,
-							"productId": "",
-							"productName": "",
-							"productSellPriceRelId": "",
-							"spellType": "启蒙班",
-							"weChatUserList": [{
-								"age": "",
-								"avatar": this.$utils.util.defaultAvatarUrl,
-								"classInfoId": "",
-								"classStudentId": "",
-								"gender": "",
-								"studentId": "",
-								"studentName": "",
-								"wxUserId": ""
-							}],
-							"wxUserId": ""
-						}
+						...res4.data
 					]
 				}
-
-
-
 			},
+			hanldeNext(item){
+				this.$utils.router.other(item.linkUrl,item.appid)
+			}
 		}
 	}
 </script>
@@ -280,6 +254,9 @@
 				height: 376rpx;
 				background: #D8D8D8;
 				border-radius: 16rpx;
+			}
+			&-view{
+				text-align: center;
 			}
 
 			&-img {

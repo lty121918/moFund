@@ -30,7 +30,7 @@ const minxin = {
 		}
 	},
 	computed: {
-		...mapGetters(['campus','location','city']),
+		...mapGetters(['campus', 'location', 'city', 'userInfo']),
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
@@ -44,6 +44,9 @@ const minxin = {
 		})
 		this.SET_STORAGE({
 			str: 'city'
+		})
+		this.SET_STORAGE({
+			str: 'userInfo'
 		})
 		this.getTeach()
 	},
@@ -75,12 +78,16 @@ const minxin = {
 			}
 			this.SET_TEACH(this.isTeach)
 		},
-		setTeach() {
-			let isTeach = this.isTeach == 1 ? 2 : 1
-			this.isTeach = this.$utils.util.setCache('role', isTeach)
-			this.isTeach = isTeach
-			this.SET_TEACH(isTeach)
-			this.$utils.router.swtTo(this.$page.Home)
+		async setTeach() {
+			const res = await this.$http['mine'].roleSwitching()
+			if (res.code == 200) {
+				let isTeach = this.isTeach == 1 ? 2 : 1
+				this.isTeach = this.$utils.util.setCache('role', isTeach)
+				this.isTeach = isTeach
+				this.SET_TEACH(isTeach)
+				this.$utils.router.swtTo(this.$page.Home)
+			}
+
 		},
 		// 社区初始化
 		getInit() {
@@ -135,7 +142,9 @@ const minxin = {
 						console.log(e);
 						uni.getSetting({
 							success: res => {
-								if (typeof(res.authSetting['scope.userLocation']) != 'undefined' && !res.authSetting['scope.userLocation']) {
+								if (typeof(res.authSetting['scope.userLocation']) !=
+									'undefined' && !res.authSetting[
+										'scope.userLocation']) {
 									// 用户拒绝了授权
 									uni.showModal({
 										title: '提示',
@@ -145,7 +154,11 @@ const minxin = {
 												// 跳转设置页面
 												uni.openSetting({
 													success: res => {
-														if (res.authSetting['scope.userLocation']) {
+														if (res
+															.authSetting[
+																'scope.userLocation'
+															]
+														) {
 															// 授权成功，重新定位
 															uni.getLocation({
 																success: res => {}

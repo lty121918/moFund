@@ -27,11 +27,13 @@
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		name: "recharge",
 		data() {
 			return {
-				value: '11111111'
+				value: ''
 			};
 		},
 		methods: {
@@ -60,6 +62,7 @@
 				this.$refs.popup.open('bottom')
 			},
 			close() {
+				this.value = ''
 				this.$refs.popup.close('bottom')
 			},
 		},

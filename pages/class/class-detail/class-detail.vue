@@ -1,6 +1,6 @@
 <template>
 	<view class="class-detail">
-		<class-item :isTeach="isTeach"></class-item>
+		<class-item :data="data" :isTeach="isTeach"></class-item>
 		<view class="class-detail-user" v-if="!isAttendance">
 			<view class="home-title">
 				<view class="home-title-item">
@@ -10,14 +10,14 @@
 			</view>
 			<view class="class-detail-head">
 				<view class="class-detail-head-flex">
-					<image class="class-detail-head-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<text class="fwb fz32">Do.Ting.le</text>
+					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFit"></image>
+					<text class="fwb fz32">{{data.wxName}}</text>
 					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
 				</view>
-			<!-- 	<image v-if="isHead && isTeach==2" class="class-detail-head-share" src="/static/class/share.png"
+				<!-- 	<image v-if="isHead && isTeach==2" class="class-detail-head-share" src="/static/class/share.png"
 					mode="aspectFit">
 				</image> v-if="!isHead || isTeach==1"-->
-				<view class="class-detail-head-contact"  @click="handlePhone">
+				<view class="class-detail-head-contact" @click="handlePhone(data.phone)">
 					<image class="class-detail-head-liao" src="/static/class/liao.png" mode="aspectFit"></image>
 					<text>联系团长</text>
 				</view>
@@ -29,14 +29,15 @@
 				</view>
 			</view>
 			<view class="class-detail-stu">
-				<view class="class-detail-stu-flex fz28">
+				<view class="class-detail-stu-flex fz28" v-for="row in data.studentVOList" :key="row.id">
 
-					<image class="class-detail-stu-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<view class="fwb class-detail-stu-name">李晓明</view>
-					<view class="class-detail-stu-sex">男</view>
-					<view class="class-detail-stu-age">5岁</view>
-					<view class="class-detail-stu-tip">余额不足</view>
-					<image class="class-detail-stu-icon" @click="handleShow" src="/static/edit.png" mode="widthFix"></image>
+					<image class="class-detail-stu-img" :src="row.headUrl" mode="aspectFit"></image>
+					<view class="fwb class-detail-stu-name">{{row.studentName}}</view>
+					<view class="class-detail-stu-sex">{{row.gender}}</view>
+					<view class="class-detail-stu-age">{{row.age}}岁</view>
+					<view class="class-detail-stu-tip" v-if="isTeach==1">余额不足</view>
+					<image class="class-detail-stu-icon" @click="handleShow" src="/static/edit.png" mode="widthFix">
+					</image>
 				</view>
 			</view>
 		</view>
@@ -122,7 +123,7 @@
 		<popup-eval2 ref="popupEval2" />
 	</view>
 </template>
-<script> 
+<script>
 	import mixin from '@/mixin.js'
 	import ClassItem from './class-item.vue'
 	import Recharge from '@/components/Recharge/Recharge.vue'
@@ -142,31 +143,58 @@
 			return {
 				isHead: true, //是否 是团长进入该页面
 				isAttendance: false, //是否考勤
-
 				boxActive: [],
+				data:{}
 
 			}
 		},
-		onLoad() {
-			// wx.showShareMenu({
-			// 	withShareTicket: true,
-			// 	menus: ["shareAppMessage"]
+		async onLoad(e) {
+			// const res = await $http['classes'].getClassDetail({
+			// 	classId: e.classId
 			// })
+			// if (res.code == 200) {
+			this.data = {
+				"avatar": require('@/static/mine/head-url.png'),
+				"campusId": "",
+				"campusName": "校区",
+				"classId": "",
+				"className": "班级名称",
+				"classStatus": "",
+				"coachId": "",
+				"courseId": "",
+				"courseName": "",
+				"courseType": "",
+				"coverImage": "",
+				"endDate": "",
+				"endPeriod": "",
+				"price": "",
+				"scheduleDetailId": "",
+				"scheduleId": "",
+				"staffName": "",
+				"startDate": "",
+				"startPeriod": "",
+				"studentVOList": [{
+					"age": 0,
+					"birthday": "",
+					"contactName": "",
+					"contactPhone": "",
+					"gender": "男",
+					"headUrl": require('@/static/mine/head-url.png'),
+					"id": "",
+					"idCard": "",
+					"studentName": "李晓明"
+				}],
+				"typeName": "",
+				"weekCode": [],
+				"wxName": "Do.Ting.le"
+			}
+			// }
 		},
-		// 分享给朋友
-		// onShareAppMessage(res) {
-		// 	if (res.from === 'button') { // 来自页面内分享按钮
-		// 		console.log(res.target)
-		// 	}
-		// 	return {
-		// 		title: 1
-		// 	}
-		// },
 		methods: {
 			// 联系团长
-			handlePhone() {
+			handlePhone(val) {
 				wx.makePhoneCall({
-					phoneNumber: '15260041580' //仅为示例，并非真实的电话号码
+					phoneNumber: val //仅为示例，并非真实的电话号码
 				})
 			},
 			/**
@@ -174,14 +202,14 @@
 			 * @param {Object} item
 			 */
 			handleShow(item) {
-				if(this.isTeach==1){
+				if (this.isTeach == 1) {
 					// 教练评价
 					this.$refs.popupEval.handleShow(item)
 				} else {
 					// 家长查看评价
 					this.$refs.popupEval2.handleShow(item)
 				}
-				
+
 			},
 			handleRecharge() {
 				this.$refs.recharge.handleShow()
@@ -220,7 +248,7 @@
 				}
 				console.log(this.boxActive);
 			},
-			
+
 		}
 	}
 </script>

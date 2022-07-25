@@ -3,16 +3,16 @@
 		<view class="add-student-content">
 			<uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData" labelWidth="100">
 				<uni-forms-item label="姓名" required name="name">
-					<uni-easyinput maxlength="20" v-model="customFormData.name" placeholder="请输入姓名" />
+					<uni-easyinput maxlength="20" v-model="customFormData.studentName" placeholder="请输入姓名" />
 				</uni-forms-item>
-				<uni-forms-item label="性别" required name="sex">
+				<uni-forms-item label="性别" required name="gender">
 					<view @click="handleShow">
 						<uni-easyinput disabled :styles="{disableColor:'#fff',color: '#333',borderColor: '#e5e5e5'}"
-							v-model="customFormData.sex" placeholder="请选择性别" />
+							v-model="customFormData.gender" placeholder="请选择性别" />
 					</view>
 				</uni-forms-item>
-				<uni-forms-item label="证件号码" required name="IdCard">
-					<uni-easyinput maxlength="20" v-model="customFormData.IdCard" placeholder="请输入证件号码" />
+				<uni-forms-item label="证件号码" required name="idCard">
+					<uni-easyinput maxlength="20" v-model="customFormData.idCard" placeholder="请输入证件号码" />
 				</uni-forms-item>
 				<uni-forms-item label="出生日期" required name="birthday">
 					<uni-datetime-picker :border="false" type="date" :value="customFormData.birthday" :end="endTime"
@@ -46,9 +46,9 @@
 				endTime: '',
 				// 自定义表单数据
 				customFormData: {
-					name: '',
-					sex: '',
-					IdCard: '',
+					studentName: '',
+					gender: '',
+					idCard: '',
 					birthday: ''
 				},
 				range: [{
@@ -62,19 +62,19 @@
 				],
 				// 自定义表单校验规则
 				customRules: {
-					name: {
+					studentName: {
 						rules: [{
 							required: true,
 							errorMessage: '请输入姓名'
 						}]
 					},
-					sex: {
+					gender: {
 						rules: [{
 							required: true,
 							errorMessage: '请选择性别'
 						}]
 					},
-					IdCard: {
+					idCard: {
 						rules: [{
 								required: true,
 								errorMessage: '请输入证件号码'
@@ -116,14 +116,22 @@
 			},
 			getSex(e) {
 				console.log(e);
-				this.customFormData.sex = e
+				this.customFormData.gender = e
 			},
 			submit(ref) {
+				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
-					uni.showToast({
-						title: `校验通过`
+					self.$http['mine'].setStudent({
+						...self.customFormData,
+						gender:self.customFormData.gender =='男'?'1':'2'
+					}).then(res=>{
+						console.log(res);
+						if(res.code==200){
+							self.$utils.router.navBack()
+						}
 					})
+					
 				}).catch(err => {
 					console.log('err', err);
 				})

@@ -26,11 +26,11 @@ const APIS_LIST = {
   "_course": '/course', // 课程下拉
   "_course_by_campusId": '/course-by-campusId', // 校区课程下拉
   "_error": '/error', // errorHtml
+  "_location": '/location', // 获取省市区
   "_operation_banner_add": '/operation/banner/add', // 添加轮播图
   "_operation_banner_del": '/operation/banner/del', // 删除轮播图
   "_operation_banner_page": '/operation/banner/page', // 查询轮播图列表
   "_operation_banner_upd": '/operation/banner/upd', // 修改轮播图
-  "_operation_location_location": '/operation/location/location', // 获取省市区
   "_operation_pay_payNotify": '/operation/pay/payNotify', // 支付回调接口
   "_operation_sys_dict_add": '/operation/sys-dict/add', // 添加字典信息
   "_operation_sys_dict_delete": '/operation/sys-dict/delete', // 删除字典信息
@@ -39,8 +39,8 @@ const APIS_LIST = {
   "_operation_sys_dict_update": '/operation/sys-dict/update', // 修改字典信息
   "_organization_campus": '/organization-campus', // 运营团队-校区联动下拉
   "_organization_student_list": '/organization/student/list', // 当前登录用户学生集合
+  "_organization_student_remove": '/organization/student/remove', // 删除学生
   "_organization_student_save": '/organization/student/save', // 保存学生
-  "_organization_student_test": '/organization/student/test', // 测试测试
   "_organization_wx_product_get_course": '/organization/wx-product/get-course', // 查询课程
   "_organization_wx_product_get_details": '/organization/wx-product/get-details', // 课程详情
   "_organization_wx_product_get_evaluate": '/organization/wx-product/get-evaluate', // 商品评价
@@ -64,7 +64,7 @@ const APIS_LIST = {
   "_wx_user_index_banner": '/wx/user/index/banner', // 小程序端首页获取轮播图
   "_wx_user_index_campus_search_list": '/wx/user/index/campus-search-list', // 校区搜索列表
   "_wx_user_index_course_details": '/wx/user/index/course-details', // 商品详情
-  "_wx_user_index_disband_class": '/wx/user/index/disband-class', // 解散拼班
+  "_wx_user_index_disband_class": '/wx/user/index/disband-class', // 解散拼班(团长)
   "_wx_user_index_initiate_spell_class": '/wx/user/index/initiate-spell-class', // 发起拼班
   "_wx_user_index_mine_spell_class": '/wx/user/index/mine-spell-class', // 我的拼班
   "_wx_user_index_my_spell_class_list": '/wx/user/index/my-spell-class-list', // 我要拼班
@@ -73,6 +73,7 @@ const APIS_LIST = {
   "_wx_user_index_remove_class_student": '/wx/user/index/remove-class-student', // 移出学员(退出拼班)
   "_wx_user_map_area_campus_list": '/wx/user/map/area-campus-list', // 根据区域code查找校区位置和数量
   "_wx_user_map_campus_list": '/wx/user/map/campus-list', // 校区列表
+  "_wx_user_purse_cash_out": '/wx/user/purse/cash-out', // 充值发起
   "_wx_user_purse_query_pay_status": '/wx/user/purse/query-pay-status', // 支付结果查询
   "_wx_user_purse_recharge": '/wx/user/purse/recharge', // 充值发起
   "_wx_user_purse_trade_list": '/wx/user/purse/trade-list', // 财务流水

@@ -6,7 +6,7 @@ module.exports = {
 	// BASE_URL_DEV: 'http://172.20.14.94:8081/polar', //成霖本地接口
 	// BASE_URL_DEV: 'http://172.20.13.171:8081/polar', //金杰本地接口
 	BASE_URL: 'http://172.20.1.25:8202/polar', //测试环境接口 部署生产体验版接口
-	IMAGE_URL:'https://sport-exam.oss-cn-hangzhou.aliyuncs.com/', //测试&开发环境
+	IMAGE_URL:'https://polar-light-dev.oss-cn-hangzhou.aliyuncs.com/', //测试&开发环境
 	// IMAGE_URL:'https://sport-exam.oss-cn-hangzhou.aliyuncs.com/', //生产环境
 	IS_VERIFICATION:true, //是否打开token校验 联调的时候需要
 	ROUTER_LIST: {
@@ -31,6 +31,7 @@ module.exports = {
 		Search:'/pages/map/search/search' ,//搜索校区
 		PieceList:'/pages/class/piece-list/piece-list',//社区拼班
 		OrderInfo:'/pages/class/order-info/order-info' ,//当前拼单or加入拼单
+		MyClass:'/pages/class/my-class/my-class' //我的拼班
 		
 	}
 }

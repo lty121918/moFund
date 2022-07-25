@@ -46,7 +46,7 @@ class DateTime {
 		if (date == undefined || date == '') {
 			date = new Date()
 		} else {
-			if ((date + '').indexOf('-') > -1) {
+			if ((date + '').indexOf('-') > -1 && (date + '').indexOf('T')== -1) {
 				date = new Date(date.replace(/-/g, '/'))
 			} else {
 				date = new Date(date)

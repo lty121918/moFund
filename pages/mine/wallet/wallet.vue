@@ -4,13 +4,13 @@
 			<view class="wallet-mony-text">余额</view>
 			<view class="mt28">
 				<text class="fz44">￥</text>
-				<text class="fz76 fwb">1235.00</text>
+				<text class="fz76 fwb">{{userInfo.remainingSum}}</text>
 			</view>
 			<view class="mt28 flex-cc" v-if="isTeach==2">
 				<view class="wallet-mony-button" @click="handleWithdrawal">
 					提现
 				</view>
-				<view  class="wallet-mony-button wallet-mony-button2 ml32" @click="handleRecharge">
+				<view class="wallet-mony-button wallet-mony-button2 ml32" @click="handleRecharge">
 					充值
 				</view>
 			</view>
@@ -29,10 +29,10 @@
 				<view class="wallet-tab-item" @click="handleTab(3)" :class="[active==3?'wallet-tab-active':'']">收入
 				</view>
 			</view>
-			<y-list ref="yList" scrollClass="wallet-scroll" :setData="search">
+			<y-list ref="yList" scrollClass="wallet-scroll" :setData="search" :params="{active}">
 				<template slot-scope="{data}">
 					<view v-for="(item,index) in data" :key="index">
-						<wallet-item @change="handleShow"></wallet-item>
+						<wallet-item :item="item" @change="handleShow"></wallet-item>
 					</view>
 				</template>
 			</y-list>
@@ -56,7 +56,7 @@
 		},
 		data() {
 			return {
-				active: 1,
+				active: 1, //  1 2 3
 				isTeach: false
 			}
 		},
@@ -66,10 +66,25 @@
 		},
 		mounted() {
 			this.$refs.yList.init()
+			this.getData()
+			
 		},
 		methods: {
+			getData() {
+				console.log('获取我的数据');
+				this.$http['mine'].getUserInfo().then(res=>{
+					console.log(res);
+					if(res.code==200){
+						const result= Object.assign(this.userInfo,res.data)
+						this.SET_STORAGE({str:'userInfo',data:result})
+					}
+				})
+			},
 			handleTab(val) {
 				this.active = val
+				setTimeout(()=>{
+					this.$refs.yList.init()
+				},300)
 			},
 			handleRecharge() {
 				this.$refs.recharge.handleShow()
@@ -78,11 +93,21 @@
 				this.$refs.withdrawal.handleShow()
 			},
 			// 模拟请求数据
-			search() {
+			search(val) {
+				const self = this
 				return new Promise(async (resolve, reject) => {
 					let data = []
-					for (let i = 0; i < 100; i++) {
-						data.push({})
+					let income = ''
+					if (val.active == 2) {
+						income = false
+					} else if (val.active == 3) {
+						income = true
+					}
+					const res = await self.$http['mine'].getTrade({
+						income
+					})
+					if(res.code==200){
+						data = res.data
 					}
 					resolve({
 						data,

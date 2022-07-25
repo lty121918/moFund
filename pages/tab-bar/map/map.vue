@@ -27,7 +27,7 @@
 
 						<cover-view class="course">
 							<cover-view class="course-list-item" v-for="item in data" :key="item"
-								@click="$utils.router.navTo($page.CourseDetail)">
+								@click="$utils.router.navTo($page.CourseDetail,item)">
 								<cover-image class="course-list-item-img" :src="item.coverImage|| '/static/notData.png'"
 									mode="aspectFit">
 								</cover-image>
@@ -117,23 +117,18 @@
 			markertap(e) {
 				console.log(e.detail);
 				const campus = this.markers.find(item => item.id == e.detail.markerId)
+				console.log(campus);
 				this.campusName = campus.campusName
-				this.$http['classes'].getCourseList(campus.campusId).then(res => {
+				this.$http['classes'].getCourseList({
+					campusId: campus.campusId
+				}).then(res => {
 					if (res.code == 200) {
 						this.isShow = true
+						res.data.forEach(item=>{
+							item.coverImage = this.$url+item.coverImage
+						})
 						this.data = [
-							...res.data,
-							{
-								"campusId": "",
-								"coverImage": "",
-								"maxAge": 0,
-								"minAge": 0,
-								"paymentNumber": 0,
-								"price": 0,
-								"productId": "",
-								"productName": "篮球启蒙篮球启蒙篮球启蒙篮球启蒙",
-								"spellingClassNumber": 0
-							}
+							...res.data
 						]
 					}
 				})

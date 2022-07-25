@@ -38,7 +38,8 @@
 				isShowMore:false
 			}
 		},
-		onLoad() {
+		onLoad(e) {
+			this.type = e.type || 'y'
 			this.isShowMore = false
 			this.search()
 		},
@@ -76,11 +77,18 @@
 				}
 			},
 			back(data) {
-				this.SET_STORAGE({
-					str: 'campus',
-					data
-				})
-				this.$utils.router.navBackData()
+				if(this.type=='no'){
+					this.$utils.router.navBackData({
+						campusOther: data
+					})
+				} else {
+					this.SET_STORAGE({
+						str: 'campus',
+						data
+					})
+					this.$utils.router.navBackData()
+				}
+				
 			},
 			handleMore() {
 				this.isShowMore = true

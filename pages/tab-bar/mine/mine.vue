@@ -25,7 +25,7 @@
 					<image class="mine-nav-img1" src="/static/mine/order.png" mode="aspectFit"></image>
 					<view>我的订单</view>
 				</view>
-				<view class="mine-nav-item" @click="$utils.router.swtTo($page.Class)">
+				<view class="mine-nav-item" @click="$utils.router.navTo($page.MyClass)">
 					<image class="mine-nav-img2" src="/static/mine/competition.png" mode="aspectFit"></image>
 					<view>我的拼班</view>
 				</view>
@@ -105,7 +105,7 @@
 		data() {
 			return {
 				isGetData: false, // 数据加载
-				userInfo:{}
+				// userInfo:{}
 			}
 		},
 		computed: {
@@ -119,6 +119,7 @@
 			if (this.active !== active) {
 				this.SET_ACTIVE(active)
 			}
+			// console.log('身份验证',this.$utils.validate.validateIdNum('350623199611085735'));
 			// 获取数据
 
 		},
@@ -130,7 +131,8 @@
 				this.$http['mine'].getUserInfo().then(res=>{
 					console.log(res);
 					if(res.code==200){
-						this.userInfo = res.data
+						const result= Object.assign(this.userInfo,res.data)
+						this.SET_STORAGE({str:'userInfo',data:result})
 					}
 				})
 			},

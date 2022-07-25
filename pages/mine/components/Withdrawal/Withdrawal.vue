@@ -31,7 +31,7 @@
 		name: "withdrawal",
 		data() {
 			return {
-				value: '11111111'
+				value: ''
 			};
 		},
 		methods: {

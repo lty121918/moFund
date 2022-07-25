@@ -7,13 +7,8 @@
 		</view>
 		<y-list ref="yList" :scrollClass="'scroll-class2'" :setData="search">
 			<template slot-scope="{data}">
-				<view class="course-list-item" v-for="item in data" :key="item"  @click="$utils.router.navTo($page.CourseDetail)">
-					<image class="course-list-item-img" :src="item.coverImage||'/static/notData.png'" mode="aspectFit"></image>
-				<!-- 	<view class="course-list-item-surplus">
-						<text>剩余</text>
-						<text class="color fz32">10</text>
-						<text>件</text>
-					</view> -->
+				<view class="course-list-item" v-for="item in data" :key="item"  @click="$utils.router.navTo($page.CourseDetail,item)">
+					<image class="course-list-item-img" :src="item.coverImage" mode="aspectFit"></image>
 					<view class="">
 						<view class="course-list-item-title">{{item.productName}}</view>
 						<view>
@@ -61,22 +56,13 @@
 					let res = await self.$http['classes'].getCourseList({
 						campusId: self.campus.campusId
 					})
+					// '/static/notData.png'
 					let data = []
 					if (res.code == 200) {
-						data = [
-							{
-								"campusId": "",
-								"coverImage": "",
-								"maxAge": 0,
-								"minAge": 0,
-								"paymentNumber": 0,
-								"price": 0,
-								"productId": "",
-								"productName": "篮球启蒙篮球启蒙篮球启蒙篮球启蒙",
-								"spellingClassNumber": 0
-							}
-						]
 						data = res.data
+						data.forEach(item=>{
+							item.coverImage = this.$url+item.coverImage
+						})
 					
 					}
 					resolve({

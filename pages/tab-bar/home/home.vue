@@ -33,16 +33,7 @@
 		created() {
 			// 初次进入获取地理位置
 			this.getLocation()
-			if(this.city.length==0){
-				this.$http['common'].getlocation().then(res=>{
-					if(res.code==200){
-						this.SET_STORAGE({
-							str: 'city',
-							data:res.data
-						})
-					}
-				})
-			}
+			
 			
 		},
 		methods: {}

@@ -86,6 +86,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "my-class/my-class",
+			"style": {
+				"navigationBarTitleText": "我的拼班",
+				"enablePullDownRefresh": false
+			}
+
 		}]
 	}, {
 		"root": "pages/map",
