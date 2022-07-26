@@ -37,8 +37,8 @@
 				</template>
 			</y-list>
 		</view>
-		<recharge ref="recharge" />
-		<withdrawal ref="withdrawal" />
+		<recharge ref="recharge" @change="getData"/>
+		<withdrawal ref="withdrawal" @change="getData"/>
 	</view>
 </template>
 
@@ -57,40 +57,50 @@
 		data() {
 			return {
 				active: 1, //  1 2 3
-				isTeach: false
+				isTeach: false,
+				getPlayStatus:''
 			}
 		},
 		computed: {},
 		created() {
 
 		},
-		mounted() {
-			this.$refs.yList.init()
-			this.getData()
+		onShow() {
 			
+		},
+		mounted() {
+			setTimeout(() => {
+				
+				this.getData()
+			}, 300)
+
 		},
 		methods: {
 			getData() {
 				console.log('获取我的数据');
-				this.$http['mine'].getUserInfo().then(res=>{
+				this.$http['mine'].getUserInfo().then(res => {
 					console.log(res);
-					if(res.code==200){
-						const result= Object.assign(this.userInfo,res.data)
-						this.SET_STORAGE({str:'userInfo',data:result})
+					if (res.code == 200) {
+						const result = Object.assign(this.userInfo, res.data)
+						this.SET_STORAGE({
+							str: 'userInfo',
+							data: result
+						})
+						this.$refs.yList.init()
 					}
 				})
 			},
 			handleTab(val) {
 				this.active = val
-				setTimeout(()=>{
+				setTimeout(() => {
 					this.$refs.yList.init()
-				},300)
+				}, 300)
 			},
 			handleRecharge() {
 				this.$refs.recharge.handleShow()
 			},
 			handleWithdrawal() {
-				this.$refs.withdrawal.handleShow()
+				this.$refs.withdrawal.handleShow(this.userInfo.remainingSum)
 			},
 			// 模拟请求数据
 			search(val) {
@@ -106,7 +116,7 @@
 					const res = await self.$http['mine'].getTrade({
 						income
 					})
-					if(res.code==200){
+					if (res.code == 200) {
 						data = res.data
 					}
 					resolve({

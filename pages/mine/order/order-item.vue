@@ -4,7 +4,7 @@
 			<text class="fwb">订单编号：{{item.orderNo}}</text>
 			<text class="color fw4">消费订单</text>
 		</view>
-		<image class="class-content-eval"  @click="handleChange" v-if="item.type=='consume'" src="/static/mine/evaluate.png" mode="aspectFit"></image>
+		<image class="class-content-eval"  @click="handleChange(item)" v-if="item.type=='consume'" src="/static/mine/evaluate.png" mode="aspectFit"></image>
 		<view class="class-content-bottom" v-if="item.type=='consume'">
 			<view class="class-content-left">
 				<image class="class-content-img" :src="item.coverImage" mode="aspectFit"></image>
@@ -40,8 +40,7 @@
 		},
 		methods: {
 			handleChange() {
-				console.log('111111111111');
-				this.$emit('change')
+				this.$emit('change',item)
 			}
 		}
 	}

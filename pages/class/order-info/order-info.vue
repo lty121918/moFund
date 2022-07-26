@@ -164,7 +164,8 @@
 							classStudentId: val.classStudentId,
 							studentId:val.studentId,
 							courseScheduleDetailId:self.data.courseScheduleDetailId,
-							wxUserId: self.data.wxUserId
+							wxUserId: self.data.wxUserId,
+							IsFormData:true
 						}).then(res=>{
 							if(res.code==200){
 								self.getMineSpellClass()

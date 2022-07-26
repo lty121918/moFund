@@ -22,7 +22,9 @@
 
 		},
 		mounted() {
-			this.$refs.yList.init()
+			setTimeout(()=>{
+				this.$refs.yList.init()
+			},300)
 		},
 		methods: {
 			// 模拟请求数据

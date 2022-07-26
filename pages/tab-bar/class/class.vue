@@ -67,7 +67,11 @@
 		mounted() {
 		},
 		methods: {
-			getMounted(){this.$refs.yList.init()},
+			getMounted(){
+				setTimeout(()=>{
+					this.$refs.yList.init()
+				},300)
+			},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			search(val) {

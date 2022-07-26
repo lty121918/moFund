@@ -19,22 +19,22 @@
 			return {}
 		},
 		onShow() {
-			
-			this.$nextTick(()=>{
-				setTimeout(()=>{
+
+			this.$nextTick(() => {
+				setTimeout(() => {
 					let ref = this.$refs['index'] || this.$refs['class']
 					console.log(ref);
-					ref&&ref.getMounted()
-				},800)
+					ref && ref.getMounted()
+				}, 800)
 			})
 		},
-		computed: {
-		},
+		computed: {},
 		created() {
 			// 初次进入获取地理位置
-			this.getLocation()
-			
-			
+			const Authorization = this.$utils.util.getCache('Authorization');
+			if (Authorization) {
+				this.getLocation()
+			}
 		},
 		methods: {}
 	}

@@ -96,27 +96,57 @@ const minxin = {
 		/**
 		 * @function 微信支付
 		 */
-		wxPay() {
-			const orderInfo = {
-				"appid": "wx499********7c70e", // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
-				"noncestr": "c5sEwbaNPiXAF3iv", // 随机字符串
-				"package": "Sign=WXPay", // 固定值
-				"partnerid": "148*****52", // 微信支付商户号
-				"prepayid": "wx202254********************fbe90000", // 统一下单订单号 
-				"timestamp": 1597935292, // 时间戳（单位：秒）
-				"sign": "A842B45937F6EFF60DEC7A2EAA52D5A0" // 签名，这里用的 MD5/RSA 签名
-			};
-			uni.requestPayment({
-				"provider": "wxpay",
-				"orderInfo": orderInfo,
-				success: function(res) {
-					const rawdata = JSON.parse(res.rawdata);
-					console.log("支付成功");
-				},
-				fail: function(err) {
-					console.log('支付失败:' + JSON.stringify(err));
-				}
+		wxPay(val) {
+			return new Promise(async (resolve, reject) =>{
+				console.log('val', val);
+				let orderInfo = {
+					// appid: val.appId, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+					// noncestr: val.nonceStr, // 随机字符串
+					// package: "Sign=WXPay", // 固定值
+					// signType: val.signType, // 微信支付商户号
+					// timeStamp: val.timeStamp,
+					// paySign: val.paySign, 
+				};
+				wx.requestPayment({
+					timeStamp: val.timeStamp,
+					nonceStr: val.nonceStr,
+					package: val.packageValue,
+					signType: val.signType,
+					paySign: val.paySign,
+					success: function(res) {
+						const rawdata = JSON.parse(res.rawdata);
+						console.log("支付成功");
+						resolve(true)
+					},
+					fail: function(err) {
+						console.log('支付失败:' + JSON.stringify(err));
+						resolve(false)
+					}
+				})
+				// uni.requestPayment({
+				// 	provider: "wxpay",
+				// 	orderInfo:val,
+				// 	success: function(res) {
+				// 		const rawdata = JSON.parse(res.rawdata);
+				// 		console.log("支付成功");
+				// 	},
+				// 	fail: function(err) {
+				// 		console.log('支付失败:' + JSON.stringify(err));
+				// 	}
+				// })
 			})
+		},
+		getPlayStatus(payOrderNo) {
+			return new Promise(async (resolve, reject) => {
+				let res = await this.$http['mine'].getPayStatus({
+					payOrderNo
+				})
+				if (res.code == 200) {
+					resolve(res.data)
+				}
+				resolve({})
+			})
+
 		},
 		getLocation() {
 			const self = this

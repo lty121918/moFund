@@ -11,15 +11,15 @@
 					<view class="flex-sc mt42">
 						<text class="fz28 mr12">￥</text>
 						<view class="popup-content-input">
-							<uni-easyinput :inputBorder="false" v-model="value"
-								@blur="changeInput2" @input="changeInput" type="number" placeholder="请输入" />
+							<uni-easyinput :inputBorder="false" v-model="amount"
+								@blur="changeInput2" @input="changeInput" placeholder="请输入" />
 						</view>
 						<text class="fz28 ml12">元</text>
 					</view>
 				</view>
 				<view class="popup-footer flex-cc">
 					<view class="popup-footer-button" @click="close">取消</view>
-					<view class="popup-footer-button colorw ml32 bg-color">提现</view>
+					<view class="popup-footer-button colorw ml32 bg-color" @click="handleConfirm">提现</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -31,7 +31,8 @@
 		name: "withdrawal",
 		data() {
 			return {
-				value: ''
+				amount: '',
+				remainingSum: null
 			};
 		},
 		methods: {
@@ -43,24 +44,40 @@
 					value = value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
 					value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3'); //只能输入两个小数 
 					setTimeout(() => {
-						this.value = value
+						this.amount = value
 					})
 			
 				}
 			},
 			changeInput2(e) {
 				console.log();
-				this.value = Number(this.value)
+				this.amount = Number(this.amount)
 			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow() {
+			handleShow(remainingSum) {
+				this.remainingSum = remainingSum
 				this.$refs.popup.open('bottom')
 			},
 			close() {
 				this.$refs.popup.close('bottom')
 			},
+			handleConfirm(){
+				if(this.remainingSum || this.remainingSum==0 ) {
+					if(this.amount>this.remainingSum){
+						this.$utils.model.showToast('已超出当前可提现金额')
+						return false
+					}
+				}
+				this.$http['mine'].setCashOut( this.amount).then(res=>{
+					if(res.code==200){
+						this.close()
+						this.$emit('change')
+					}
+				})
+				
+			}
 		},
 	}
 </script>
@@ -117,4 +134,6 @@
 			}
 		}
 	}
+	
+	
 </style>

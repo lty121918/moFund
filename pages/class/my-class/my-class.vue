@@ -25,7 +25,9 @@
 		computed: {
 		},
 		onShow() {
-			this.$refs.yList.init()
+			setTimeout(()=>{
+				this.$refs.yList.init()
+			},300)
 		},
 		created() {
 			

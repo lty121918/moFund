@@ -2,14 +2,14 @@
 	<view class="wallet-content">
 		<view class="wallet-content-top">
 			<text class="fwb">流水号：{{item.tradeNo}}</text>
-			<text class="color fw4" v-if="!income">收入</text>
-			<text class="color2 fw4" v-if="income">支出</text>
+			<text class="color fw4" v-if="item.income">收入</text>
+			<text class="color2 fw4" v-if="!item.income">支出</text>
 		</view>
 		<view class="mt32 fz28" >
 			<view>变动时间：{{item.operateTime}}</view>
 			<view class="mt16">交易类型：{{tradeTypeData[item.tradeType]}}</view>
-			<view class="mt16">订单编号：{{item.orderNo}}</view>
-			<view class="fz24 wallet-content-price wallet-content-priceActive">
+			<view class="mt16">订单编号：{{item.orderNo ||''}}</view>
+			<view class="fz24 wallet-content-price " :class="[item.income?'wallet-content-priceActive':'']">
 				<text>{{item.income?'+':'-'}}</text>
 				<text>￥</text>
 				<text class="fz32 fwb">{{item.amount}}</text>

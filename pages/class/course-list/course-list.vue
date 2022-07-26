@@ -43,7 +43,9 @@
 			}
 		},
 		mounted() {
-			this.getInit()
+			setTimeout(()=>{
+				this.getInit()
+			},300)
 		},
 		methods: {
 			getInit(){
