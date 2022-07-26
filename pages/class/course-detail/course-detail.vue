@@ -18,7 +18,7 @@
 					</view> -->
 					<view class="text-c course-title-content-r2">
 						<view class="color999 fz24">最多</view>
-						<view class="color fz28">8</view>
+						<view class="color fz28">{{productInfo.maxNum}}</view>
 						<view class="color999 fz24">人</view>
 
 					</view>
@@ -94,7 +94,7 @@
 						</view>
 					</view>
 				</view>
-				<view class="course-detail-evaluate-more" @click="$utils.router.navTo($page.Evaluate)">
+				<view v-if="isEvaluate" class="course-detail-evaluate-more" @click="$utils.router.navTo($page.Evaluate)">
 					<text>查看更多</text>
 					<image class="course-detail-evaluate-more-img" src="/static/class/more.png" mode=""></image>
 				</view>
@@ -130,7 +130,8 @@
 				productInfo: {}, //商品信息
 				productDetail: '', // 商品详情
 				productEvaluate: [], //商品评价
-				campusOther: {}
+				campusOther: {},
+				isEvaluate: false //评论是否超出5条
 			}
 		},
 		watch: {
@@ -151,6 +152,9 @@
 
 		},
 		methods: {
+			/**
+			 * @function 获取当前商品详情所有数据
+			 */
 			async getCourseDetail() {
 				console.log('campusOther', this.campusOther);
 				const {
@@ -158,6 +162,7 @@
 					getProductDetails,
 					getProductEvaluate
 				} = this.$http['classes']
+				//获取商品详情
 				const res = await getCourseDetails({
 					productId: this.productId,
 					campusId: this.campusOther.campusId
@@ -169,12 +174,14 @@
 					this.productInfo = res.data
 					this.productSpellClassList = [...res.data.productSpellClassList]
 				}
+				// 获取商品详情下的描述
 				const res2 = await getProductDetails({
 					productId: this.productId
 				})
 				if (res2.code == 200) {
 					this.productDetail = res2.data
 				}
+				// 获取当前商品的评价
 				const res3 = await getProductEvaluate({
 					productId: this.productId
 				})
@@ -183,6 +190,9 @@
 					res3.data.forEach(item => {
 						item.avatar = this.$url + item.avatar
 					})
+					if(res3.data.length > 5){
+						this.isEvaluate = true
+					}
 					if (res3.data.length > 5) {
 						this.productEvaluate = res3.data.slice(0, 5)
 					} else {
@@ -191,17 +201,19 @@
 				}
 
 			},
-			check() {
-				this.$refs.popupDate.handleShow(true)
+			// 打开周期
+			check(ls) {
+				this.$refs.popupDate.handleShow(true,ls)
 			},
+			// 打开我要拼班
 			submit() {
 				this.$refs.popupPin.handleShow({
 					productId: this.productId,
 					campusId: this.campusOther.campusId
 				})
 			},
+			// 切换tab
 			handleTab(val) {
-				console.log(val);
 				this.active = val
 			},
 		}

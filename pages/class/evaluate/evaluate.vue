@@ -52,7 +52,7 @@
 			}
 		},
 		async onLoad(e) {
-			const res = await getProductEvaluate({
+			const res = await this.$http['classes'].getProductEvaluate({
 				productId: this.productId
 			})
 			if (res.code == 200) {

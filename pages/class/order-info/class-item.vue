@@ -13,30 +13,30 @@
 				<!-- 班级名称 -->
 				<view class="class-content-info">
 					<view class="class-content-info-title">
-						<text class="class-content-info-num">4人班</text>
-						<text>篮球启蒙课A</text>
+						<text class="class-content-info-num">{{data.spellType}}</text>
+						<text>{{data.productName}}</text>
 					</view>
 					<view class="color">
 						<text class="fz24">￥</text>
-						<text class="fz32">50.00</text>
+						<text class="fz32">{{data.price}}</text>
 						<text class="color3 fz24">/节</text>
 					</view>
 				</view>
 				<!-- 上课周期 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/cycle.png" mode="widthFix"></image>
-					<text>上课周期：2022-07-01~2022</text>
+					<text>上课周期：{{data.startDate}}~{{data.endDate}}</text>
 				</view>
 				<!-- 上课时段 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/time.png" mode="widthFix"></image>
-					<text>上课时段：每天9:00~10:30</text>
+					<text>上课时段：{{data.courseType==2?'每天':data.weekCodeName}} {{data.startTime}}~{{data.endTime}}</text>
 				</view>
 				<!-- 教练 -->
-				<view class="class-content-cycle">
+				<!-- <view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/coach.png" mode="widthFix"></image>
 					<text>教练：唐小明</text>
-				</view>
+				</view> -->
 				<!-- <view class="class-content-cycle">
 					<text class="class-content-cycle-tip">10节课</text>
 					<text class="class-content-cycle-tip">2人可提前开课，4人提前开班</text>
@@ -47,6 +47,13 @@
 </template>
 
 <script>
+	export default{
+		props:{
+				
+			data:{
+			}
+		}
+	}
 </script>
 
 <style lang="scss" scoped>

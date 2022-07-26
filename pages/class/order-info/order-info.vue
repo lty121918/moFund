@@ -1,6 +1,6 @@
 <template>
 	<view class="order-info">
-		<class-item></class-item>
+		<class-item :data="data"></class-item>
 		<view class="order-info-user">
 			<view class="home-title">
 				<view class="home-title-item">
@@ -10,14 +10,14 @@
 			</view>
 			<view class="order-info-head">
 				<view class="order-info-head-flex">
-					<image class="order-info-head-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<text class="fwb fz32">Do.Ting.le</text>
+					<image class="order-info-head-img" :src="data.avatar" mode="aspectFit"></image>
+					<text class="fwb fz32">{{data.nickName}}</text>
 					<image class="order-info-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
 				</view>
 				<image v-if="isHead" class="order-info-head-share" src="/static/class/share.png" mode="aspectFit"
 					@click="handleShare">
 				</image>
-				<view class="order-info-head-contact" v-if="!isHead" @click="handlePhone">
+				<view class="order-info-head-contact" v-if="!isHead" @click="handlePhone(data.phone)">
 					<image class="order-info-head-liao" src="/static/class/liao.png" mode="aspectFit"></image>
 					<text>联系团长</text>
 				</view>
@@ -29,12 +29,12 @@
 				</view>
 			</view>
 			<view class="order-info-stu">
-				<view class="order-info-stu-flex fz28">
-					<image class="order-info-stu-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<view class="fwb order-info-stu-name">李晓明</view>
-					<view class="order-info-stu-sex">男</view>
-					<view class="order-info-stu-age">5岁</view>
-					<image class="order-info-stu-del" src="/static/del.png" mode="aspectFit"></image>
+				<view class="order-info-stu-flex fz28" v-for="item in data.weChatUserList" :key="item.classStudentId">
+					<image class="order-info-stu-img" :src="item.avatar" mode="aspectFit"></image>
+					<view class="fwb order-info-stu-name">{{item.studentName}}</view>
+					<view class="order-info-stu-sex">{{item.gender==1?'男':'女'}}</view>
+					<view class="order-info-stu-age">{{item.age}}岁</view>
+					<image class="order-info-stu-del" @click="handleDel(item)" src="/static/del.png" mode="aspectFit"></image>
 				</view>
 			</view>
 			<view class="order-info-adduser" @click="handleAdd">
@@ -44,7 +44,7 @@
 		</view>
 		<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<view class="order-info-footer-button" @click="submit">
+			<view class="order-info-footer-button" @click="handleDissolution">
 				解散班级
 			</view>
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
@@ -52,14 +52,16 @@
 			</view>
 		</view>
 		<view v-if="!isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<view >
+			<view>
 			</view>
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
 				确定
 			</view>
 		</view>
 		<popup-share ref="popupShare"></popup-share>
-		<popup-add-stu ref="popupAddStu"></popup-add-stu>
+		<popup-add-stu ref="popupAddStu" @change="getMineSpellClass" @recharge="recharge"></popup-add-stu>
+		<!-- 充值 -->
+		<recharge ref="recharge" />
 	</view>
 </template>
 <script>
@@ -67,27 +69,29 @@
 	import ClassItem from './class-item.vue'
 	import PopupShare from '../components/PopupShare/PopupShare.vue'
 	import PopupAddStu from '../components/PopupAddStu/PopupAddStu.vue'
+	import Recharge from '@/components/Recharge/Recharge.vue'
 	export default {
 		components: {
 			ClassItem,
 			PopupShare,
-			PopupAddStu
+			PopupAddStu,
+			Recharge
 		},
 		mixins: [mixin],
 		data() {
 			return {
 				isHead: false, //是否 是团长进入该页面
-
+				data: {},
+				classInfoId:''
 			}
 		},
-		onLoad() {
-			uni.setNavigationBarTitle({
-				title: this.isHead ? '我的拼单' : '加入拼单'
-			})
+		onLoad(e) {
+			this.classInfoId ='39fffa311d849b8719aa8293bd302397'|| e.classInfoId
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ["shareAppMessage"]
 			})
+			this.getMineSpellClass()
 
 		},
 		// 分享给朋友
@@ -96,22 +100,84 @@
 				console.log(res.target)
 			}
 			return {
-				title: 1
+				title: this.data.productName,
+				desc: '',
+				path: `/pages/class/order-info/order-info?classInfoId=${this.classInfoId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
 		methods: {
+			getMineSpellClass(){
+				this.$http['classes'].getMineSpellClass({
+					classInfoId:this.classInfoId 
+				}).then(res => {
+					if (res.code == 200) {
+						console.log(res.data);
+						this.isHead = res.data.regimentalCommander
+						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
+						this.data = res.data
+						uni.setNavigationBarTitle({
+							title: this.isHead ? '我的拼单' : '加入拼单'
+						})
+					}
+				})
+			},
 			// 联系团长
-			handlePhone() {
+			handlePhone(phone) {
 				wx.makePhoneCall({
-					phoneNumber: '15260041580' //仅为示例，并非真实的电话号码
+					phoneNumber: phone //仅为示例，并非真实的电话号码
 				})
 			},
 			handleAdd() {
-				this.$refs.popupAddStu.handleShow()
+				const ls = this.data.weChatUserList.map(item => item.studentId)
+				this.$refs.popupAddStu.handleShow(this.classInfoId, ls)
 				console.log('添加学员');
 			},
+			// 调起充值界面
+			recharge(){
+				this.$refs.recharge.handleShow()
+			},
+			// 执行解散班级
+			handleDisolution(){
+				const ls = this.data.weChatUserList.map(item => item.studentId)
+				this.$http['classes'].indexDisbandClass({
+					classId: this.classInfoId,
+					studentIds: ls
+				}).then(res=>{
+					if(res.code==200){
+						this.submit()
+					}
+				})
+			},
+			// 执行分享界面
 			handleShare() {
 				this.$refs.popupShare.handleShow()
+			},
+			// 删除学员
+			handleDel(val){
+				const self = this
+				self.$utils.model.showMsgModal({
+					content:'确定要删除该团员',
+					showCancel:true,
+					confirmCallback:function(){
+						self.$http['classes'].indexRemoveClassStudent({
+							classInfoId: self.classInfoId,
+							classStudentId: val.classStudentId,
+							studentId:val.studentId,
+							courseScheduleDetailId:self.data.courseScheduleDetailId,
+							wxUserId: self.data.wxUserId
+						}).then(res=>{
+							if(res.code==200){
+								self.getMineSpellClass()
+							}
+						})
+					}
+				})
+				
+				
+			},
+			// 返回上一页
+			submit(){
+				this.$utils.router.navBackData()
 			},
 		}
 	}
@@ -243,8 +309,10 @@
 				margin-right: 24rpx;
 				width: 48rpx;
 				height: 46rpx;
+				border-radius: 50%;
 			}
-			&-del{
+
+			&-del {
 				width: 64rpx;
 				height: 64rpx;
 			}

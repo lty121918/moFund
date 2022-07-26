@@ -3,26 +3,31 @@
 		<uni-popup ref="popup" :isMaskClick="isMaskClick" @change="change">
 			<view class="popup-content">
 				<!-- 当前商品信息 -->
-				<view class="popup-nearby-content popup-content2">
-					<image class="popup-nearby-content-img" :sssrc="data.coverImage" mode="aspectFit"></image>
-					<view>
+				<view class=" flex-bc">
+					<view class="popup-nearby-content popup-content2">
+						<image class="popup-nearby-content-img" :sssrc="data.coverImage" mode="aspectFit"></image>
 						<view class="">
-							<text class="color fz24">￥</text>
-							<text class="color fz32">50.0</text>
-							<text class="fz24">/节</text>
-							<text class="popup-content-jie">10节课</text>
-						</view>
-						<!-- 上课周期 -->
-						<view class="popup-nearby-content-cycle">
-							<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png" mode="widthFix">
-							</image>
-							<text>周期: 2022-07-01~ 2022-07-01</text>
-						</view>
-						<!-- 上课时段 -->
-						<view class="popup-nearby-content-cycle">
-							<image class="popup-nearby-content-cycle-img" src="/static/class/time.png" mode="widthFix">
-							</image>
-							<text>时段:9:00~10:30</text>
+							<view class="">
+								<text class="color fz24">￥</text>
+								<text class="color fz32">{{data.price}}</text>
+								<text class="fz24">/节</text>
+								<text class="popup-content-jie">{{data.totalNum}}节课</text>
+							</view>
+							<!-- 上课周期 -->
+							<view class="popup-nearby-content-cycle">
+								<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png"
+									mode="widthFix">
+								</image>
+								<text v-if="data.courseType==2">周期: {{data.startDate}}~ {{data.endDate}}</text>
+								<text v-if="data.courseType==1">按星期: {{data.weekCodeName}}</text>
+							</view>
+							<!-- 上课时段 -->
+							<view class="popup-nearby-content-cycle">
+								<image class="popup-nearby-content-cycle-img" src="/static/class/time.png"
+									mode="widthFix">
+								</image>
+								<text>时段:{{data.startPeriod}}~{{data.endPeriod}}</text>
+							</view>
 						</view>
 					</view>
 					<view class="popup-nearby-content-check" @click="check">
@@ -34,22 +39,28 @@
 					<!-- 周期 -->
 					<view class="fwb fz28 mt32">课程周期</view>
 					<view class="popup-content-cycle fz24">
-						<view class="mt32 mr26 popup-content-cycle-item" v-for="(item,index) in 10" :key="index">
-							暑假第{{item}}期
+						<view class="mt32 mr26 popup-content-cycle-item" @click="handleSchedule(item)"
+							:class="[data.scheduleId==item.scheduleId?'popup-content-cycle-active':'']"
+							v-for="(item,index) in myCourseScheduleList" :key="index">
+							{{item.scheduleName}}
 						</view>
 					</view>
 					<!-- 上课时段 -->
 					<view class="fwb fz28 mt32">上课时段</view>
 					<view class="popup-content-cycle fz24">
-						<view class="mt32 mr26 popup-content-cycle-item" v-for="(item,index) in 10" :key="index">
-							1{{item}}:00
+						<view class="mt32 mr26 popup-content-cycle-item" @click="handlePeriod(item)"
+							:class="[data.periodId==item.id?'popup-content-cycle-active':'']"
+							v-for="(item,index) in periodList" :key="index">
+							{{item.startTime}}~{{item.endTime}}
 						</view>
 					</view>
 					<!-- 拼班方式 -->
 					<view class="fwb fz28 mt32">拼班方式</view>
 					<view class="popup-content-cycle fz24">
-						<view class="mt32 mr26 popup-content-cycle-item" v-for="(item,index) in 2" :key="index">
-							{{item}}人班
+						<view class="mt32 mr26 popup-content-cycle-item" v-for="(item,index) in spellTypeList"
+							:key="index" @click="handleSpellType(item)"
+							:class="[data.productSellPriceRelId==item.productSellPriceRelId?'popup-content-cycle-active':'']">
+							{{item.spellType}}
 						</view>
 					</view>
 				</view>
@@ -58,7 +69,7 @@
 					<view class="popup-footer-button" @click="submit">
 						我要拼班
 					</view>
-					<view class="popup-footer-button popup-footer-button2">
+					<view class="popup-footer-button popup-footer-button2" @click="handleOther">
 						没有库存试试加入拼班？
 					</view>
 				</view>
@@ -72,26 +83,162 @@
 		data() {
 			return {
 				isMaskClick: true,
-				data: {}
+				data: {
+					organizationId: "", //	机构ID
+					campusId: "", //	校区Id
+					courseId: "", //课程Id
+					productId: "", // 商品Id
+					courseType: 2,
+
+					startDate: "", //	上课开始日期(周期)
+					endDate: "", //上课结束日期(周期)
+					startPeriod: "", //	上课开始时段
+					endPeriod: "", // 上课结束时段
+					totalNum: 0, //课表节次总数
+
+
+					scheduleId: "", // 	排课表主键Id
+					scheduleName: "", //课表名称
+
+					spellType: "", //	拼班方式
+					productSellPriceRelId: "", // 	商品拼班类型表Id
+					price: 0, // 单价
+				},
+				coverImage: '',
+				spellTypeList: [],
+				myCourseScheduleList: [],
+				periodList: [],
 			}
 		},
 		methods: {
+			// 发起拼班
+			submit(){
+				if(!this.data.periodId){
+					uni.showToast({
+						title: "请选择时段"
+					})
+					return false
+				}
+				this.$http['classes'].getInitiateSpellClass(this.data).then(res=>{
+					if(res.code==200){
+						this.$utils.router.navTo(this.$page.OrderInfo,{classInfoId:''})
+					}
+				})
+			},
+			handleOther(){
+				this.$refs.popup.close('bottom')
+			},
 			// 查看周期
 			check() {
 				uni.showToast({
 					title: "查看周期"
 				})
-				this.$emit('check')
+				let ls = []
+				if (this.data.courseType == 2) {
+					ls = this.$utils.dateTime.getRangeDay([
+						this.data.startDate, //	上课开始日期(周期)
+						this.data.endDate, //上课结束日期(周期)
+					], this.data.totalNum)
+				} else {
+					ls = this.$utils.dateTime.getRangeDay(this.data.weekCode, this.data.totalNum, 'week')
+				}
+
+				console.log(ls);
+				this.$emit('check', ls)
+			},
+			// 选择拼班方式
+			handleSpellType(item) {
+				if (item.spellType == this.data.spellType) {
+					return false
+				}
+				Object.assign(this.data, item)
+			},
+			// 选择时段
+			handlePeriod(item) {
+				if (item.id == this.data.periodId) {
+					return false
+				}
+				Object.assign(this.data, {
+					startPeriod: item.startTime, //	上课开始时段
+					endPeriod: item.endTime, // 上课结束时段
+					periodId: item.id,
+				})
+			},
+			//  选择周期
+			handleSchedule(item) {
+				if (item.scheduleId == this.data.scheduleId) {
+					return false
+				}
+				console.log(item);
+				Object.assign(this.data, {
+					scheduleId: item.scheduleId, // 	排课表主键Id
+					scheduleName: item.scheduleName, //课表名称
+					courseType: item.courseType, // 课程类型
+					weekCodeName: item.weekCodeName,
+					weekCode: item.weekCode,
+					totalNum: item.totalNum, //课表节次总数
+					startDate: item.startDate, //	上课开始日期(周期)
+					endDate: item.endDate, //上课结束日期(周期)
+				})
+				// 上课时段
+				this.periodList = item.periodList || []
+				const periodList = this.periodList[0] || {}
+				this.handlePeriod(periodList)
 			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
 			handleShow(val) {
+				const self = this
 				this.$refs.popup.open('bottom')
 				this.$http['classes'].getSpellClass(val).then(res => {
 					if (res.code == 200) {
-						res.data.coverImage = this.$url + res.data.coverImage
-						this.data = res.data
+						this.coverImage = this.$url + res.data.coverImage
+
+						// 课程周期
+						this.myCourseScheduleList = [{
+							courseType: "1",
+							periodList: [{
+								endTime: "9:00",
+								id: "1",
+								startTime: "8:00",
+								status: ""
+							}],
+							scheduleId: "1",
+							scheduleName: "课表1",
+							startDate: "2022-07-08",
+							endDate: "2022-08-08",
+							totalNum: 10,
+							weekCode: [1, 2, 3],
+							weekCodeName: self.$utils.dateTime.filteDay([1, 2, 3])
+						}, {
+							courseType: "2",
+							periodList: [{
+								endTime: "19:00",
+								id: "2",
+								startTime: "18:00",
+								status: ""
+							}],
+							scheduleId: "2",
+							scheduleName: "课表2",
+							startDate: "2022-07-09",
+							endDate: "2022-08-09",
+							totalNum: 10,
+							weekCode: [1, 2, 3],
+							weekCodeName: self.$utils.dateTime.filteDay([1, 2, 3])
+						}] || res.data.myCourseScheduleList
+						const scheduleList = this.myCourseScheduleList[0] || {}
+						// 拼班方式
+						this.spellTypeList = res.data.spellTypeList || []
+						const typeList = this.spellTypeList[0] || {}
+						this.data = {
+							organizationId: res.data.organizationId, //	机构ID
+							campusId: res.data.campusId, //	校区Id
+							courseId: res.data.courseId, //课程Id
+							productId: res.data.productId, // 商品Id
+						}
+						this.handleSchedule(scheduleList)
+						this.handleSpellType(typeList)
 					}
 				})
 			},

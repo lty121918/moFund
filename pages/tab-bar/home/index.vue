@@ -113,6 +113,7 @@
 
 		},
 		methods: {
+			// home 页面调用
 			getMounted() {
 				this.getData()
 			},
@@ -192,6 +193,7 @@
 					]
 				}
 			},
+			// 跳转到其他小程序
 			hanldeNext(item){
 				this.$utils.router.other(item.linkUrl,item.appid)
 			}

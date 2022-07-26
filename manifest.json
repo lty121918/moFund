@@ -107,6 +107,7 @@
                 "desc" : "演示定位能力"
             }
         },
+		"lazyCodeLoading":"requiredComponents",
         "requiredPrivateInfos" : [ "getLocation" ]
     },
     "mp-alipay" : {

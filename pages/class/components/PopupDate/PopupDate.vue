@@ -18,9 +18,7 @@
 		components:{DateCalendar},
 		data() {
 			return {
-				dotLists:[
-					'2022-07-07'
-				],
+				dotLists:[],
 				isShow:false,
 				isMaskClick:true
 			}
@@ -36,7 +34,8 @@
 				this.$refs.popup.close('bottom')
 				this.$emit('close',false)
 			},
-			handleShow(isShow=false) {
+			handleShow(isShow=false,ls) {
+				this.dotLists = ls
 				this.$refs.popup.open('bottom')
 				this.isShow = isShow
 				this.isMaskClick = !isShow

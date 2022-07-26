@@ -70,9 +70,11 @@ const requestBefore = (config) => {
 	}
 	let routes = getCurrentPages() //获取当前页面栈
 	let curRoute = routes[routes.length - 1].route //获取当前页面的路由
+	console.log(curRoute);
 	let isLogin = curRoute !== 'pages/login/login'
 	if (!config.header['Authorization'] && isLogin && DEV_CONFIG.IS_VERIFICATION) {
 		utils.userInfo.login()
+		return false
 	}
 	config.url = baseUrl + config.url
 	return config

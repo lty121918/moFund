@@ -46,7 +46,7 @@ class DateTime {
 		if (date == undefined || date == '') {
 			date = new Date()
 		} else {
-			if ((date + '').indexOf('-') > -1 && (date + '').indexOf('T')== -1) {
+			if ((date + '').indexOf('-') > -1 && (date + '').indexOf('T') == -1) {
 				date = new Date(date.replace(/-/g, '/'))
 			} else {
 				date = new Date(date)
@@ -203,6 +203,16 @@ class DateTime {
 			sunday
 		}
 	}
+	// 获取当前星期几
+	getNowWeek(time) {
+		let now = new Date()
+		if (time) {
+			now = new Date(time.replace(/-/g, '/'));
+		}
+
+		let day = now.getDay() || 7 //为周日的时候 day 修改为7  否则当天周天会有问题
+		return day
+	}
 	// 判断是大于当前时间还是小于当前时间 或者再范围内  0;未开始;1进行中;2已完成）
 	ltgtDate(startTime, endTime, value) {
 		value = value || {}
@@ -338,6 +348,60 @@ class DateTime {
 		let min = Math.round(disparity / 1000 / 60);
 		// console.log(disparity)
 		return min
+	}
+	// 处理星期是否连贯
+	filteDay(value) {
+		if (!value) {
+			return ''
+		}
+		let weekTime = ['一', '二', '三', '四', '五', '六', '日']
+		let ncontinuity = 0 //用于连续个数的统计
+		for (let i = 1; i < value.length; i++) {
+			if (value[i] - value[i - 1] == 1 || value[i] - value[i - 1] == -1) {
+				//等于1代表升序连贯   等于-1代表降序连贯
+				ncontinuity += 1 //存在连贯：计数+1
+			}
+		}
+		let str = ``
+		if (ncontinuity > value.length - 2) {
+			console.log('全部连贯')
+			str = `周${weekTime[value[0] - 1]}~周${
+	          weekTime[value[value.length - 1] - 1]
+	        }`
+		} else {
+			console.log('不全部连贯')
+			value.forEach((item, index) => {
+				str += `${index === 0 ? '' : ','}周${weekTime[item - 1]}`
+			})
+		}
+		return str
+	}
+
+	// 给时间或者星期返回时间
+	getRangeDay(data, num, type = 'date') {
+		let list = []
+		if (type == 'date') {
+			let start = data[0]
+			let end = data[0]
+			for (let i = 0; i <= num; i++) {
+				list.push(start)
+				start = this.getNextDay(1, start)
+			}
+		} else {
+			let start = this.getLocalTime()
+			const ls = Math.ceil(num / data.length)*7
+			for (let i = 0; i < ls; i++) {
+				const code = this.getNowWeek(start)
+				if(data.indexOf(code)>-1){
+					list.push(start)
+				}
+				console.log(start);
+				start = this.getNextDay(1, start)
+			}
+			
+		}
+		list = list.slice(0, num)
+		return list
 	}
 }
 export default DateTime

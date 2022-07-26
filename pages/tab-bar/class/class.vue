@@ -20,6 +20,8 @@
 						</view>
 					</view>
 				</view>
+				<!-- 	班级状态 0：拼班中 1：待开课(拼班完成) 2：拼班未成功 3：开班中 
+				4：解散（到期结课）5：解散（团长解散）、6：解散（人数不足） -->
 				<!-- 教师端 end-->
 				<view v-for="(item,index) in data" :key="index">
 					<class-item :data="item"></class-item>
