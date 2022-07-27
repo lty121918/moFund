@@ -4,7 +4,7 @@
 		<y-list ref="yList" :setData="search">
 			<template slot-scope="{data}">
 				<view v-for="(item,index) in data" :key="index">
-					<class-item :data="item"></class-item>
+					<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 				</view>
 			</template>
 		</y-list>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-	import ClassItem from './class-item.vue'
+	import ClassItem from '../../tab-bar/class/class-item.vue'
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<index ref="index" v-if="isTeach==2" />
-		<class ref="calss" v-if="isTeach==1" />
+		<class ref="calsses" v-if="isTeach==1" />
 	</view>
 </template>
 
@@ -22,8 +22,8 @@
 
 			this.$nextTick(() => {
 				setTimeout(() => {
-					let ref = this.$refs['index'] || this.$refs['class']
-					console.log(ref);
+					let ref = this.$refs['index'] || this.$refs['calsses']
+					console.log('ref',ref);
 					ref && ref.getMounted()
 				}, 800)
 			})

@@ -25,7 +25,7 @@ const APIS_LIST = {
   "_common_download": '/common/download', // 通用下载请求
   "_course": '/course', // 课程下拉
   "_course_by_campusId": '/course-by-campusId', // 校区课程下拉
-  "_error": '/error', // error
+  "_error": '/error', // errorHtml
   "_file_download": '/file/download', // 下载文件
   "_file_remove_attachment": '/file/remove-attachment', // 删除附件
   "_file_upload": '/file/upload', // 文件上传(自动获取文件名)
@@ -67,7 +67,7 @@ const APIS_LIST = {
   "_wx_user_class_exit": '/wx/user/class/exit', // 退出班级（家长）
   "_wx_user_class_get_evaluate": '/wx/user/class/get-evaluate', // 获取教练对学员的评价
   "_wx_user_class_mien": '/wx/user/class/mien', // 班级风采
-  "_wx_user_class_page": '/wx/user/class/page', // 获取班级分页
+  "_wx_user_class_page": '/wx/user/class/page', // 获取班级列表
   "_wx_user_index_add_stu": '/wx/user/index/add-stu', // 拼班添加学员
   "_wx_user_index_banner": '/wx/user/index/banner', // 小程序端首页获取轮播图
   "_wx_user_index_campus_search_list": '/wx/user/index/campus-search-list', // 校区搜索列表
@@ -81,10 +81,11 @@ const APIS_LIST = {
   "_wx_user_index_remove_class_student": '/wx/user/index/remove-class-student', // 移出学员(退出拼班)
   "_wx_user_map_area_campus_list": '/wx/user/map/area-campus-list', // 根据区域code查找校区位置和数量
   "_wx_user_map_campus_list": '/wx/user/map/campus-list', // 校区列表
-  "_wx_user_purse_cash_out": '/wx/user/purse/cash-out', // 充值发起
+  "_wx_user_purse_cash_out": '/wx/user/purse/cash-out', // 提现发起
   "_wx_user_purse_query_pay_status": '/wx/user/purse/query-pay-status', // 支付结果查询
   "_wx_user_purse_recharge": '/wx/user/purse/recharge', // 充值发起
   "_wx_user_purse_trade_list": '/wx/user/purse/trade-list', // 财务流水
+  "_wx_user_share_generate_url_link": '/wx/user/share/generate-url-link', // 获取 URL Link
   "_wx_user_wx_course_schedule_attendance": '/wx/user/wx-course-schedule/attendance', // 学员考勤
   "_wx_user_wx_course_schedule_coach_schedule_stu_info": '/wx/user/wx-course-schedule/coach-schedule-stu-info', // 教练查看-班级详情-查看课表-学员信息
   "_wx_user_wx_course_schedule_view": '/wx/user/wx-course-schedule/view', // 班级详情-查看课表

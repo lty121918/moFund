@@ -1,8 +1,8 @@
 <template>
-	<view class="class-content" @click="$utils.router.navTo($page.ClassDetail)">
+	<view class="class-content" @click="handleNavTo">
 		<view class="class-content-top">
-			<text>下节课：2020-07-04 09:00</text>
-			<text class="color fw4">进行中</text>
+			<text>下节课：{{data.nextCLassTime || '已结课'}}</text>
+			<text class="color fw4">{{classStatus[data.classStatus]}}</text>
 		</view>
 		<view class="class-content-bottom">
 			<view class="class-content-left">
@@ -44,10 +44,28 @@
 <script>
 	export default{
 		props:{
+			isTeach:{
+				default: 1
+			},
 			data:{
-				default: ()=>{
+				default:()=>{
 					return {}
 				}
+			},
+			classStatus:{
+				default:()=>{
+					return {}
+				}
+			}
+		},
+		methods:{
+			handleNavTo(){
+				if(this.data.classStatus==0){
+					this.$utils.router.navTo(this.$page.OrderInfo,{classInfoId: this.data.classId})
+				} else {
+					this.$utils.router.navTo(this.$page.ClassDetail,{classId: this.data.classId})
+				}
+				
 			}
 		}
 	}
@@ -111,7 +129,7 @@
 				width: 470rpx;
 				margin-bottom: 12rpx;
 				&-title{
-					width: 264rpx;
+					width: 300rpx;
 					font-size: 32rpx;
 					font-family: SourceHanSansSC-Bold, SourceHanSansSC;
 					font-weight: bold;

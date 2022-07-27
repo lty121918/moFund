@@ -246,7 +246,9 @@ class DateTime {
 		if (startTime) {
 			time2 = startTime.replace(/-(\d)(?!\d)/g, '-0$1')
 		}
-		if (time <= time2) {
+		if (time > time2) {
+			return 1
+		} else if (time <= time2) {
 			return 0
 		} else {
 			return 2

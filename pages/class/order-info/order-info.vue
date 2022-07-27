@@ -150,7 +150,11 @@
 			},
 			// 执行分享界面
 			handleShare() {
-				this.$refs.popupShare.handleShow()
+				this.$refs.popupShare.handleShow({
+					title: this.data.productName,
+					query: 'classInfoId=${this.classInfoId}&wxUserId=${this.data.wxUserId}',
+					path: `/pages/class/order-info/order-info`
+				})
 			},
 			// 删除学员
 			handleDel(val){
@@ -163,6 +167,8 @@
 							classInfoId: self.classInfoId,
 							classStudentId: val.classStudentId,
 							studentId:val.studentId,
+							courseScheduleId:val.courseScheduleId,
+							spellClassDetailsId:val.spellClassDetailsId,
 							courseScheduleDetailId:self.data.courseScheduleDetailId,
 							wxUserId: self.data.wxUserId,
 							IsFormData:true

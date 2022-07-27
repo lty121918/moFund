@@ -1,11 +1,11 @@
 <template>
 	<view class="">
-		<uni-popup ref="popup"  @change="change">
+		<uni-popup ref="popup" @change="change">
 			<view class="popup-content">
 				<image class="popup-content-bg" src="/static/share/bg.png" mode="widthFix"></image>
 				<view class="popup-content-pos">
 					<view class="popup-content-top flex-cc fz46 fwb colorw">
-						XXXXXXX课程劲爆来袭了
+						{{title}}
 					</view>
 					<view class="popup-content-center flex-cc">
 						<image class="popup-content-img" src="/static/home/bg-item.png" mode="widthFix"></image>
@@ -33,15 +33,19 @@
 <script>
 	export default {
 		data() {
-			return {
-			}
+			return {}
 		},
 		methods: {
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow(isShow=false) {
-				this.$refs.popup.open('center')
+			handleShow(val) {
+				this.title = val.title
+				this.$http['classes'].shareGenerateUrlLink(val).then(res => {
+					if (res.code == 200) {
+						this.$refs.popup.open('center')
+					}
+				})
 			},
 			// 复制链接
 			copyUrl() {
@@ -63,7 +67,7 @@
 					}
 				});
 			},
-			
+
 		}
 	}
 </script>
@@ -75,33 +79,40 @@
 			width: 714rpx;
 			margin: auto;
 			height: 1102rpx;
-			&-bg{
+
+			&-bg {
 				width: 100%;
 			}
-			&-pos{
+
+			&-pos {
 				position: absolute;
-				top:0;
+				top: 0;
 				left: 16rpx;
 				right: 0;
 				width: 684rpx;
 				height: 1102rpx;
-				
+
 			}
-			&-top{
+
+			&-top {
 				height: 182rpx;
 			}
-			&-center{
+
+			&-center {
 				height: 722rpx;
 			}
-			&-img{
+
+			&-img {
 				width: 586rpx;
 				max-height: 664rpx;
 			}
-			&-bottom{
+
+			&-bottom {
 				padding: 32rpx 64rpx;
 				box-sizing: border-box;
 			}
-			&-icon{
+
+			&-icon {
 				width: 80rpx;
 				height: 80rpx;
 				margin-bottom: 12rpx;
@@ -109,17 +120,18 @@
 		}
 
 
-		
+
 	}
-	.is-view{
-		background-color: transparent!important;
+
+	.is-view {
+		background-color: transparent !important;
 		box-sizing: border-box;
 		cursor: pointer;
-		line-height: normal!important;
+		line-height: normal !important;
 		overflow: auto;
 		font-size: 24rpx !important;
 		color: white;
-		margin:0 !important;
+		margin: 0 !important;
 		padding: 0 !important;
 		position: relative;
 		text-align: center;

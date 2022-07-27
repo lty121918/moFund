@@ -5,18 +5,19 @@
 				<view class="popup-content-info">
 					<view class="popup-content-top">
 						<image class="popup-content-img" src="/static/stu.png" mode="widthFix"></image>
-						<text class="fz28">黄小米-5岁</text>
-						<image class="popup-content-sex" src="/static/sex-m.png" mode="widthFix"></image>
+						<text class="fz28">{{data.studentName}}-{{data.age}}岁</text>
+						<image class="popup-content-sex" :src="item.gender==1?'/static/sex-m.png':'/static/sex-w.png'"
+							mode="widthFix"></image>
 					</view>
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32 flex0">评价</view>
 						<view class="popup-content-textarea">
-							<uni-easyinput type="textarea" v-model="value2" placeholder="请输入内容"></uni-easyinput>
+							<uni-easyinput type="textarea" v-model="value" placeholder="请输入内容"></uni-easyinput>
 						</view>
 					</view>
 				</view>
 				<view class="popup-footer">
-					<view class="popup-footer-button">提交</view>
+					<view class="popup-footer-button" @click="handleConfirm">提交</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -27,16 +28,38 @@
 	export default {
 		data() {
 			return {
-				value2: ''
+				value: '',
+				data: {}
 			}
 		},
 		methods: {
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow() {
+			handleShow(item) {
+				this.data = item
 				this.$refs.popup.open('bottom')
 			},
+			handleConfirm() {
+				if (!this.value) {
+					this.$utils.model.showToast('请输入内容')
+					return false
+				}
+				this.$http['classes'].studentEvaluation({
+					campusId: this.data.campusId,
+					classId: this.data.classId,
+					coachId: this.data.coachId,
+					courseId: this.data.courseId,
+					evaluationContent: this.value,
+					scheduleDetailId: this.data.scheduleDetailId,
+					scheduleId: this.data.scheduleId,
+					studentId: this.data.ids,
+				}).then(res => {
+					if (res.code == 200) {
+						this.$refs.popup.close('bottom')
+					}
+				})
+			}
 		}
 	}
 </script>
@@ -70,12 +93,14 @@
 			&-textarea {
 				width: 598rpx;
 			}
-			&-img{
+
+			&-img {
 				margin-right: 16rpx;
 				width: 23rpx;
 				height: 15rpx;
 			}
-			&-sex{
+
+			&-sex {
 				margin-left: 12rpx;
 				width: 28rpx;
 				height: 28rpx;

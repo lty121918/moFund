@@ -196,7 +196,7 @@
 		background-color: #fff;
 		border: 1px solid #ccc;
 		border-radius: 30px;
-		width: 150px;
+		min-width: 150px;
 		height: 40px;
 		display: inline-flex;
 		padding: 5px 20px;

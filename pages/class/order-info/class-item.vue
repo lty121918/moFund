@@ -1,10 +1,5 @@
 <template>
 	<view class="class-content">
-		<!-- <view class="class-head-address" @click="$utils.router.navTo($page.Search)">
-			<image class="class-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-			<text> 福田区2</text>
-			<image class="class-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
-		</view> -->
 		<view class="class-content-bottom">
 			<view class="class-content-left">
 				<image class="class-content-img" src="/static/notData.png" mode="widthFix"></image>
@@ -32,15 +27,7 @@
 					<image class="class-content-cycle-img" src="/static/class/time.png" mode="widthFix"></image>
 					<text>上课时段：{{data.courseType==2?'每天':data.weekCodeName}} {{data.startTime}}~{{data.endTime}}</text>
 				</view>
-				<!-- 教练 -->
-				<!-- <view class="class-content-cycle">
-					<image class="class-content-cycle-img" src="/static/class/coach.png" mode="widthFix"></image>
-					<text>教练：唐小明</text>
-				</view> -->
-				<!-- <view class="class-content-cycle">
-					<text class="class-content-cycle-tip">10节课</text>
-					<text class="class-content-cycle-tip">2人可提前开课，4人提前开班</text>
-				</view> -->
+		
 			</view>
 		</view>
 	</view>

@@ -321,7 +321,7 @@
 
 				this.setToDayAll();
 				this.setDocListsUpdate();
-				this.change()
+				// this.change()
 			},
 			updateMonth() {
 				this.getDate(this.getMonth('prev'), 'prev');
@@ -489,7 +489,7 @@
 				this.setToDayAll();
 
 				if (updateWeek) {
-					this.change()
+					// this.change()
 				}
 
 			},

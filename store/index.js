@@ -35,48 +35,65 @@ const state = {
 		}
 	],
 
-	campus:null,
-	location:{
+	campus: null,
+	location: {
 		latitude: null,
 		longitude: null
 	},
-	userInfo:{},
-	Authorization:'',
-	city:[]
-	
+	userInfo: {},
+	Authorization: '',
+	city: [],
+	classStatus: {
+		0: '拼班中',
+		1: '待开课(拼班完成)',
+		2: '拼班未成功',
+		3: '开班中',
+		4: '解散（到期结课）',
+		5: '解散（团长解散）',
+		6: '解散（人数不足）'
+	},
+	avatar:'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132'
+
 }
 
 const getters = {
 	active: state => state.active,
 	animate: state => state.animate,
 	tabbars: state => state.tabbars,
-	teach:state => state.teach,
-	campus:state => state.campus,
-	location:state => state.location,
-	userInfo:state => state.userInfo,
-	Authorization:state => state.Authorization,
-	city:state => state.city
+	teach: state => state.teach,
+	campus: state => state.campus,
+	location: state => state.location,
+	userInfo: state => state.userInfo,
+	Authorization: state => state.Authorization,
+	city: state => state.city,
+	classStatus: state => state.classStatus,
+	avatar: state => state.avatar
 	
+
 }
 
 const mutations = {
-	SET_STORAGE(state, {data = null,str='campus',type='Object'}) {
+	SET_STORAGE(state, {
+		data = null,
+		str = 'campus',
+		type = 'Object'
+	}) {
 		if (data) {
 			state[str] = data;
-			if(type=='Object'&& str!='Authorization'){
-				uni.setStorageSync(CONFIG.CACHE_PREFIX+str, JSON.stringify(data));
+			if (type == 'Object' && str != 'Authorization') {
+				uni.setStorageSync(CONFIG.CACHE_PREFIX + str, JSON.stringify(data));
 			} else {
-				uni.setStorageSync(CONFIG.CACHE_PREFIX+str, data);
+				uni.setStorageSync(CONFIG.CACHE_PREFIX + str, data);
 			}
-			
+
 		} else {
-			if (uni.getStorageSync(CONFIG.CACHE_PREFIX+str)) {
-				if(type=='Object'&& str!='Authorization'){
-					state[str] = JSON.parse(uni.getStorageSync(CONFIG.CACHE_PREFIX+str));
+			if (uni.getStorageSync(CONFIG.CACHE_PREFIX + str)) {
+				if (type == 'Object' && str != 'Authorization') {
+					state[str] = JSON.parse(uni.getStorageSync(CONFIG.CACHE_PREFIX + str));
 				} else {
-					state[str] = uni.getStorageSync(CONFIG.CACHE_PREFIX+str)
+					state[str] = uni.getStorageSync(CONFIG.CACHE_PREFIX + str)
 				}
-				
+
 			}
 		}
 	},
@@ -87,7 +104,7 @@ const mutations = {
 		state.tabbars = data
 	},
 	SET_TEACH(state, data) {
-		console.log(data,'data');
+		console.log(data, 'data');
 		state.teach = data
 	},
 }

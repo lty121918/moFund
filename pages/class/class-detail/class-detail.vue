@@ -1,6 +1,6 @@
 <template>
 	<view class="class-detail">
-		<class-item :data="data" :isTeach="isTeach"></class-item>
+		<class-item :data="data" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 		<view class="class-detail-user" v-if="!isAttendance">
 			<view class="home-title">
 				<view class="home-title-item">
@@ -17,7 +17,7 @@
 				<!-- 	<image v-if="isHead && isTeach==2" class="class-detail-head-share" src="/static/class/share.png"
 					mode="aspectFit">
 				</image> v-if="!isHead || isTeach==1"-->
-				<view class="class-detail-head-contact" @click="handlePhone(data.phone)">
+				<view class="class-detail-head-contact" @click="handlePhone(data.wxPhone)">
 					<image class="class-detail-head-liao" src="/static/class/liao.png" mode="aspectFit"></image>
 					<text>联系团长</text>
 				</view>
@@ -30,13 +30,15 @@
 			</view>
 			<view class="class-detail-stu">
 				<view class="class-detail-stu-flex fz28" v-for="row in data.studentVOList" :key="row.id">
-
 					<image class="class-detail-stu-img" :src="row.headUrl" mode="aspectFit"></image>
 					<view class="fwb class-detail-stu-name">{{row.studentName}}</view>
-					<view class="class-detail-stu-sex">{{row.gender}}</view>
+					<view class="class-detail-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="class-detail-stu-age">{{row.age}}岁</view>
-					<view class="class-detail-stu-tip" v-if="isTeach==1">余额不足</view>
-					<image class="class-detail-stu-icon" @click="handleShow" src="/static/edit.png" mode="widthFix">
+					<view class="class-detail-stu-tip">
+						<text class="class-detail-stu-tip2" v-if="isTeach==1">余额不足</text>
+					</view>
+					<image class="class-detail-stu-icon" @click="handleShow(row)" src="/static/edit.png"
+						mode="widthFix">
 					</image>
 				</view>
 			</view>
@@ -53,21 +55,23 @@
 					<image class="class-detail-attendance-img" src="/static/attendance.png" mode="widthFix">
 						<text class="color4">考勤名单</text>
 				</view>
-				<text class="color2">2022-07-03 09:00 ~ 10:30</text>
+				<text class="color2">{{studentVOList.courseDate}}
+					{{studentVOList.startTime}}~{{studentVOList.endTime}}</text>
 			</view>
 			<view class="class-detail-stu">
-				<view class="class-detail-stu-flex fz28" v-for="(item,index) in 10" :key="index"
-					@click="changeBox(index)">
-					<view v-if="boxActive.indexOf(index)==-1" class="class-detail-attendance-check"></view>
+				<view class="class-detail-stu-flex fz28" v-for="(item,index) in studentVOList.data" :key="index"
+					@click="changeBox(item.classStudentId)">
+					<view v-if="boxActive.indexOf(item.classStudentId)==-1" class="class-detail-attendance-check">
+					</view>
 					<image v-else class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
 					</image>
-					<image class="class-detail-stu-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<view class="fwb class-detail-stu-name">李晓明</view>
-					<view class="class-detail-stu-sex">男</view>
-					<view class="class-detail-stu-age">5岁</view>
-					<view class="color256 text-r class-detail-stu-status" v-if="index==1">已出勤</view>
-					<view class="color2 text-r class-detail-stu-status" v-if="index==2">学员请假</view>
-					<view class="color text-r class-detail-stu-status" v-if="index==3">学员未到</view>
+					<image class="class-detail-stu-img" :src="item.headUrl" mode="aspectFit"></image>
+					<view class="fwb class-detail-stu-name">{{item.studentName}}</view>
+					<view class="class-detail-stu-sex">{{item.gender==1?'男':'女'}}</view>
+					<view class="class-detail-stu-age">{{item.age}}岁</view>
+					<view class="color256 text-r class-detail-stu-status" v-if="item.attendanceStatus==1">已出勤</view>
+					<view class="color2 text-r class-detail-stu-status" v-if="item.attendanceStatus==2">学员请假</view>
+					<view class="color text-r class-detail-stu-status" v-if="item.attendanceStatus==3">学员未到</view>
 				</view>
 			</view>
 		</view>
@@ -83,7 +87,7 @@
 			<view class="class-detail-footer-button " @click="checkTimetable">
 				查看课表
 			</view>
-			<view class="class-detail-footer-button " @click="$utils.router.navTo($page.Demeanour)">
+			<view class="class-detail-footer-button " @click="$utils.router.navTo($page.Demeanour,{classId})">
 				班级风采
 			</view>
 			<view class="class-detail-footer-button " @click="handleRecharge">
@@ -97,7 +101,7 @@
 				查看课表
 			</view>
 			<view class="class-detail-footer-button class-detail-footer-button3"
-				@click="$utils.router.navTo($page.Demeanour)">
+				@click="$utils.router.navTo($page.Demeanour,{classId})">
 				班级风采
 			</view>
 			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleAttendance">
@@ -106,19 +110,19 @@
 		</view>
 		<!-- 考勤展示 -->
 		<view class="class-detail-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }" v-if="isAttendance">
-			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas('签到')">
+			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(1,'签到')">
 				教练签到
 			</view>
-			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas('请假')">
+			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(2,'请假')">
 				学员请假
 			</view>
-			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas('未到')">
+			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(3,'未到')">
 				学员未到
 			</view>
 		</view>
 		<!-- 充值 -->
 		<recharge ref="recharge" />
-		<popup-date ref="popupDate"></popup-date>
+		<popup-date ref="popupDate" @attendance="getAttendance"></popup-date>
 		<popup-eval ref="popupEval" />
 		<popup-eval2 ref="popupEval2" />
 	</view>
@@ -144,53 +148,61 @@
 				isHead: true, //是否 是团长进入该页面
 				isAttendance: false, //是否考勤
 				boxActive: [],
-				data:{}
+				studentVOList: [], // 教练考勤人员
+				data: {},
+				classId: ''
 
 			}
 		},
 		async onLoad(e) {
-			// const res = await $http['classes'].getClassDetail({
-			// 	classId: e.classId
-			// })
-			// if (res.code == 200) {
-			this.data = {
-				"avatar": require('@/static/mine/head-url.png'),
-				"campusId": "",
-				"campusName": "校区",
-				"classId": "",
-				"className": "班级名称",
-				"classStatus": "",
-				"coachId": "",
-				"courseId": "",
-				"courseName": "",
-				"courseType": "",
-				"coverImage": "",
-				"endDate": "",
-				"endPeriod": "",
-				"price": "",
-				"scheduleDetailId": "",
-				"scheduleId": "",
-				"staffName": "",
-				"startDate": "",
-				"startPeriod": "",
-				"studentVOList": [{
-					"age": 0,
-					"birthday": "",
-					"contactName": "",
-					"contactPhone": "",
-					"gender": "男",
-					"headUrl": require('@/static/mine/head-url.png'),
-					"id": "",
-					"idCard": "",
-					"studentName": "李晓明"
-				}],
-				"typeName": "",
-				"weekCode": [],
-				"wxName": "Do.Ting.le"
-			}
-			// }
+
+			this.classId = e.classInfoId || '39fffa311d849b8719aa8293bd302397'
+			this.$nextTick(() => {
+				this.getClassDetail()
+			})
 		},
 		methods: {
+			getClassDetail() {
+				const {
+					getClassStudenDetail,
+					getClassDetail
+				} = this.$http['classes']
+				let getData = ''
+				console.log(this.isTeach);
+				if (this.isTeach == 1) {
+					// 教练
+					getData = getClassStudenDetail
+				} else {
+					// 家长
+					getData = getClassDetail
+				}
+				getData({
+					classId: this.classId
+				}).then(res => {
+					if (res.code == 200) {
+						this.isHead = res.data.regimentalCommander
+						res.data.startPeriod = this.$utils.dateTime.getLocalTime(
+							`2022-01-01 ${res.data.startPeriod}`, 'hh:mm')
+						res.data.endPeriod = this.$utils.dateTime.getLocalTime(`2022-01-01 ${res.data.endPeriod}`,
+							'hh:mm')
+						if (res.data.nextCLassTime) {
+							res.data.nextCLassTime = this.$utils.dateTime.getLocalTime(
+								res.data.nextCLassTime,
+								'yyyy-MM-dd hh:mm')
+						}
+						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
+						res.data.studentVOList.forEach(item => {
+							if (item.headUrl) {
+								item.headUrl = this.$url + item.headUrl
+							} else {
+								item.headUrl = this.avatar
+							}
+
+						})
+						this.data = res.data
+					}
+				})
+			},
 			// 联系团长
 			handlePhone(val) {
 				wx.makePhoneCall({
@@ -204,10 +216,16 @@
 			handleShow(item) {
 				if (this.isTeach == 1) {
 					// 教练评价
-					this.$refs.popupEval.handleShow(item)
+					this.$refs.popupEval.handleShow({
+						...item,
+						...this.data
+					})
 				} else {
 					// 家长查看评价
-					this.$refs.popupEval2.handleShow(item)
+					this.$refs.popupEval2.handleShow({
+						...item,
+						...this.data
+					})
 				}
 
 			},
@@ -217,34 +235,95 @@
 			// 解散
 			handleDismiss() {
 				uni.showToast({
-					title: "解散"
+					title: this.isHead ? "解散" : "退出"
 				})
+				if (this.isHead) {
+					this.$http['classes'].disbandClass({
+						classId: this.classId,
+						studentIds: this.data.data.studentVOList.map(item => item.id)
+					})
+				} else {
+					this.$http['classes'].exitClass({
+						classId: this.classId
+					})
+				}
 			},
 			// 考勤按钮
+			async getAttendance(dataObj) {
+				const res = await this.$http['classes'].coachScheduleStuInfo({
+					id: dataObj.id
+				}).then(res => {
+					if (res.code == 200) {
+						this.isAttendance = true
+						this.studentVOList = {
+							...dataObj,
+							data: res.data
+						}
+					}
+				})
+			},
+			// 打开考勤课表
 			handleAttendance() {
-				this.isAttendance = true
+				this.$refs.popupDate.handleShow(false, {
+					isTeach: this.isTeach,
+					scheduleId: this.data.scheduleId
+				}, true)
 			},
 			// 修改学员考勤状态
-			handleStutas(val) {
-				uni.showToast({
-					title: val
+			handleStutas(val, type) {
+				// uni.showToast({
+				// 	title: type
+				// })
+				const self = this
+				let data = self.studentVOList.data
+				if (val == 1) {
+					data.forEach(item => {
+						item.attendanceStatus = val
+					})
+				} else {
+					if (self.boxActive.length == 0) {
+						uni.showToast({
+							title: '请选择考勤学员'
+						})
+						return false
+					}
+					data = data.filter(item => {
+						item.attendanceStatus = val
+						let index = self.boxActive.indexOf(item.classStudentId)
+						return index > -1
+					})
+				}
+				// this.studentVOList
+				self.$http['clases'].CourseScheduleAttendance({
+					attendanceStatus: val,
+					attendances: data,
+					classId: self.studentVOList.classId,
+					id: self.studentVOList.id
+				}).then(res => {
+					if (res.code == 200) {
+						self.getAttendance(self.studentVOList)
+						self.boxActive = []
+					}
 				})
 			},
 			// 查看课表
 			checkTimetable() {
-				uni.showToast({
-					title: "查看课表"
+				// uni.showToast({
+				// 	title: "查看课表"
+				// })
+				this.$refs.popupDate.handleShow(false, {
+					isTeach: this.isTeach,
+					scheduleId: this.data.scheduleId
 				})
-				this.$refs.popupDate.handleShow()
 			},
 
 			changeBox(val) {
-				let index = this.boxActive.indexOf(val)
+				let index = this.boxActive.indexOf(val.classStudentId)
 				console.log(val, index);
 				if (index > -1) {
 					this.boxActive.splice(index, 1)
 				} else {
-					this.boxActive.push(val)
+					this.boxActive.push(val.classStudentId)
 				}
 				console.log(this.boxActive);
 			},
@@ -420,6 +499,11 @@
 
 			&-tip {
 				width: 116rpx;
+			}
+
+			&-tip2 {
+				display: inline-block;
+				width: 116rpx;
 				height: 40rpx;
 				background: rgba(222, 80, 31, 0.1000);
 				border-radius: 6rpx;
@@ -436,6 +520,7 @@
 				margin-right: 24rpx;
 				width: 48rpx;
 				height: 46rpx;
+				border-radius: 50%;
 			}
 
 			&-icon {

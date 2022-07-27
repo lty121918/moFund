@@ -30,7 +30,7 @@ const minxin = {
 		}
 	},
 	computed: {
-		...mapGetters(['campus', 'location', 'city', 'userInfo']),
+		...mapGetters(['campus', 'location', 'city', 'userInfo','classStatus','avatar']),
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
@@ -114,7 +114,7 @@ const minxin = {
 					signType: val.signType,
 					paySign: val.paySign,
 					success: function(res) {
-						const rawdata = JSON.parse(res.rawdata);
+						// const rawdata = JSON.parse(res.rawdata);
 						console.log("支付成功");
 						resolve(true)
 					},

@@ -17,6 +17,7 @@
 		mixins: [mixin],
 		data() {
 			return {
+				classId:'',
 				list: [{
 						image: 'https://via.placeholder.com/200x500.png/ff0000',
 					},
@@ -38,7 +39,18 @@
 				]
 			}
 		},
+		onLoad(e) {
+			this.classId = e.classId
+			this.getClassMien()
+		},
 		methods: {
+			getClassMien(){
+				this.$http['classes'].getClassMien({classId:this.classId}).then(res=>{
+					if(res.code==200){
+						this.list = res.data || []
+					}
+				})
+			},
 			submit() {
 				uni.chooseImage({
 					count: 1, // 默认最多一次选择9张图

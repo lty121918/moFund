@@ -51,11 +51,12 @@
 		},
 		methods: {
 			// 初始化
-			init() {
+			init(val) {
 				console.log('初始化列表');
 				this.queryParams = {
 					page: 1,
-					row: 10
+					row: 10,
+					...val
 				}
 				this.search()
 			},

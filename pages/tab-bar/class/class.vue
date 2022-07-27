@@ -2,29 +2,36 @@
 	<view class="class">
 
 		<y-list ref="yList" :setData="search">
-			<template slot-scope="{data}">
-				<!-- 教师端 -->
-				<view class="home-title" v-if="isTeach==1">
-					<view class="home-title-item">
-						<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
-						<text>热门活动</text>
-					</view>
-					<view class="class-title">
-						<view class="class-title-item">
-							<text>待开课: </text>
-							<text class="color pl12">0</text>
-						</view>
-						<view class="">
-							<text>进行中: </text>
-							<text class="color pl12">1</text>
-						</view>
-					</view>
-				</view>
-				<!-- 	班级状态 0：拼班中 1：待开课(拼班完成) 2：拼班未成功 3：开班中 
-				4：解散（到期结课）5：解散（团长解散）、6：解散（人数不足） -->
-				<!-- 教师端 end-->
+			<template slot-scope="{data}" v-if="isTeach==1">
 				<view v-for="(item,index) in data" :key="index">
-					<class-item :data="item"></class-item>
+					<!-- 教师端 -->
+					<view class="home-title">
+						<view class="home-title-item">
+							<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+							<text>{{item.campusName}}</text>
+						</view>
+						<view class="class-title">
+							<view class="class-title-item">
+								<text>待开课: </text>
+								<text class="color pl12">0</text>
+							</view>
+							<view class="">
+								<text>进行中: </text>
+								<text class="color pl12">1</text>
+							</view>
+						</view>
+					</view>
+					<!-- 教师端 end-->
+					<view v-for="(row,index) in item.classWxPageVOList" :key="row.classId">
+						<class-item :data="row" :classStatus="classStatus" :isTeach="isTeach"></class-item>
+					</view>
+
+				</view>
+
+			</template>
+			<template slot-scope="{data}" v-if="isTeach==2">
+				<view v-for="(item,index) in data" :key="index">
+					<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 				</view>
 			</template>
 		</y-list>
@@ -52,25 +59,27 @@
 		},
 		onShow() {
 			this.getMounted()
-			const active = 'class'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
-			uni.setNavigationBarTitle({
-				title: '班级'
-			})
-			this.getTeach()
 		},
 		created() {
-			
+
 		},
-		mounted() {
-		},
+		mounted() {},
 		methods: {
-			getMounted(){
-				setTimeout(()=>{
-					this.$refs.yList.init()
-				},300)
+			getMounted() {
+				setTimeout(() => {
+					console.log('11');
+					const active = 'class'
+					if (this.active !== active) {
+						this.SET_ACTIVE(active)
+					}
+					uni.setNavigationBarTitle({
+						title: '班级'
+					})
+					this.getTeach()
+					this.$refs.yList.init({
+						isTeach: this.isTeach
+					})
+				}, 300)
 			},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
@@ -78,13 +87,49 @@
 				const self = this
 				console.log('class请求');
 				return new Promise(async (resolve, reject) => {
-					self.$http['classes'].getClassList({
+					const {
+						getClassStudentPage,
+						getClassList
+					} = self.$http['classes']
+					let getData = getClassList
+					if (val.isTeach == 1) {
+						getData = getClassStudentPage
+					}
+					getData({
 						...val
 					}).then(res => {
 						let data = []
 						if (res.code == 200) {
 							data = res.data || []
-							data = data.filter(item=>item.classStatus==0 || item.classStatus==1)
+							let list = []
+							if (val.isTeach == 1) {
+								data.classWxPageVOList = data.classWxPageVOList || []
+								list = data.classWxPageVOList
+							} else {
+								data = data.filter(item => item.classStatus == 0 || item.classStatus ==
+									1 || item.classStatus == 3)
+								list = data
+
+							}
+							list.forEach(item => {
+								item.startPeriod = self.$utils.dateTime.getLocalTime(
+									`2022-01-01 ${item.startPeriod}`, 'hh:mm')
+								item.endPeriod = self.$utils.dateTime.getLocalTime(
+									`2022-01-01 ${item.endPeriod}`,
+									'hh:mm')
+								if (item.nextCLassTime) {
+									item.nextCLassTime = self.$utils.dateTime.getLocalTime(
+										item.nextCLassTime,
+										'yyyy-MM-dd hh:mm')
+								}
+							})
+							if (val.isTeach == 1) {
+								data.classWxPageVOList = list
+							} else {
+								data = list
+
+							}
+
 						}
 						resolve({
 							data,
