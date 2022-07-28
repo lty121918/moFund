@@ -1,16 +1,13 @@
 <template>
 	<view class="coach">
-		<y-list ref="yList" :scrollClass="'coach-scroll-class'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="flex-bc coach-content" v-for="(item,index) in data" :key="index">
-					<view class="">
-						<view class="">申请时间：{{item.time}}</view>
-						<view class="pt16">申请校区：{{item.campusName}}</view>
-					</view>
-					<!-- <view class="coach-status">待审核</view> -->
-				</view>
-			</template>
-		</y-list>
+		<view class="flex-bc coach-content" v-for="(item,index) in data" :key="index">
+			<view class="">
+				<view class="">申请时间：{{item.time}}</view>
+				<view class="pt16">申请校区：{{item.campusName}}</view>
+			</view>
+			<!-- <view class="coach-status">待审核</view> -->
+		</view>
+		<view :style="{ height: `calc(${safeAreaHeight}px + 168rpx)` }"></view>
 		<view class="coach-footer">
 			<view class="coach-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
 				申请成为教练
@@ -20,56 +17,45 @@
 </template>
 
 <script>
-
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],
 		data() {
-			return {}
+			return {
+				data: []
+			}
 		},
 		computed: {},
 		created() {
 
 		},
 		onShow() {
-			setTimeout(()=>{
-				this.$refs.yList.init()
-			},300)
+			this.search()
 		},
 		methods: {
-			submit(){
+			submit() {
 				this.$utils.router.navTo(this.$page.AddCoach)
 			},
 			// 模拟请求数据
-			search() {
+			async search() {
 				const self = this
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					const res = await self.$http['mine'].getCoach()
-					if(res.code==200){
-						data = res.data
-						data.forEach(item=>{
-							item.time = self.$utils.dateTime.getLocalTime(item.applyTime,'yyyy-MM-dd hh:mm:ss')
-							item.campusName= item.campusNames.join(',')
-						})
-					}
-					resolve({
-						data,
-						totalRows: 10
+				let data = []
+				const res = await self.$http['mine'].getCoach()
+				if (res.code == 200) {
+					data = res.data
+					data.forEach(item => {
+						item.time = self.$utils.dateTime.getLocalTime(item.applyTime, 'yyyy-MM-dd hh:mm:ss')
+						item.campusName = item.campusNames.join(',')
 					})
-				})
+				}
+				this.data = data
+
 			},
 
 		}
 	}
 </script>
-<style>
-	.coach-scroll-class {
-		height: calc(100vh - 92rpx);
-		padding-top: 32rpx;
-		box-sizing: border-box;
-	}
-</style>
+
 <style lang="scss" scoped>
 	.coach {
 		min-height: 100vh;

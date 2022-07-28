@@ -1,64 +1,47 @@
 <template>
 	<view class="declare">
-		<y-list ref="yList" :scrollClass="'declare-scroll-class'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="declare-content" v-for="(item,index) in data" :key="index">
-					<view class="">社区名称：{{item.campusName}}</view>
-					<view class="pt16">社区物业：{{item.property}}</view>
-					<view class="pt16">社区场地：{{item.campusSpace}}</view>
-				</view>
-			</template>
-		</y-list>
+		<view class="declare-content" v-for="(item,index) in data" :key="index">
+			<view class="">社区名称：{{item.campusName}}</view>
+			<view class="pt16">社区物业：{{item.property}}</view>
+			<view class="pt16">社区场地：{{item.campusSpace}}</view>
+		</view>
 	</view>
 </template>
 
 <script>
 	export default {
 		data() {
-			return {}
+			return {
+				data: []
+			}
 		},
 		computed: {},
 		created() {
 
 		},
 		mounted() {
-			setTimeout(()=>{
-				this.$refs.yList.init()
-			},300)
+			this.search()
 		},
 		methods: {
 			// 模拟请求数据
-			search() {
+			async search() {
 				const self = this
-				return new Promise(async (resolve, reject) => {
-					const res =await self.$http['map'].getCampusApply()
-					let data = []
-					if (res.code == 200) {
-						for (let i = 0; i < res.data.length; i++) {
-							data.push(res.data[i])
-						}
-					}
-					console.log(data,'data',res.data);
-					resolve({
-						data,
-						totalRows: 10
-					})
-				})
+				const res = await self.$http['map'].getCampusApply()
+				let data = []
+				if (res.code == 200) {
+					data = res.data
+				}
+				this.data = data
 			},
 
 		}
 	}
 </script>
-<style>
-	.declare-scroll-class {
-		padding-top: 32rpx;
-		height: 100vh;
-		box-sizing: border-box;
-	}
-</style>
 <style lang="scss" scoped>
 	.declare {
+		padding-top: 32rpx;
 		min-height: 100vh;
+		box-sizing: border-box;
 		background: #EEF1FA;
 
 		&-content {

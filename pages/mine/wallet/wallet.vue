@@ -29,16 +29,13 @@
 				<view class="wallet-tab-item" @click="handleTab(3)" :class="[active==3?'wallet-tab-active':'']">收入
 				</view>
 			</view>
-			<y-list ref="yList" scrollClass="wallet-scroll" :setData="search" :params="{active}">
-				<template slot-scope="{data}">
-					<view v-for="(item,index) in data" :key="index">
-						<wallet-item :item="item" @change="handleShow"></wallet-item>
-					</view>
-				</template>
-			</y-list>
+			<view v-for="(item,index) in data" :key="index">
+				<wallet-item :item="item" @change="handleShow"></wallet-item>
+			</view>
 		</view>
-		<recharge ref="recharge" @change="getData"/>
-		<withdrawal ref="withdrawal" @change="getData"/>
+		<view :style="{ height: `calc(${safeAreaHeight}px + 32rpx)` }"></view>
+		<recharge ref="recharge" @change="getData" />
+		<withdrawal ref="withdrawal" @change="getData" />
 	</view>
 </template>
 
@@ -57,23 +54,13 @@
 		data() {
 			return {
 				active: 1, //  1 2 3
+				data: [], //数据列表
 				isTeach: false,
-				getPlayStatus:''
+				getPlayStatus: ''
 			}
 		},
-		computed: {},
-		created() {
-
-		},
-		onShow() {
-			
-		},
-		mounted() {
-			setTimeout(() => {
-				
-				this.getData()
-			}, 300)
-
+		onLoad() {
+			this.getData()
 		},
 		methods: {
 			getData() {
@@ -86,44 +73,40 @@
 							str: 'userInfo',
 							data: result
 						})
-						this.$refs.yList.init()
+						this.handleTab(1)
 					}
 				})
 			},
+			// 选择tab操作
 			handleTab(val) {
 				this.active = val
-				setTimeout(() => {
-					this.$refs.yList.init()
-				}, 300)
+				this.search()
 			},
+			// 打开充值弹窗
 			handleRecharge() {
 				this.$refs.recharge.handleShow()
 			},
+			// 打开提现弹窗
 			handleWithdrawal() {
 				this.$refs.withdrawal.handleShow(this.userInfo.remainingSum)
 			},
 			// 模拟请求数据
-			search(val) {
+			async search() {
 				const self = this
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					let income = ''
-					if (val.active == 2) {
-						income = false
-					} else if (val.active == 3) {
-						income = true
-					}
-					const res = await self.$http['mine'].getTrade({
-						income
-					})
-					if (res.code == 200) {
-						data = res.data
-					}
-					resolve({
-						data,
-						totalRows: 10
-					})
+				let data = []
+				let income = ''
+				if (this.active == 2) {
+					income = false
+				} else if (this.active == 3) {
+					income = true
+				}
+				const res = await self.$http['mine'].getTrade({
+					income
 				})
+				if (res.code == 200) {
+					data = res.data
+				}
+				this.data = data
 			},
 		}
 	}
@@ -212,6 +195,7 @@
 		&-content {
 			&-item {
 				margin-left: 32rpx;
+				padding-bottom: 16rpx;
 				width: 686rpx;
 				background: #FFFFFF;
 				border-radius: 14rpx;

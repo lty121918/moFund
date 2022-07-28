@@ -91,7 +91,10 @@
 			"path": "my-class/my-class",
 			"style": {
 				"navigationBarTitleText": "我的拼班",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"usingComponenets": {
+					"van-image":"/wxcomponents/vant/image/index"
+				}
 			}
 
 		}]

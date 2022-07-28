@@ -1,32 +1,30 @@
 <template>
 	<view class="student">
-		<y-list ref="yList" :scrollClass="'student-scroll-class'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="flex-start mr32 ml32 mt32">
-					<image class="student-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
-					<view>
-						<view>
-							<text class="student-head-name">{{userInfo.name}}</text>
-							<text class="student-head-role">家长</text>
-						</view>
-						<view class="fz28 colorw mt16">{{userInfo.phone}}</view>
-					</view>
+		<view class="student-head flex-start pr32 pl32 pt32">
+			<image class="student-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
+			<view>
+				<view>
+					<text class="student-head-name">{{userInfo.name}}</text>
+					<text class="student-head-role">家长</text>
 				</view>
-				<view class="flex-bc student-content" v-for="(item,index) in data" :key="index">
-					<view class="">
-						<view class="flex-sc">
-							<text>姓名：{{item.studentName}} - {{item.age}}岁</text>
-							<image class="student-sex" :src="item.gender==1?'/static/sex-m.png':'/static/sex-w.png'" mode="widthFix"></image>
-						</view>
-						<view class="pt16">证件号码：{{item.idCard}}</view>
-						<view class="pt16">出生日期：{{item.birthday}}</view>
-					</view>
-					<view class="student-status" @click="handleDel(item)">
-						<image class="student-head-del" src="/static/del.png" mode="aspectFit"></image>
-					</view>
+				<view class="fz28 colorw mt16">{{userInfo.phone}}</view>
+			</view>
+		</view>
+		<view class="flex-bc student-content" v-for="(item,index) in data" :key="index">
+			<view class="">
+				<view class="flex-sc">
+					<text>姓名：{{item.studentName}} - {{item.age}}岁</text>
+					<image class="student-sex" :src="item.gender==1?'/static/sex-m.png':'/static/sex-w.png'"
+						mode="widthFix"></image>
 				</view>
-			</template>
-		</y-list>
+				<view class="pt16">证件号码：{{item.idCard || ''}}</view>
+				<view class="pt16">出生日期：{{item.birthday}}</view>
+			</view>
+			<view class="student-status" @click="handleDel(item)">
+				<image class="student-head-del" src="/static/del.png" mode="aspectFit"></image>
+			</view>
+		</view>
+		<view :style="{ height: `calc(${safeAreaHeight}px + 168rpx)` }"></view>
 		<view class="student-footer">
 			<view class="student-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
 				添加学员
@@ -41,62 +39,50 @@
 		mixins: [mixin],
 		data() {
 			return {
+				data: []
 			}
 		},
 		computed: {},
 		onShow() {
-			setTimeout(()=>{
-				this.$refs.yList.init()
-			},300)
+			this.search()
 		},
 		methods: {
 			submit() {
 				this.$utils.router.navTo(this.$page.AddStudent)
 			},
-			handleDel(item){
-				const self =this 
+			handleDel(item) {
+				const self = this
 				this.$utils.model.showMsgModal({
-					content:'确认要删除该学员嘛？',
-					showCancel:true,
-					confirmCallback:()=>{
+					content: '确认要删除该学员嘛？',
+					showCancel: true,
+					confirmCallback: () => {
 						console.log('确认');
-						self.$http['mine'].delStudent(item.id).then(res=>{
+						self.$http['mine'].delStudent(item.id).then(res => {
 							console.log(res);
-							if(res.code==200){
+							if (res.code == 200) {
 								self.$refs.yList.init()
 							}
 						})
 					},
-					cancelCallback:()=>{
+					cancelCallback: () => {
 						console.log('取消');
 					}
 				})
 			},
 			// 模拟请求数据
-			search() {
+			async search() {
 				const self = this
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					const res =await self.$http['mine'].getStudent()
-					if(res.code==200){
-						data = res.data
-					}
-					
-					resolve({
-						data,
-						totalRows: 10
-					})
-				})
+				let data = []
+				const res = await self.$http['mine'].getStudent()
+				if (res.code == 200) {
+					data = res.data
+				}
+				this.data = data
 			},
 
 		}
 	}
 </script>
-<style>
-	.student-scroll-class {
-		height: calc(100vh - 160rpx);
-	}
-</style>
 <style lang="scss" scoped>
 	.student {
 		min-height: 100vh;
@@ -136,6 +122,8 @@
 		}
 
 		&-head {
+			position: relative;
+			z-index: 1;
 			&-img {
 				margin-right: 28rpx;
 				width: 90rpx;
@@ -166,11 +154,12 @@
 				color: #FFFFFF;
 				line-height: 34rpx;
 			}
-			&-del{
+
+			&-del {
 				width: 64rpx;
 				height: 64rpx;
 			}
-			
+
 		}
 
 		&-footer2 {

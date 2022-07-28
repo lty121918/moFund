@@ -1,39 +1,37 @@
 <template>
 	<view class="class">
-		<y-list ref="yList" :setData="search">
-			<template slot-scope="{data}" v-if="isTeach==1">
-				<view v-for="(item,index) in data" :key="index">
-					<!-- 教师端 -->
-					<view class="home-title">
-						<view class="home-title-item">
-							<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
-							<text>{{item.campusName}}</text>
+		<view v-if="isTeach==1">
+			<view v-for="item in data" :key="item.campusName">
+				<!-- 教师端 -->
+				<view class="home-title">
+					<view class="home-title-item">
+						<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+						<text>{{item.campusName}}</text>
+					</view>
+					<view class="class-title">
+						<view class="class-title-item">
+							<text>待开课: </text>
+							<text class="color pl12">0</text>
 						</view>
-						<view class="class-title">
-							<view class="class-title-item">
-								<text>待开课: </text>
-								<text class="color pl12">0</text>
-							</view>
-							<view class="">
-								<text>进行中: </text>
-								<text class="color pl12">1</text>
-							</view>
+						<view class="">
+							<text>进行中: </text>
+							<text class="color pl12">1</text>
 						</view>
 					</view>
-					<!-- 教师端 end-->
-					<view v-for="(row,index) in item.classWxPageVOList" :key="row.classId">
-						<class-item :data="row" :classStatus="classStatus" :isTeach="isTeach"></class-item>
-					</view>
-
+				</view>
+				<!-- 教师端 end-->
+				<view v-for="row in item.classWxPageVOList" :key="row.classId">
+					<class-item :data="row" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 				</view>
 
-			</template>
-			<template slot-scope="{data}" v-if="isTeach==2">
-				<view v-for="(item,index) in data" :key="index">
-					<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
-				</view>
-			</template>
-		</y-list>
+			</view>
+
+		</view>
+		<view v-if="isTeach==2">
+			<view v-for="(item,index) in data" :key="index">
+				<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
+			</view>
+		</view>
 		<page-tabpars></page-tabpars>
 	</view>
 </template>
@@ -51,7 +49,9 @@
 			ClassItem
 		},
 		data() {
-			return {}
+			return {
+				data:[]
+			}
 		},
 		computed: {
 			...mapGetters(['active']),
@@ -66,7 +66,6 @@
 		methods: {
 			getMounted() {
 				setTimeout(() => {
-					console.log('11');
 					const active = 'class'
 					if (this.active !== active) {
 						this.SET_ACTIVE(active)
@@ -75,7 +74,7 @@
 						title: '班级'
 					})
 					this.getTeach()
-					this.$refs.yList.init({
+					this.search({
 						isTeach: this.isTeach
 					})
 				}, 300)
@@ -85,57 +84,53 @@
 			search(val) {
 				const self = this
 				console.log('class请求');
-				return new Promise(async (resolve, reject) => {
-					const {
-						getClassStudentPage,
-						getClassList
-					} = self.$http['classes']
-					let getData = getClassList
-					if (val.isTeach == 1) {
-						getData = getClassStudentPage
-					}
-					getData({
-						...val
-					}).then(res => {
-						let data = []
-						if (res.code == 200) {
-							data = res.data || []
-							let list = []
-							if (val.isTeach == 1) {
-								data.classWxPageVOList = data.classWxPageVOList || []
-								list = data.classWxPageVOList
-							} else {
-								data = data.filter(item => item.classStatus == 0 || item.classStatus ==
-									1 || item.classStatus == 3)
-								list = data
-
-							}
-							list.forEach(item => {
-								item.coverImage = self.url + item.coverImages
-								item.startPeriod = self.$utils.dateTime.getLocalTime(
-									`2022-01-01 ${item.startPeriod}`, 'hh:mm')
-								item.endPeriod = self.$utils.dateTime.getLocalTime(
-									`2022-01-01 ${item.endPeriod}`,
-									'hh:mm')
-								if (item.nextCLassTime) {
-									item.nextCLassTime = self.$utils.dateTime.getLocalTime(
-										item.nextCLassTime,
-										'yyyy-MM-dd hh:mm')
-								}
-							})
-							if (val.isTeach == 1) {
-								data.classWxPageVOList = list
-							} else {
-								data = list
-
-							}
+				const {
+					getClassStudentPage,
+					getClassList
+				} = self.$http['classes']
+				let getData = getClassList
+				if (val.isTeach == 1) {
+					getData = getClassStudentPage
+				}
+				getData({
+					...val
+				}).then(res => {
+					let data = []
+					if (res.code == 200) {
+						data = res.data || []
+						let list = []
+						if (val.isTeach == 1) {
+							data.classWxPageVOList = data.classWxPageVOList || []
+							list = data.classWxPageVOList
+						} else {
+							data = data.filter(item => item.classStatus == 0 || item.classStatus ==
+								1 || item.classStatus == 3)
+							list = data
 
 						}
-						resolve({
-							data,
-							totalRows: 10
+						list.forEach(item => {
+							item.coverImage = self.url + item.coverImages
+							item.startPeriod = self.$utils.dateTime.getLocalTime(
+								`2022-01-01 ${item.startPeriod}`, 'hh:mm')
+							item.endPeriod = self.$utils.dateTime.getLocalTime(
+								`2022-01-01 ${item.endPeriod}`,
+								'hh:mm')
+							if (item.nextCLassTime) {
+								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
+									item.nextCLassTime,
+									'yyyy-MM-dd hh:mm')
+							}
 						})
-					})
+						if (val.isTeach == 1) {
+							data.classWxPageVOList = list
+						} else {
+							data = list
+
+						}
+						this.data = data
+
+					}
+
 
 				})
 			},
@@ -146,7 +141,9 @@
 
 <style lang="scss" scoped>
 	.class {
+		padding: 32rpx 0;
 		min-height: 100vh;
+		box-sizing: border-box;
 		background: #EEF1FA;
 
 		&-title {

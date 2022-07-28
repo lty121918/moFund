@@ -1,13 +1,8 @@
 <template>
 	<view class="class">
-
-		<y-list ref="yList" :setData="search">
-			<template slot-scope="{data}">
-				<view v-for="(item,index) in data" :key="index">
-					<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
-				</view>
-			</template>
-		</y-list>
+		<view v-for="(item,index) in data" :key="index">
+			<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
+		</view>
 	</view>
 </template>
 
@@ -20,39 +15,53 @@
 			ClassItem
 		},
 		data() {
-			return {}
+			return {
+				data:[]
+			}
 		},
-		computed: {
-		},
+		computed: {},
 		onShow() {
-			setTimeout(()=>{
-				this.$refs.yList.init()
-			},300)
+			this.getMounted()
 		},
 		created() {
-			
+
 		},
-		mounted() {
-		},
+		mounted() {},
 		methods: {
+			getMounted() {
+				setTimeout(() => {
+					this.getTeach()
+					this.search()
+				}, 300)
+			},
 			// 模拟请求数据
-			search(val) {
+			async search(val) {
 				const self = this
 				console.log('class请求');
-				return new Promise(async (resolve, reject) => {
-					self.$http['classes'].getClassList({
-						...val
-					}).then(res => {
-						let data = []
-						if (res.code == 200) {
-							data = res.data || []
-						}
-						resolve({
-							data,
-							totalRows: 10
+				self.$http['classes'].getClassList({
+					...val
+				}).then(res => {
+					let data = []
+					if (res.code == 200) {
+						data = res.data || []
+						data = data.filter(item => item.classStatus == 0 || item.classStatus ==
+							1 || item.classStatus == 3)
+						data.forEach(item => {
+							item.coverImage = self.url + item.coverImages
+							item.startPeriod = self.$utils.dateTime.getLocalTime(
+								`2022-01-01 ${item.startPeriod}`, 'hh:mm')
+							item.endPeriod = self.$utils.dateTime.getLocalTime(
+								`2022-01-01 ${item.endPeriod}`,
+								'hh:mm')
+							if (item.nextCLassTime) {
+								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
+									item.nextCLassTime,
+									'yyyy-MM-dd hh:mm')
+							}
 						})
-					})
 
+					}
+					this.data = data
 				})
 			},
 
@@ -62,7 +71,9 @@
 
 <style lang="scss" scoped>
 	.class {
+		padding: 32rpx 0;
 		min-height: 100vh;
+		box-sizing: border-box;
 		background: #EEF1FA;
 
 		&-title {

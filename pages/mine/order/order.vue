@@ -5,15 +5,9 @@
 			<view class="order-tab-item" @click="handleTab(2)" :class="[active==2?'order-tab-active':'']">消费订单</view>
 			<view class="order-tab-item" @click="handleTab(3)" :class="[active==3?'order-tab-active':'']">充值订单</view>
 		</view>
-		<y-list ref="yList" scrollClass="order-scroll" :setData="search" :params="{active}">
-			<template slot-scope="{data}">
-				<view v-for="(item,index) in data" :key="index">
-					<order-item :item="item" @change="handleShow"></order-item>
-				</view>
-
-			</template>
-		</y-list>
-
+		<view v-for="(item,index) in data" :key="index">
+			<order-item :item="item" @change="handleShow"></order-item>
+		</view>
 		<!-- 订单评价 -->
 		<popup-eval ref="popupEval" />
 	</view>
@@ -30,6 +24,7 @@
 		data() {
 			return {
 				active: 1,
+				data: []
 			}
 		},
 		computed: {},
@@ -37,9 +32,7 @@
 
 		},
 		mounted() {
-			setTimeout(()=>{
-				this.$refs.yList.init()
-			},500)
+			this.search()
 		},
 		methods: {
 			/**
@@ -48,9 +41,7 @@
 			 */
 			handleTab(val) {
 				this.active = val
-				setTimeout(()=>{
-					this.$refs.yList.init()
-				},300)
+				this.search()
 			},
 			/**
 			 * @function 打开评价评分方法
@@ -60,63 +51,52 @@
 				this.$refs.popupEval.handleShow(item)
 			},
 			// 模拟请求数据
-			search(val) {
+			async search() {
 				const self = this
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					const {
-						getOrder,
-						getOrderConsume,
-						getOrderInvest
-					} = this.$http['mine']
-					let res;
-					if (val.active == 1) {
-						res = await getOrder()
-					} else if (val.active == 2) {
-						res = await getOrderConsume()
-					} else if (val.active == 3) {
-						res = await getOrderInvest()
-					}
-					if (res.code == 200) {
+				let data = []
+				const {
+					getOrder,
+					getOrderConsume,
+					getOrderInvest
+				} = self.$http['mine']
+				let res;
+				if (self.active == 1) {
+					res = await getOrder()
+				} else if (self.active == 2) {
+					res = await getOrderConsume()
+				} else if (self.active == 3) {
+					res = await getOrderInvest()
+				}
+				if (res.code == 200) {
 
-						res.data.forEach(item => {
-							if (val.active == 1) {
-								if (item.wxFtbOrderVO.orderNo) {
-									data.push({
-										...item.wxFtbOrderVO,
-										type: 'invest'
-									})
-								} else {
-									data.push({
-										...item.wxOrderVO,
-										coverImage: self.$url+item.wxOrderVO.coverImage,
-										type: 'consume'
-									})
-								}
+					res.data.forEach(item => {
+						if (self.active == 1) {
+							if (item.wxFtbOrderVO.orderNo) {
+								data.push({
+									...item.wxFtbOrderVO,
+									type: 'invest'
+								})
 							} else {
 								data.push({
-									...item,
-									coverImage: self.$url+item.coverImage,
-									type: val.active == 2?'consume':'invest'
+									...item.wxOrderVO,
+									coverImage: self.$url + item.wxOrderVO.coverImage,
+									type: 'consume'
 								})
 							}
-						})
-
-					}
-					resolve({
-						data,
-						totalRows: 10
+						} else {
+							data.push({
+								...item,
+								coverImage: self.$url + item.coverImage,
+								type: self.active == 2 ? 'consume' : 'invest'
+							})
+						}
 					})
-				})
+					this.data = data
+				}
 			},
 		}
 	}
 </script>
-<style>
-	.order-scroll {
-		height: calc(100vh - 49px);
-	}
-</style>
 <style lang="scss" scoped>
 	.order {
 		min-height: 100vh;

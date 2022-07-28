@@ -43,7 +43,9 @@ s				</van-image>
 </template>
 
 <script>
+	import vanImage from '@/wxcomponents/vant/image/index'
 	export default{
+		components:{vanImage},
 		props:{
 			isTeach:{
 				default: 1
@@ -75,7 +77,7 @@ s				</van-image>
 <style lang="scss" scoped>
 	.class {
 		&-content {
-			margin: 32rpx 32rpx 0 32rpx;
+			margin:0 32rpx 32rpx  32rpx;
 			padding: 0 32rpx 32rpx 32rpx;
 			// min-height: 344rpx;
 			background: #FFFFFF;

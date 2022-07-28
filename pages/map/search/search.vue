@@ -33,13 +33,13 @@
 		mixins: [mixin],
 		data() {
 			return {
-				campusName:'',
-				campusList:[],
-				isShowMore:false
+				campusName:'', //搜索社区名称
+				campusList:[], //校区列表
+				isShowMore:false //是否展示全部校区
 			}
 		},
 		onLoad(e) {
-			this.type = e.type || 'y'
+			this.type = e.type || 'y' //判断是否要进入缓存
 			this.isShowMore = false
 			this.search()
 		},
@@ -58,6 +58,7 @@
 				if (res2.code == 200) {
 					let list = res2.data
 					list.forEach(item=>{
+						// 处理距离显示
 						if(item.distance>1200){
 							item.distance2 = '>1.2Km'
 						} else if(item.distance<500){
@@ -66,6 +67,7 @@
 							item.distance2 = `${item.distance}m`
 						}
 					})
+					// 限制是否展示全部社区列表
 					if(this.isShowMore || list.length<=5){
 						this.isShowMore = true
 						this.campusList = list
@@ -76,6 +78,7 @@
 					
 				}
 			},
+			// 确认返回 如果不存才则带参数返回上一页
 			back(data) {
 				if(this.type=='no'){
 					this.$utils.router.navBackData({
@@ -90,11 +93,12 @@
 				}
 				
 			},
+			// 查看更多 
 			handleMore() {
 				this.isShowMore = true
-				uni.showToast({
-					title: '查看更多'
-				})
+				// uni.showToast({
+				// 	title: '查看更多'
+				// })
 				this.search()
 			}
 		}

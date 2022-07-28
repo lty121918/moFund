@@ -131,7 +131,7 @@
 				this.$http['mine'].getUserInfo().then(res=>{
 					console.log(res);
 					if(res.code==200){
-						if(res.data.avatar.indexOf('http')==ss-1){
+						if(res.data.avatar.indexOf('http')==-1){
 							res.data.avatar = this.$url + res.data.avatar
 						}
 						const result= Object.assign(this.userInfo,res.data)
