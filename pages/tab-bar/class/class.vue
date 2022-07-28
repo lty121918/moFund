@@ -1,6 +1,5 @@
 <template>
 	<view class="class">
-
 		<y-list ref="yList" :setData="search">
 			<template slot-scope="{data}" v-if="isTeach==1">
 				<view v-for="(item,index) in data" :key="index">
@@ -44,7 +43,7 @@
 		mapGetters,
 		mapMutations
 	} from 'vuex'
-	import ClassItem from './class-item.vue'
+	import ClassItem from '@/components/ClassItem/ClassItem.vue'
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],
@@ -112,6 +111,7 @@
 
 							}
 							list.forEach(item => {
+								item.coverImage = self.url + item.coverImages
 								item.startPeriod = self.$utils.dateTime.getLocalTime(
 									`2022-01-01 ${item.startPeriod}`, 'hh:mm')
 								item.endPeriod = self.$utils.dateTime.getLocalTime(

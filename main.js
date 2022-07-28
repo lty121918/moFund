@@ -6,9 +6,11 @@ import config from '@/config/config.js'
 const http = require('./api/index.js')
 import yList from '@/components/YList/YList.vue'
 import pageTabpars from '@/components/PageTabpars/PageTabpars.vue'
+import vanImage from '@/wxcomponents/vant/image/index'
 //注册全局组件  
 Vue.component('y-list', yList);
 Vue.component('page-tabpars', pageTabpars);
+Vue.component('van-image',vanImage)
 console.log(config.IMAGE_URL );
 Vue.config.productionTip = false
 Vue.prototype.$utils = utils //工具包管理

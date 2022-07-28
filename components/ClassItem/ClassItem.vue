@@ -6,7 +6,8 @@
 		</view>
 		<view class="class-content-bottom">
 			<view class="class-content-left">
-				<image class="class-content-img" src="/static/notData.png" mode="widthFix"></image>
+				<van-image use-error-slot class="class-content-img"  radius="10" width="140" height="132" :src="item.coverImage" >
+s				</van-image>
 			</view>
 			<view class="">
 				<!-- 班级名称 -->
@@ -17,7 +18,7 @@
 					</view>
 					<view class="color">
 						<text class="fz24">￥</text>
-						<text class="fz32">{{data.price}}</text>
+						<text class="fz32">{{data.price || 0}}</text>
 						<text class="color3 fz24">/节</text>
 					</view>
 				</view>

@@ -12,7 +12,7 @@
 					:duration="500">
 					<swiper-item v-for="item in banner" :key="item.id" @click="hanldeNext(item)">
 						<view class="home-head-view">
-							<image class="home-head-img" :src="url+item.imageUrl" mode="heightFix"></image>
+							<image class="home-head-img" :src="url+item.imageUrl" mode="heightFix" alt="加载失败"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -33,7 +33,9 @@
 			<view class="home-activity-content">
 				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
 					@click="$utils.router.navTo($page.CourseDetail,item)">
-					<image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image>
+					<van-image use-error-slot class="home-activity-content-img"  radius="10" width="84" height="84" :src="item.coverImage" >
+					</van-image>
+					<!-- <image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image> -->
 					<view class="home-activity-content-title t-over">{{item.productName}}</view>
 					<!-- <view class="home-activity-content-msg">&nbsp;</view> -->
 					<view class="home-activity-content-price">
@@ -75,9 +77,7 @@
 				<view class="home-nearby-content-button">加入拼班</view>
 			</view>
 		</view>
-
-
-
+		<!-- Tabbar -->
 		<page-tabpars></page-tabpars>
 	</view>
 </template>
@@ -87,12 +87,13 @@
 		mapGetters,
 		mapMutations
 	} from 'vuex'
+	
 	export default {
 		data() {
 			return {
 				banner: [], // 轮播图
 				courseList: [], // 社区课程
-				spellClassList: [] // 附件拼班
+				spellClassList: [] ,// 附件拼班
 			}
 		},
 		computed: {
@@ -102,28 +103,29 @@
 			}
 		},
 		created() {
-			console.log()
-			const active = 'home'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
-			uni.setNavigationBarTitle({
-				title: '首页'
-			})
-
+			this.getMounted()
 		},
 		methods: {
 			// home 页面调用
 			getMounted() {
+				const active = 'home'
+				if (this.active !== active) {
+					this.SET_ACTIVE(active)
+				}
+				uni.setNavigationBarTitle({
+					title: '首页'
+				})
 				this.getData()
 			},
 			...mapMutations(['SET_ACTIVE', 'SET_STORAGE']),
 			// 请求数据
 			async getData() {
+				console.log('数据请求home');
+				// 读取社区信息 已经缓存在本地
 				this.SET_STORAGE({
 					str: 'campus'
 				})
-				console.log('数据请求home');
+				// 读取登录时获取的坐标轴
 				this.SET_STORAGE({
 					str: 'location'
 				})
@@ -148,11 +150,13 @@
 				if (res2.code == 200) {
 					let list = res2.data
 					if (!this.campus) {
+						// 没有社区 保存一下
 						this.SET_STORAGE({
 							str: 'campus',
 							data: list[0]
 						})
 					} else {
+						// 如果之前缓存的社区已经被删除 则重新选取
 						const isTrue = list.some(item => item.campusId == this.campus.campusId)
 						if (!isTrue) {
 							this.SET_STORAGE({

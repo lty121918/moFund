@@ -4,6 +4,7 @@
 			"style": {
 				"navigationBarTitleText": "首页",
 				"enablePullDownRefresh": false
+				
 			}
 
 		}, {
@@ -169,7 +170,10 @@
 		"navigationBarBackgroundColor": "#DE501F",
 		"backgroundColor": "#DE501F",
 		"backgroundColorTop": "#DE501F",
-		"backgroundColorBottom": "#003920"
+		"backgroundColorBottom": "#003920",
+		"usingComponenets": {
+			"van-image":"/wxcomponents/vant/image/index"
+		}
 	},
 	"tabBar": {
 		"color": "#141D3D",

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-	import ClassItem from '../../tab-bar/class/class-item.vue'
+	import ClassItem from '@/components/ClassItem/ClassItem.vue'
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],

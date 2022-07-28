@@ -28,7 +28,7 @@
 						<cover-view class="course">
 							<cover-view class="course-list-item" v-for="item in data" :key="item"
 								@click="$utils.router.navTo($page.CourseDetail,item)">
-								<cover-image class="course-list-item-img" :src="item.coverImage|| '/static/notData.png'"
+								<cover-image class="course-list-item-img" :src="item.coverImages"
 									mode="aspectFit">
 								</cover-image>
 								<cover-view class="">
@@ -125,7 +125,7 @@
 					if (res.code == 200) {
 						this.isShow = true
 						res.data.forEach(item=>{
-							item.coverImage = this.$url+item.coverImage
+							item.coverImage = this.$url+item.coverImages
 						})
 						this.data = [
 							...res.data
