@@ -59,7 +59,7 @@
 				</view>
 			</view>
 			<view class="home-nearby-content" v-for="(item,index) in spellClassList" :key="index"
-				@click="$utils.router.navTo($page.OrderInfo)">
+				@click="$utils.router.navTo($page.OrderInfo,item)">
 				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
 				<view class="home-nearby-content-center">
 					<view>{{item.nickName}}</view>
@@ -191,6 +191,9 @@
 				if (res4.code == 200) {
 					res4.data.forEach(item=>{
 						item.headUrl = this.$url+item.headUrl
+						item.weChatUserList.forEach(row=>{
+							item.avatar = self.$url+item.avatar
+						})
 					})
 					this.spellClassList = [
 						...res4.data

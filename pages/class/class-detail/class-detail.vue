@@ -1,6 +1,6 @@
 <template>
 	<view class="class-detail">
-		<class-item :data="data" :classStatus="classStatus" :isTeach="isTeach"></class-item>
+		<class-item type="2" :data="data" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 		<view class="class-detail-user" v-if="!isAttendance">
 			<view class="home-title">
 				<view class="home-title-item">
@@ -14,9 +14,6 @@
 					<text class="fwb fz32">{{data.wxName}}</text>
 					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
 				</view>
-				<!-- 	<image v-if="isHead && isTeach==2" class="class-detail-head-share" src="/static/class/share.png"
-					mode="aspectFit">
-				</image> v-if="!isHead || isTeach==1"-->
 				<view class="class-detail-head-contact" @click="handlePhone(data.wxPhone)">
 					<image class="class-detail-head-liao" src="/static/class/liao.png" mode="aspectFit"></image>
 					<text>联系团长</text>
@@ -35,7 +32,7 @@
 					<view class="class-detail-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="class-detail-stu-age">{{row.age}}岁</view>
 					<view class="class-detail-stu-tip">
-						<text class="class-detail-stu-tip2" v-if="isTeach==1">余额不足</text>
+						<text class="class-detail-stu-tip2" v-if="isTeach==1 && !row.isSufficient">余额不足</text>
 					</view>
 					<image class="class-detail-stu-icon" @click="handleShow(row)" src="/static/edit.png"
 						mode="widthFix">
@@ -101,7 +98,7 @@
 				查看课表
 			</view>
 			<view class="class-detail-footer-button class-detail-footer-button3"
-				@click="$utils.router.navTo($page.Demeanour,{classId})">
+				@click="$utils.router.navTo($page.Demeanour,{classId,scheduleDetailId:data.courseScheduleDetailId})">
 				班级风采
 			</view>
 			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleAttendance">
@@ -122,14 +119,17 @@
 		</view>
 		<!-- 充值 -->
 		<recharge ref="recharge" />
+		<!-- 课表弹窗 -->
 		<popup-date ref="popupDate" @attendance="getAttendance"></popup-date>
+		<!-- 教练评论弹窗 -->
 		<popup-eval ref="popupEval" />
+		<!-- 会员查看评论弹窗 -->
 		<popup-eval2 ref="popupEval2" />
 	</view>
 </template>
 <script>
 	import mixin from '@/mixin.js'
-	import ClassItem from './class-item.vue'
+	import ClassItem from '@/components/ClassItem/ClassItem.vue'
 	import Recharge from '@/components/Recharge/Recharge.vue'
 	import PopupDate from '../components/PopupDate/PopupDate'
 	import PopupEval from '../components/PopupEval/PopupEval.vue'
@@ -155,8 +155,7 @@
 			}
 		},
 		async onLoad(e) {
-
-			this.classId = e.classInfoId || '39fffa311d849b8719aa8293bd302397'
+			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
 			this.$nextTick(() => {
 				this.getClassDetail()
 			})
@@ -180,7 +179,7 @@
 					classId: this.classId
 				}).then(res => {
 					if (res.code == 200) {
-						this.isHead = res.data.regimentalCommander
+						this.isHead = res.data.isBoss
 						res.data.startPeriod = this.$utils.dateTime.getLocalTime(
 							`2022-01-01 ${res.data.startPeriod}`, 'hh:mm')
 						res.data.endPeriod = this.$utils.dateTime.getLocalTime(`2022-01-01 ${res.data.endPeriod}`,
@@ -229,6 +228,7 @@
 				}
 
 			},
+			// 打开充值弹窗
 			handleRecharge() {
 				this.$refs.recharge.handleShow()
 			},
@@ -241,10 +241,18 @@
 					this.$http['classes'].disbandClass({
 						classId: this.classId,
 						studentIds: this.data.data.studentVOList.map(item => item.id)
+					}).then(res => {
+						if (res.code == 200) {
+							this.$utils.router.navBackData()
+						}
 					})
 				} else {
 					this.$http['classes'].exitClass({
 						classId: this.classId
+					}).then(res => {
+						if (res.code == 200) {
+							this.$utils.router.navBackData()
+						}
 					})
 				}
 			},

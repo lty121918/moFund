@@ -1,6 +1,6 @@
 <template>
 	<view class="order-info">
-		<class-item :data="data"></class-item>
+		<class-item :data="data" type="3" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 		<view class="order-info-user">
 			<view class="home-title">
 				<view class="home-title-item">
@@ -66,7 +66,7 @@
 </template>
 <script>
 	import mixin from '@/mixin.js'
-	import ClassItem from './class-item.vue'
+	import ClassItem from '@/components/ClassItem/ClassItem.vue'
 	import PopupShare from '../components/PopupShare/PopupShare.vue'
 	import PopupAddStu from '../components/PopupAddStu/PopupAddStu.vue'
 	import Recharge from '@/components/Recharge/Recharge.vue'
@@ -86,7 +86,7 @@
 			}
 		},
 		onLoad(e) {
-			this.classInfoId ='39fffa311d849b8719aa8293bd302397'|| e.classInfoId
+			this.classInfoId =e.classId || '39fffa311d849b8719aa8293bd302397'
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ["shareAppMessage"]

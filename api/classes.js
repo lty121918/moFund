@@ -39,9 +39,9 @@ export const getEvaluate = params => get(apis._wx_user_class_get_evaluate, param
 // 班级风采
 export const getClassMien = params => get(apis._wx_user_class_mien, params)
 // 解散拼班(团长)
-export const disbandClass = params => get(apis._wx_user_class_disband_class, params)
+export const disbandClass = params => post(apis._wx_user_class_disband_class, params)
 // 退出班级（家长）
-export const exitClass = params => get(apis._wx_user_class_exit, params)
+export const exitClass = params => post(apis._wx_user_class_exit, params)
 // 班级详情-查看课表
 export const courseScheduleView = params => get(apis._wx_user_wx_course_schedule_view, params)
 // 教练查看-班级详情-查看课表-学员信息 
@@ -59,3 +59,5 @@ export const CourseScheduleAttendance = params => get(apis._wx_user_wx_course_sc
 
 // 分享
 export const shareGenerateUrlLink = params => post(apis._wx_user_share_generate_url_link, params)
+// 上传素材
+export const ClassStudentUploadMien = params => post(apis._wx_organization_class_student_uploadMien, params)

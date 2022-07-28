@@ -30,6 +30,7 @@ const APIS_LIST = {
   "_file_remove_attachment": '/file/remove-attachment', // 删除附件
   "_file_upload": '/file/upload', // 文件上传(自动获取文件名)
   "_file_upload_attachment": '/file/upload-attachment', // 上传附件
+  "_get_template": '/get-template', // 获取所有节次
   "_location": '/location', // 获取省市区
   "_locationByCode": '/locationByCode', // 根据编码获取省市区
   "_operation_banner_add": '/operation/banner/add', // 添加轮播图
@@ -59,6 +60,7 @@ const APIS_LIST = {
   "_wx_organization_class_student_evaluation": '/wx/organization/class-student/evaluation', // 教学评价
   "_wx_organization_class_student_mien": '/wx/organization/class-student/mien', // 班级风采
   "_wx_organization_class_student_page": '/wx/organization/class-student/page', // 班级列表分页
+  "_wx_organization_class_student_uploadMien": '/wx/organization/class-student/uploadMien', // 上传素材
   "_wx_user_center_detail": '/wx/user/center/detail', // 当前登录用户学生集合
   "_wx_user_center_get_apply": '/wx/user/center/get-apply', // 我的申报
   "_wx_user_center_role_switching": '/wx/user/center/role-switching', // 切换角色

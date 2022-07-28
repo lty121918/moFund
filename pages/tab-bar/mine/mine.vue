@@ -113,12 +113,12 @@
 		},
 		onShow() {
 			this.getData()
-		},
-		created() {
 			const active = 'mine'
 			if (this.active !== active) {
 				this.SET_ACTIVE(active)
 			}
+		},
+		created() {
 			// console.log('身份验证',this.$utils.validate.validateIdNum('350623199611085735'));
 			// 获取数据
 

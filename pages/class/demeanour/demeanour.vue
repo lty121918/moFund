@@ -12,12 +12,12 @@
 
 <script>
 	import mixin from '@/mixin.js'
-	import uploadImage from '@/utils/ossutil/uploadFile.js';
 	export default {
 		mixins: [mixin],
 		data() {
 			return {
 				classId:'',
+				scheduleDetailId:'',
 				list: [{
 						image: 'https://via.placeholder.com/200x500.png/ff0000',
 					},
@@ -41,6 +41,7 @@
 		},
 		onLoad(e) {
 			this.classId = e.classId
+			this.scheduleDetailId = e.scheduleDetailId
 			this.getClassMien()
 		},
 		methods: {
@@ -52,31 +53,63 @@
 				})
 			},
 			submit() {
+				//选择视频
+				const self = this
 				uni.chooseImage({
-					count: 1, // 默认最多一次选择9张图
-					sourceType: ['camera'], // 可以指定来源是相册还是相机，默认二者都有
-					success: res => {
-				 	// 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-						var tempFilePaths = res.tempFilePaths;
-
-						//支持多图上传
-						for (var i = 0; i < res.tempFilePaths.length; i++) {
-							//显示消息提示框
-							uni.showLoading({
-								mask: true
-							})
-
-							//上传图片
-							//图片路径可自行修改
-							uploadImage(res.tempFilePaths[i], 'images/',
-								result => {
-									uni.hideLoading();
-								}
-							)
+					count: 1, //默认100
+					success: function(res) {
+						//可以判断有没有超过最大限制
+						// let  fileSize = res.size;
+						//获取文件选择之后的临时路径
+						let tempFilePath = res.tempFilePath;
+						// uni.showLoading({
+						// 	title: "上传中...",
+						// });
+						if(res.size > 10*1024*1024){
+							self.$utils.showToast('上传图片不超过10M')
+							return false
 						}
-					}
-				})
-			}
+						// if(res.tempFilePath.indexOf('mp4')==-1){
+						// 	self.$utils.showToast('仅支持上传MP4格式视频')
+						// 	return false
+						// }
+						
+						console.log(res);
+						// 上传视频
+						let baseUrl = self.$config.BASE_URL
+						if (process.env.NODE_ENV === 'development') {
+						  baseUrl = self.$config.BASE_URL_DEV
+						} 
+						uni.uploadFile({
+							name: "file", //文件上传的name值
+							url: baseUrl+'/polar/file/upload', //接口地址
+							header: {
+								"Content-Type": "multipart/form-data"
+							}, //头信息
+							formData: {
+								
+							}, //上传额外携带的参数
+							filePath: tempFilePath, //临时路径
+							fileType: "video", //文件类型
+							success: (uploadFileRes) => {
+								uni.hideLoading();
+								const ret = JSON.parse(uploadFileRes.data);
+								console.log(ret);
+								// self.videoUrl = (ret[0] || '')
+								self.$http['classes'].ClassStudentUploadMien({
+									imgUrl:ret[0],
+									classInfoId:self.classId,
+									scheduleDetailId:self.scheduleDetailId
+								}).then(res=>{
+									if(res.code==200){
+										self.getClassMien()
+									}
+								})
+							},
+						});
+					},
+				});
+			},
 		}
 	}
 </script>

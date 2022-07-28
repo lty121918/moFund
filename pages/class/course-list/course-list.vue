@@ -5,32 +5,31 @@
 			<text> {{campus.campusName}}</text>
 			<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
 		</view>
-		<y-list ref="yList" :scrollClass="'scroll-class2'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="course-list-item" v-for="item in data" :key="item"  @click="$utils.router.navTo($page.CourseDetail,item)">
-					<image class="course-list-item-img" :src="item.coverImage" mode="aspectFit"></image>
-					<view class="">
-						<view class="course-list-item-title">{{item.productName}}</view>
-						<view>
-							<text class="color">
-								<text class="fz24">￥</text>
-								<text class="fz32">{{item.price}}</text>
-							</text>
-							<text class="fz24">/节</text>
-							<text class="course-list-item-payment">{{item.paymentNumber}}人付款</text>
-						</view>
-						<view class="course-list-item-info">
-							<view class="course-list-item-apply">
-								{{item.minAge}}-{{item.maxAge}}岁适用
-							</view>
-							<view class="course-list-item-pin">
-								{{item.spellingClassNumber}}拼班
-							</view>
-						</view>
+		<view class="course-list-item" v-for="item in data" :key="item"
+			@click="$utils.router.navTo($page.CourseDetail,item)">
+			<van-image use-error-slot class="course-list-item-img"  radius="10" width="180" height="204" :src="item.coverImage" >
+			s				</van-image>
+			<!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFit"></image> -->
+			<view class="">
+				<view class="course-list-item-title">{{item.productName}}</view>
+				<view>
+					<text class="color">
+						<text class="fz24">￥</text>
+						<text class="fz32">{{item.price}}</text>
+					</text>
+					<text class="fz24">/节</text>
+					<text class="course-list-item-payment">{{item.paymentNumber}}人付款</text>
+				</view>
+				<view class="course-list-item-info">
+					<view class="course-list-item-apply">
+						{{item.minAge}}-{{item.maxAge}}岁适用
+					</view>
+					<view class="course-list-item-pin">
+						{{item.spellingClassNumber}}拼班
 					</view>
 				</view>
-			</template>
-		</y-list>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -40,20 +39,18 @@
 		mixins: [mixin],
 		data() {
 			return {
+				data:[]
 			}
 		},
 		mounted() {
-			setTimeout(()=>{
-				this.getInit()
-			},300)
+			this.getInit()
 		},
 		methods: {
-			getInit(){
-				this.$refs.yList.init()
+			getInit() {
+				this.search()
 			},
-			search() {
+			async search() {
 				const self = this
-				return new Promise(async (resolve, reject) => {
 					// 获取课程
 					let res = await self.$http['classes'].getCourseList({
 						campusId: self.campus.campusId
@@ -62,16 +59,12 @@
 					let data = []
 					if (res.code == 200) {
 						data = res.data
-						data.forEach(item=>{
-							item.coverImage = this.$url+item.coverImage
+						data.forEach(item => {
+							item.coverImage = this.$url + item.coverImage
 						})
-					
+
 					}
-					resolve({
-						data,
-						totalRows: 10
-					})
-				})
+					this.data =data 
 			}
 		}
 	}
@@ -82,8 +75,6 @@
 	}
 </style>
 <style scoped lang="scss">
-	
-
 	.course {
 		min-height: 100vh;
 		padding: 0 32rpx;
@@ -135,7 +126,8 @@
 					height: 204rpx;
 					// background-color: rgba(0, 0, 0, 0.1);
 				}
-				&-title{
+
+				&-title {
 					width: 300rpx;
 					min-height: 86rpx;
 					font-size: 36rpx;
@@ -144,13 +136,15 @@
 					color: #141D3D;
 					line-height: 48rpx;
 				}
-				&-payment{
+
+				&-payment {
 					margin-left: 16rpx;
 					font-size: 24rpx;
 					font-weight: 400;
 					color: rgba(20, 29, 61, 0.5);
 				}
-				&-info{
+
+				&-info {
 					display: flex;
 					justify-content: space-around;
 					margin-top: 22rpx;
@@ -165,17 +159,19 @@
 					line-height: 44rpx;
 					text-align: center;
 				}
-				&-apply{
+
+				&-apply {
 					width: 148rpx;
 					height: 44rpx;
 					background: rgba(20, 29, 61, 0.1);
 					border-radius: 12rpx;
 				}
-				&-pin{
+
+				&-pin {
 					width: 148rpx;
 				}
-				
-				
+
+
 				&-surplus {
 					position: absolute;
 					right: 24rpx;

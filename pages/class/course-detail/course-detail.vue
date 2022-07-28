@@ -90,7 +90,7 @@
 							<view class="fz24 color2">{{item.evaluationTime}}</view>
 						</view>
 						<view class="course-detail-evaluate-text">
-							{{item.content}}
+							{{item.content||''}}
 						</view>
 					</view>
 				</view>
@@ -165,7 +165,7 @@
 				//获取商品详情
 				const res = await getCourseDetails({
 					productId: this.productId,
-					campusId: this.campusOther.campusId
+					campusId: 'de3854becdf21cabc921cdeffaf84d78'||this.campusOther.campusId
 				})
 				if (res.code == 200) {
 					uni.setNavigationBarTitle({

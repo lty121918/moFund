@@ -1,6 +1,6 @@
 <template>
 	<view class="class-content" @click="handleNavTo">
-		<view class="class-content-top">
+		<view class="class-content-top" v-if="type!=3">
 			<text>下节课：{{data.nextCLassTime || '已结课'}}</text>
 			<text class="color fw4">{{classStatus[data.classStatus]}}</text>
 		</view>
@@ -13,7 +13,7 @@ s				</van-image>
 				<!-- 班级名称 -->
 				<view class="class-content-info">
 					<view class="class-content-info-title">
-						<text class="class-content-info-num">{{data.typeName}}</text>
+						<text class="class-content-info-num">{{data.typeName || data.spellType}}</text>
 						<text>{{data.className}}</text>
 					</view>
 					<view class="color">
@@ -30,14 +30,17 @@ s				</van-image>
 				<!-- 上课时段 -->
 				<view class="class-content-cycle">
 					<image class="class-content-cycle-img" src="/static/class/time.png" mode="widthFix"></image>
-					<text>上课时段：每天{{data.startPeriod}}~{{data.endPeriod}}</text>
+					<text>上课时段：{{data.courseType==2?'每天':data.weekCodeName}} {{data.startPeriod || data.startTime}}~{{data.endPeriod || data.endTime}}</text>
 				</view>
 				<!-- 教练 -->
-				<view class="class-content-cycle">
+				<view class="class-content-cycle" v-if="type==1">
 					<image class="class-content-cycle-img" src="/static/class/coach.png" mode="widthFix"></image>
 					<text>教练：{{data.staffName}}</text>
 				</view>
 			</view>
+		</view>
+		<view class="class-content-tip" v-if="type==2 && isTeach==2 && !data.isSufficient">
+			您的余额不足，为保证上课不受影响，请尽快
 		</view>
 	</view>
 </template>
@@ -47,6 +50,9 @@ s				</van-image>
 	export default{
 		components:{vanImage},
 		props:{
+			type:{
+				default: 1
+			},
 			isTeach:{
 				default: 1
 			},
@@ -63,12 +69,13 @@ s				</van-image>
 		},
 		methods:{
 			handleNavTo(){
-				if(this.data.classStatus==0){
-					this.$utils.router.navTo(this.$page.OrderInfo,{classInfoId: this.data.classId})
-				} else {
-					this.$utils.router.navTo(this.$page.ClassDetail,{classId: this.data.classId})
+				if(this.type==1){
+					if(this.data.classStatus==0){
+						this.$utils.router.navTo(this.$page.OrderInfo,{classId: this.data.classId})
+					} else {
+						this.$utils.router.navTo(this.$page.ClassDetail,{classId: this.data.classId})
+					}
 				}
-				
 			}
 		}
 	}
@@ -161,6 +168,19 @@ s				</van-image>
 					width: 24rpx;
 					height: 24rpx;
 				}
+			}
+			&-tip {
+				margin: 32rpx auto 0rpx auto;
+				width: 542rpx;
+				height: 48rpx;
+				background: rgba(222, 80, 31, 0.1);
+				border-radius: 12rpx;
+				font-size: 22rpx;
+				font-family: PingFangSC-Regular, PingFang SC;
+				font-weight: 400;
+				color: #DE501F;
+				line-height: 48rpx;
+				text-align: center;
 			}
 		}
 	}

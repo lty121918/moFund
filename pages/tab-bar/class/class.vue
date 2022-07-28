@@ -115,6 +115,7 @@
 							item.endPeriod = self.$utils.dateTime.getLocalTime(
 								`2022-01-01 ${item.endPeriod}`,
 								'hh:mm')
+							item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
 							if (item.nextCLassTime) {
 								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
 									item.nextCLassTime,
