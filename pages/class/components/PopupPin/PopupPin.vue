@@ -40,7 +40,8 @@
 					<view class="fwb fz28 mt32">课程周期</view>
 					<view class="popup-content-cycle fz24">
 						<view class="mt32 mr26 popup-content-cycle-item" @click="handleSchedule(item)"
-							:class="[data.scheduleId==item.scheduleId?'popup-content-cycle-active':'']"
+							:class="[data.scheduleId==item.scheduleId?'popup-content-cycle-active':'',
+							!item.status?'popup-content-cycle-dis':'']"
 							v-for="(item,index) in myCourseScheduleList" :key="index">
 							{{item.scheduleName}}
 						</view>
@@ -49,7 +50,8 @@
 					<view class="fwb fz28 mt32">上课时段</view>
 					<view class="popup-content-cycle fz24">
 						<view class="mt32 mr26 popup-content-cycle-item" @click="handlePeriod(item)"
-							:class="[data.periodId==item.id?'popup-content-cycle-active':'']"
+							:class="[data.periodId==item.id?'popup-content-cycle-active':'',
+							item.status==5?'popup-content-cycle-dis':'']"
 							v-for="(item,index) in periodList" :key="index">
 							{{item.startTime}}~{{item.endTime}}
 						</view>
@@ -67,7 +69,7 @@
 
 				<view class="popup-footer">
 					<view class="popup-footer-button" @click="submit">
-						我要拼班
+						发起拼班
 					</view>
 					<view class="popup-footer-button popup-footer-button2" @click="handleOther">
 						没有库存试试加入拼班？
@@ -112,20 +114,22 @@
 		},
 		methods: {
 			// 发起拼班
-			submit(){
-				if(!this.data.periodId){
+			submit() {
+				if (!this.data.periodId) {
 					uni.showToast({
 						title: "请选择时段"
 					})
 					return false
 				}
-				this.$http['classes'].getInitiateSpellClass(this.data).then(res=>{
-					if(res.code==200){
-						this.$utils.router.navTo(this.$page.OrderInfo,{classInfoId:''})
+				this.$http['classes'].getInitiateSpellClass(this.data).then(res => {
+					if (res.code == 200) {
+						this.$utils.router.navTo(this.$page.OrderInfo, {
+							classId: res.data.classInfoId
+						})
 					}
 				})
 			},
-			handleOther(){
+			handleOther() {
 				this.$refs.popup.close('bottom')
 			},
 			// 查看周期
@@ -152,10 +156,12 @@
 					return false
 				}
 				Object.assign(this.data, item)
+				this.$forceUpdate()
 			},
 			// 选择时段
 			handlePeriod(item) {
-				if (item.id == this.data.periodId) {
+				console.log(item.status, this.data.periodId, item.id);
+				if (item.id == this.data.periodId || item.status == 5) {
 					return false
 				}
 				Object.assign(this.data, {
@@ -163,10 +169,11 @@
 					endPeriod: item.endTime, // 上课结束时段
 					periodId: item.id,
 				})
+				this.$forceUpdate()
 			},
 			//  选择周期
 			handleSchedule(item) {
-				if (item.scheduleId == this.data.scheduleId) {
+				if (item.scheduleId == this.data.scheduleId || !item.status) {
 					return false
 				}
 				console.log(item);
@@ -182,7 +189,13 @@
 				})
 				// 上课时段
 				this.periodList = item.periodList || []
-				const periodList = this.periodList[0] || {}
+				let periodList ={}
+				for(let i =0 ;i<this.periodList.length;i++){
+					if(this.periodList[i].status!=5){
+						periodList = this.periodList[i]
+						break;
+					}
+				}
 				this.handlePeriod(periodList)
 			},
 			change(e) {
@@ -190,44 +203,26 @@
 			},
 			handleShow(val) {
 				const self = this
+				val.campusId = 'de3854becdf21cabc921cdeffaf84d78'
 				this.$refs.popup.open('bottom')
 				this.$http['classes'].getSpellClass(val).then(res => {
 					if (res.code == 200) {
 						this.coverImage = this.$url + res.data.coverImage
 
 						// 课程周期
-						this.myCourseScheduleList = [{
-							courseType: "1",
-							periodList: [{
-								endTime: "9:00",
-								id: "1",
-								startTime: "8:00",
-								status: ""
-							}],
-							scheduleId: "1",
-							scheduleName: "课表1",
-							startDate: "2022-07-08",
-							endDate: "2022-08-08",
-							totalNum: 10,
-							weekCode: [1, 2, 3],
-							weekCodeName: self.$utils.dateTime.filteDay([1, 2, 3])
-						}, {
-							courseType: "2",
-							periodList: [{
-								endTime: "19:00",
-								id: "2",
-								startTime: "18:00",
-								status: ""
-							}],
-							scheduleId: "2",
-							scheduleName: "课表2",
-							startDate: "2022-07-09",
-							endDate: "2022-08-09",
-							totalNum: 10,
-							weekCode: [1, 2, 3],
-							weekCodeName: self.$utils.dateTime.filteDay([1, 2, 3])
-						}] || res.data.myCourseScheduleList
-						const scheduleList = this.myCourseScheduleList[0] || {}
+						let list = res.data.myCourseScheduleList || []
+						list.forEach(item => {
+							item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
+							item['status'] = item.periodList.some(row=>item.status!=5)
+						})
+						this.myCourseScheduleList = list
+						let scheduleList ={}
+						for(let i =0 ;i<this.myCourseScheduleList.length;i++){
+							if(this.myCourseScheduleList[i].status){
+								scheduleList = this.myCourseScheduleList[i]
+								break;
+							}
+						}
 						// 拼班方式
 						this.spellTypeList = res.data.spellTypeList || []
 						const typeList = this.spellTypeList[0] || {}
@@ -360,6 +355,10 @@
 				&-active {
 					background: #DE501F;
 					color: #FFFFFF;
+				}
+				&-dis{
+					background: #E7E8EB;
+					color: #333333;
 				}
 			}
 

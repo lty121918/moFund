@@ -44,7 +44,7 @@
 		</view>
 		<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<view class="order-info-footer-button" @click="handleDissolution">
+			<view class="order-info-footer-button" @click="handleDisolution">
 				解散班级
 			</view>
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
@@ -86,7 +86,7 @@
 			}
 		},
 		onLoad(e) {
-			this.classInfoId =e.classId || '39fffa311d849b8719aa8293bd302397'
+			this.classInfoId =e.classId || 'c1f51a8e4de7364995f72a2a51ebfe7e'
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ["shareAppMessage"]
@@ -128,6 +128,7 @@
 				})
 			},
 			handleAdd() {
+				this.data.weChatUserList = this.data.weChatUserList || []
 				const ls = this.data.weChatUserList.map(item => item.studentId)
 				this.$refs.popupAddStu.handleShow(this.classInfoId, ls)
 				console.log('添加学员');

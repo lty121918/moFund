@@ -108,7 +108,7 @@
 			</view>
 		</view>
 		<popup-pin ref="popupPin" @check="check"></popup-pin>
-		<PopupDate ref="popupDate"></PopupDate>
+		<PopupDate ref="popupDate" :value="value"></PopupDate>
 	</view>
 </template>
 
@@ -131,7 +131,8 @@
 				productDetail: '', // 商品详情
 				productEvaluate: [], //商品评价
 				campusOther: {},
-				isEvaluate: false //评论是否超出5条
+				isEvaluate: false ,//评论是否超出5条
+				value:""
 			}
 		},
 		watch: {
@@ -165,7 +166,7 @@
 				//获取商品详情
 				const res = await getCourseDetails({
 					productId: this.productId,
-					campusId: 'de3854becdf21cabc921cdeffaf84d78'||this.campusOther.campusId
+					campusId: this.campusOther.campusId
 				})
 				if (res.code == 200) {
 					uni.setNavigationBarTitle({
@@ -203,6 +204,7 @@
 			},
 			// 打开周期
 			check(ls) {
+				this.value = ls[0] || ''
 				this.$refs.popupDate.handleShow(true,ls)
 			},
 			// 打开我要拼班

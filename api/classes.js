@@ -20,10 +20,6 @@ export const getSpellClass = params => get(apis._wx_user_index_my_spell_class_li
 export const getInitiateSpellClass = params => post(apis._wx_user_index_initiate_spell_class, params)
 // 我的拼班
 export const getMineSpellClass = params => get(apis._wx_user_index_mine_spell_class, params)
-// 解散拼班(团长)
-export const getDisbandClass = params => get(apis._wx_user_index_disband_class, params)
-// 移出学员(退出拼班)
-export const getRemoveClassStudent = params => post(apis._wx_user_index_remove_class_student, params)
 // 拼班添加学员
 export const indexAddStu = params => post(apis._wx_user_index_add_stu, params)
 // 解散拼班(团长)

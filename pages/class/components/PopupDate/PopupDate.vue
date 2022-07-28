@@ -2,7 +2,7 @@
 	<view class="" @click.stop>
 		<uni-popup ref="popup" :isMaskClick="isMaskClick" @change="change">
 			<view class="popup-content">
-				<DateCalendar ref="dateCalendar" @change="change2" :dotLists="dotLists">
+				<DateCalendar ref="dateCalendar" @change="change2" :value="value" :dotLists="dotLists">
 				</DateCalendar>
 				<view class="popup-footer" v-if="isShow">
 					<view class="popup-footer-button" @click="close">返回拼班</view>
@@ -29,6 +29,12 @@
 <script>
 	import DateCalendar from '../DateCalendar/DateCalendar'
 	export default {
+		props:{
+			value: {
+				type: [String, Number],
+				default: ''
+			},
+		},
 		components: {
 			DateCalendar
 		},
