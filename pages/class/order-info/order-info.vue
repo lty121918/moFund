@@ -86,7 +86,7 @@
 			}
 		},
 		onLoad(e) {
-			this.classInfoId =e.classId || 'c1f51a8e4de7364995f72a2a51ebfe7e'
+			this.classInfoId =e.classId 
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ["shareAppMessage"]
