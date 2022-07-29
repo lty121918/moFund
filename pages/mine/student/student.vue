@@ -60,7 +60,7 @@
 						self.$http['mine'].delStudent(item.id).then(res => {
 							console.log(res);
 							if (res.code == 200) {
-								self.$refs.yList.init()
+								self.search()
 							}
 						})
 					},

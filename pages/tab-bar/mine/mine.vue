@@ -136,6 +136,7 @@
 						}
 						const result= Object.assign(this.userInfo,res.data)
 						this.SET_STORAGE({str:'userInfo',data:result})
+						this.$forceUpdate()
 					}
 				})
 			},
