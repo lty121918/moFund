@@ -75,6 +75,9 @@
 				let data = []
 				const res = await self.$http['mine'].getStudent()
 				if (res.code == 200) {
+					res.data.forEach(item=>{
+						item.birthday = this.$utils.dateTime.getLocalTime(item.birthday)
+					})
 					data = res.data
 				}
 				this.data = data
