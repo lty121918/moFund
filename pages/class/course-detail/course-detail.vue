@@ -1,7 +1,17 @@
 <template>
 	<view class="course">
 		<view class="course-title">
-			<image class="course-title-img" src="/static/default.png"></image>
+			<view class="course-swiper">
+				<swiper class="swiper" circular :indicator-dots="false" :autoplay="true" :interval="5000"
+					:duration="500">
+					<swiper-item v-for="(item,index) in banner" :key="index">
+						<view class="course-swiper-view">
+							<image class="course-swiper-img" :src="item" mode="heightFix" alt="加载失败"></image>
+						</view>
+					</swiper-item>
+				</swiper>
+			</view>
+			<!-- <image class="course-title-img" src="/static/default.png"></image> -->
 			<view class="course-title-content">
 				<view>
 					<view class="fz36 fwb">{{productInfo.productName}}A</view>
@@ -94,7 +104,8 @@
 						</view>
 					</view>
 				</view>
-				<view v-if="isEvaluate" class="course-detail-evaluate-more" @click="$utils.router.navTo($page.Evaluate)">
+				<view v-if="isEvaluate" class="course-detail-evaluate-more"
+					@click="$utils.router.navTo($page.Evaluate)">
 					<text>查看更多</text>
 					<image class="course-detail-evaluate-more-img" src="/static/class/more.png" mode=""></image>
 				</view>
@@ -131,15 +142,21 @@
 				productDetail: '', // 商品详情
 				productEvaluate: [], //商品评价
 				campusOther: {},
-				isEvaluate: false ,//评论是否超出5条
-				value:""
+				isEvaluate: false, //评论是否超出5条
+				value: "",
+				banner:['/static/default.png']
 			}
 		},
 		watch: {
-			campusOther:{
-				handler(){
+			campusOther: {
+				handler() {
 					this.getCourseDetail()
 				}
+			}
+		},
+		computed: {
+			url() {
+				return this.$url
 			}
 		},
 		onLoad(e) {
@@ -172,6 +189,13 @@
 					uni.setNavigationBarTitle({
 						title: res.data.productName
 					})
+					const banner = res.data.imageUrl.split(',')
+					banner.forEach(item=>{
+						item.imageUrl = this.$url + item.imageUrl
+					})
+					if(banner.length>0){
+						this.banner = banner
+					}
 					this.productInfo = res.data
 					this.productSpellClassList = [...res.data.productSpellClassList]
 				}
@@ -187,11 +211,11 @@
 					productId: this.productId
 				})
 				if (res3.code == 200) {
-					res3.data = res3.data.filter(item=>item)
+					res3.data = res3.data.filter(item => item)
 					res3.data.forEach(item => {
 						item.avatar = this.$url + item.avatar
 					})
-					if(res3.data.length > 5){
+					if (res3.data.length > 5) {
 						this.isEvaluate = true
 					}
 					if (res3.data.length > 5) {
@@ -205,7 +229,7 @@
 			// 打开周期
 			check(ls) {
 				this.value = ls[0] || ''
-				this.$refs.popupDate.handleShow(true,ls)
+				this.$refs.popupDate.handleShow(true, ls)
 			},
 			// 打开我要拼班
 			submit() {
@@ -226,6 +250,32 @@
 	.course {
 		min-height: 100vh;
 		background: #EEF1FA;
+
+		&-swiper {
+			position: relative;
+			top: 0;
+			left: 0;
+			// padding: 20rpx 32rpx 0 32rpx;
+			// margin-bottom: 142rpx;
+			width: 100%;
+			height: 364rpx;
+			z-index: 11;
+			&-swiper {
+				margin-top: 20rpx;
+				width: 750rpx;
+				height: 424rpx;
+				background: #D8D8D8;
+				border-radius: 16rpx;
+			}
+
+			&-view {
+				text-align: center;
+			}
+
+			&-img {
+				height: 376rpx;
+			}
+		}
 
 		&-title {
 			position: relative;
@@ -249,6 +299,7 @@
 				height: 152rpx;
 				background: #FFFFFF;
 				border-radius: 16rpx;
+				z-index: 99;
 
 				&-right {
 					display: flex;
@@ -288,7 +339,6 @@
 		}
 
 		&-head {
-
 			&-address {
 				display: flex;
 				justify-content: flex-start;
@@ -416,7 +466,7 @@
 		&-detail {
 			padding: 0 32rpx 20rpx 32rpx;
 			margin-left: 32rpx;
-			margin-top: 80rpx;
+			margin-top: 32rpx;
 			width: 686rpx;
 			// min-height: 702rpx;
 			box-sizing: border-box;
@@ -560,5 +610,10 @@
 			}
 
 		}
+	}
+	.swiper {
+		width: 750rpx;
+		height: 424rpx;
+		border-radius: 16rpx;
 	}
 </style>
