@@ -25,7 +25,9 @@
 		data() {
 			return {};
 		},
-		onLoad() {},
+		onLoad() {
+			this.SET_STORAGE({str:'shareInfo'})
+		},
 		onReady() {},
 		methods: {
 			...mapMutations(['SET_STORAGE']),
@@ -58,7 +60,17 @@
 				this.SET_STORAGE({str:'userInfo',data})
 				// console.log('1是2否教练', isTeach);
 				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)
+				if (this.shareInfo.classId) {
+					if(data.isCoach==1){
+						this.$utils.router.redTo(this.$page.ClassDetail,this.shareInfo)
+					} else{
+						this.$utils.router.redTo(this.$page.OrderInfo,this.shareInfo)
+					}
+					
+				}	else {
 					this.$utils.router.swtTo(this.$page.Home)
+				}
+					
 				
 				
 			},

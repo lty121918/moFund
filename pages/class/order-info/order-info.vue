@@ -34,7 +34,8 @@
 					<view class="fwb order-info-stu-name">{{item.studentName}}</view>
 					<view class="order-info-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="order-info-stu-age">{{item.age}}岁</view>
-					<image class="order-info-stu-del" @click="handleDel(item)" src="/static/del.png" mode="aspectFit"></image>
+					<image class="order-info-stu-del" @click="handleDel(item)" src="/static/del.png" mode="aspectFit">
+					</image>
 				</view>
 			</view>
 			<view class="order-info-adduser" @click="handleAdd">
@@ -82,16 +83,22 @@
 			return {
 				isHead: false, //是否 是团长进入该页面
 				data: {},
-				classInfoId:''
+				classId: ''
 			}
 		},
 		onLoad(e) {
-			this.classInfoId =e.classId 
+			this.classId = e.classId
+			this.wxUserId = e.wxUserId
+			this.SET_STORAGE({
+				str: 'shareInfo',
+				data: e
+			})
 			wx.showShareMenu({
 				withShareTicket: true,
 				menus: ["shareAppMessage"]
 			})
 			this.getMineSpellClass()
+			
 
 		},
 		// 分享给朋友
@@ -102,13 +109,13 @@
 			return {
 				title: this.data.productName,
 				desc: '',
-				path: `/pages/class/order-info/order-info?classInfoId=${this.classInfoId}&wxUserId=${this.data.wxUserId}`
+				path: `/pages/class/order-info/order-info?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
 		methods: {
-			getMineSpellClass(){
+			getMineSpellClass() {
 				this.$http['classes'].getMineSpellClass({
-					classInfoId:this.classInfoId 
+					classInfoId: this.classId
 				}).then(res => {
 					if (res.code == 200) {
 						console.log(res.data);
@@ -118,6 +125,14 @@
 						uni.setNavigationBarTitle({
 							title: this.isHead ? '我的拼单' : '加入拼单'
 						})
+						this.SET_STORAGE({
+							str: 'shareInfo',
+							data: {}
+						})
+						if(res.data.classStatus!=0){
+							this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
+						}
+						
 					}
 				})
 			},
@@ -134,17 +149,17 @@
 				console.log('添加学员');
 			},
 			// 调起充值界面
-			recharge(){
+			recharge() {
 				this.$refs.recharge.handleShow()
 			},
 			// 执行解散班级
-			handleDisolution(){
+			handleDisolution() {
 				const ls = this.data.weChatUserList.map(item => item.studentId)
 				this.$http['classes'].indexDisbandClass({
 					classId: this.classInfoId,
 					studentIds: ls
-				}).then(res=>{
-					if(res.code==200){
+				}).then(res => {
+					if (res.code == 200) {
 						this.submit()
 					}
 				})
@@ -158,33 +173,33 @@
 				})
 			},
 			// 删除学员
-			handleDel(val){
+			handleDel(val) {
 				const self = this
 				self.$utils.model.showMsgModal({
-					content:'确定要删除该团员',
-					showCancel:true,
-					confirmCallback:function(){
+					content: '确定要删除该团员',
+					showCancel: true,
+					confirmCallback: function() {
 						self.$http['classes'].indexRemoveClassStudent({
 							classInfoId: self.classInfoId,
 							classStudentId: val.classStudentId,
-							studentId:val.studentId,
-							courseScheduleId:val.courseScheduleId,
-							spellClassDetailsId:val.spellClassDetailsId,
-							courseScheduleDetailId:self.data.courseScheduleDetailId,
+							studentId: val.studentId,
+							courseScheduleId: val.courseScheduleId,
+							spellClassDetailsId: val.spellClassDetailsId,
+							courseScheduleDetailId: self.data.courseScheduleDetailId,
 							wxUserId: self.data.wxUserId,
-							IsFormData:true
-						}).then(res=>{
-							if(res.code==200){
+							IsFormData: true
+						}).then(res => {
+							if (res.code == 200) {
 								self.getMineSpellClass()
 							}
 						})
 					}
 				})
-				
-				
+
+
 			},
 			// 返回上一页
-			submit(){
+			submit() {
 				this.$utils.router.navBackData()
 			},
 		}

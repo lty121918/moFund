@@ -52,6 +52,7 @@ const state = {
 		5: '解散（团长解散）',
 		6: '解散（人数不足）'
 	},
+	shareInfo:{},//分享信息
 	avatar:'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132'
 
 }
@@ -67,7 +68,8 @@ const getters = {
 	Authorization: state => state.Authorization,
 	city: state => state.city,
 	classStatus: state => state.classStatus,
-	avatar: state => state.avatar
+	avatar: state => state.avatar,
+	shareInfo:state => state.shareInfo
 	
 
 }
