@@ -8,6 +8,11 @@
 		<view v-for="(item,index) in data" :key="index">
 			<order-item :item="item" @change="handleShow"></order-item>
 		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
+		</view>
 		<!-- 订单评价 -->
 		<popup-eval ref="popupEval" />
 	</view>

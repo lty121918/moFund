@@ -52,6 +52,11 @@
 									</cover-view>
 								</cover-view>
 							</cover-view>
+							<cover-view class="default-empty" v-if="data.length===0">
+								<cover-image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+								</cover-image>
+								<cover-view class="">暂无数据</cover-view>
+							</cover-view>
 						</cover-view>
 					</cover-view>
 				</cover-view>

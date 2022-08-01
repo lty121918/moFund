@@ -7,6 +7,11 @@
 				上传素材
 			</view>
 		</view>
+		<view class="default-empty" v-if="list.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
+		</view>
 	</view>
 </template>
 
@@ -18,24 +23,10 @@
 			return {
 				classId:'',
 				scheduleDetailId:'',
-				list: [{
-						image: 'https://via.placeholder.com/200x500.png/ff0000',
-					},
-					{
-						image: 'https://via.placeholder.com/200x200.png/2878ff',
-					},
-					{
-						image: 'https://via.placeholder.com/200x200.png/2878ff',
-					},
-					{
-						image: 'https://via.placeholder.com/200x200.png/2878ff',
-					},
-					{
-						image: 'https://via.placeholder.com/200x200.png/2878ff',
-					},
-					{
-						image: 'https://via.placeholder.com/200x200.png/2878ff',
-					}
+				list: [
+					// {
+					// 	image: 'https://via.placeholder.com/200x200.png/2878ff',
+					// }
 				]
 			}
 		},

@@ -5,6 +5,11 @@
 			<view class="pt16">社区物业：{{item.property}}</view>
 			<view class="pt16">社区场地：{{item.campusSpace}}</view>
 		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
+		</view>
 	</view>
 </template>
 

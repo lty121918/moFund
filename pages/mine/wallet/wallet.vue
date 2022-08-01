@@ -32,6 +32,11 @@
 			<view v-for="(item,index) in data" :key="index">
 				<wallet-item :item="item" @change="handleShow"></wallet-item>
 			</view>
+			<view class="default-empty" v-if="data.length===0">
+				<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+				</image>
+				<view class="">暂无数据</view>
+			</view>
 		</view>
 		<view :style="{ height: `calc(${safeAreaHeight}px + 32rpx)` }"></view>
 		<recharge ref="recharge" @change="getData" />

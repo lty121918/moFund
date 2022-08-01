@@ -3,6 +3,11 @@
 		<view v-for="(item,index) in data" :key="index">
 			<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
+		</view>
 	</view>
 </template>
 

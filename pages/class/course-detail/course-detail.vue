@@ -64,7 +64,8 @@
 				</view>
 				<view v-if="item.unUseNum > 0">
 					<view class="course-nearby-content-button" @click="$utils.router.navTo($page.OrderInfo)">加入拼班</view>
-					<view class="course-nearby-content-success">差{{item.unUseNum}}人拼成</view>
+					<view class="course-nearby-content-success" v-if="item.minNumMax">差{{item.minNumMax}}人拼成</view>
+					<view class="course-nearby-content-success" v-else>差{{item.unUseNum}}人拼满</view>
 				</view>
 				<view v-else>
 					<view class="course-nearby-content-button bg-color2">已拼满</view>
@@ -197,6 +198,12 @@
 						this.banner = banner
 					}
 					this.productInfo = res.data
+					res.data.productSpellClassList.forEach(item=>{
+						if(item.minNum-item.useStudentNum>0){
+							item.minNumMax  = item.minNum-item.useStudentNum
+						} 
+						
+					})
 					this.productSpellClassList = [...res.data.productSpellClassList]
 				}
 				// 获取商品详情下的描述

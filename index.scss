@@ -220,3 +220,23 @@
 .popup-content-input .uni-easyinput__content-input{
 	font-size: 48rpx !important;
 }
+.default-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-flow: column;
+	height: 100%;
+	margin-top: 25%;
+	margin-bottom: 25%;
+	font-size: 28rpx;
+	font-family: SourceHanSansSC-Regular, SourceHanSansSC;
+	font-weight: 400;
+	color: #DE501F !important;
+
+}
+
+.default-empty-image {
+	margin-bottom: 48rpx;
+	width: 170rpx;
+	height: 170rpx;
+}

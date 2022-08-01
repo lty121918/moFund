@@ -8,7 +8,7 @@
 		<view class="course-list-item" v-for="item in data" :key="item"
 			@click="$utils.router.navTo($page.CourseDetail,item)">
 			<van-image use-error-slot class="course-list-item-img"  radius="10" width="180" height="204" :src="item.coverImage" >
-			s				</van-image>
+			</van-image>
 			<!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFit"></image> -->
 			<view class="">
 				<view class="course-list-item-title">{{item.productName}}</view>
@@ -29,6 +29,11 @@
 					</view>
 				</view>
 			</view>
+		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
 		</view>
 	</view>
 </template>
