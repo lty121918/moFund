@@ -49,6 +49,7 @@
 			handleTabbarItemClick(e) {
 				console.log('click::', e)
 				const name = e.name
+				this.SET_ACTIVE(name)
 				const tabbar = this.tabbars.find(item => item.name === name)
 				uni.switchTab({
 					url: tabbar.path,
