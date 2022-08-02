@@ -81,11 +81,17 @@ const minxin = {
 		async setTeach() {
 			const res = await this.$http['mine'].roleSwitching()
 			if (res.code == 200) {
-				let isTeach = this.isTeach == 1 ? 2 : 1
+				let isTeach = res.data.isCoach ? 1 : 2
 				this.isTeach = this.$utils.util.setCache('role', isTeach)
 				this.isTeach = isTeach
 				this.SET_TEACH(isTeach)
-				this.$utils.router.swtTo(this.$page.Home)
+				this.SET_STORAGE({str:'Authorization',data:res.data.accessToken})
+				if(isTeach==1){
+					this.$utils.router.swtTo(this.$page.Home)
+				} else{
+					this.$utils.router.swtTo(this.$page.Class)
+				}
+				
 			}
 
 		},

@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<index ref="index" v-if="isTeach==2" />
-		<class ref="calsses" v-if="isTeach==1" />
+		<index ref="index" :num="num" v-show="isTeach==2" />
+		<class ref="calsses" :num="num2" v-show="isTeach==1" />
 	</view>
 </template>
 
@@ -16,18 +16,19 @@
 			Class
 		},
 		data() {
-			return {}
+			return {
+				num:0,
+				num2:0
+			}
 		},
 		onShow() {
+			if(this.isTeach==2){
+				this.num++
+			} else {
+				this.num2++
+			}
 			// 为了处理切换会员端和教师端 会有一闪而过的卡顿
-			this.$nextTick(() => {
-				setTimeout(() => {
-					let ref = this.$refs['index'] || this.$refs['calsses']
-					console.log('ref',ref);
-					// 调用两个组件里面预留的方法
-					ref && ref.getMounted()
-				}, 800)
-			})
+			
 		},
 		computed: {},
 		created() {

@@ -53,9 +53,20 @@
 		components: {
 			ClassItem
 		},
+		props: {
+			num: {
+				default: ''
+			}
+		},
 		data() {
 			return {
-				data:[]
+				data: []
+			}
+		},
+		watch: {
+			num() {
+				console.log('11111111111111111111111111111111111111');
+				this.getMounted()
 			}
 		},
 		computed: {
@@ -64,25 +75,20 @@
 		onShow() {
 			this.getMounted()
 		},
-		created() {
-
-		},
 		mounted() {},
 		methods: {
 			getMounted() {
-				setTimeout(() => {
-					const active = 'class'
-					if (this.active !== active) {
-						this.SET_ACTIVE(active)
-					}
-					uni.setNavigationBarTitle({
-						title: '班级'
-					})
-					this.getTeach()
-					this.search({
-						isTeach: this.isTeach
-					})
-				}, 300)
+				const active = 'class'
+				if (this.active !== active) {
+					this.SET_ACTIVE(active)
+				}
+				uni.setNavigationBarTitle({
+					title: '班级'
+				})
+				this.getTeach()
+				this.search({
+					isTeach: this.isTeach
+				})
 			},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据

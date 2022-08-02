@@ -73,7 +73,13 @@
 				this.$http['mine'].getUserInfo().then(res => {
 					console.log(res);
 					if (res.code == 200) {
-						const result = Object.assign(this.userInfo, res.data)
+						const result = {
+							...this.userInfo,
+							avatar: res.data.avatar,
+							name:  res.data.name,
+							remainingSum:  res.data.remainingSum,
+							roleName:  res.data.roleName,
+						}
 						this.SET_STORAGE({
 							str: 'userInfo',
 							data: result

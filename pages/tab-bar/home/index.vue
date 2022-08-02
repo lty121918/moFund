@@ -89,6 +89,11 @@
 	} from 'vuex'
 	
 	export default {
+		props:{
+			num:{
+				default:''
+			}
+		},
 		data() {
 			return {
 				banner: [], // 轮播图
@@ -100,6 +105,11 @@
 			...mapGetters(['active', 'location', 'campus']),
 			url() {
 				return this.$url
+			}
+		},
+		watch:{
+			num(){
+				this.getMounted()
 			}
 		},
 		created() {
