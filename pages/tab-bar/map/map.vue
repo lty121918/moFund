@@ -349,4 +349,7 @@
 		line-height: 20rpx;
 		width: 10rpx;
 	}
+	.default-empty{
+		margin: 0rpx;
+	}
 </style>

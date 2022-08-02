@@ -9,7 +9,9 @@
 					<uni-easyinput type="textarea" maxlength="200" v-model="customFormData.property" placeholder="请输入社区物业" />
 				</uni-forms-item>
 				<uni-forms-item label="社区场地" required name="campusSpace">
-					<uni-easyinput type="textarea" maxlength="500" v-model="customFormData.campusSpace" placeholder="请输入社区场地" />
+					<uni-easyinput type="textarea" maxlength="500" v-model="customFormData.campusSpace"
+					 placeholderStyle="font-size:28rpx"
+					 placeholder="请输入社区场地" />
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -135,6 +137,9 @@
 		margin-bottom: 0;
 		border-bottom: 2rpx solid #F3F3F5;
 	}
+	/deep/.uni-forms-item__label{
+		height: 35px !important;
+	}
 	/deep/.is-input-border{
 		border: none;
 	}
@@ -147,7 +152,9 @@
 		right: 0;
 	}
 	/deep/.uni-easyinput__content-textarea{
-		margin: 20rpx 0;
+		margin: 20rpx 0!important;
 		// text-align: right;
+		line-height: normal !important;
+		font-size: 28rpx;
 	}
 </style>

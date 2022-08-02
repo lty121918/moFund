@@ -33,7 +33,8 @@
 			<view class="home-activity-content">
 				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
 					@click="$utils.router.navTo($page.CourseDetail,item)">
-					<van-image use-error-slot class="home-activity-content-img"  radius="10" width="84" height="84" :src="item.coverImage" >
+					<van-image use-error-slot class="home-activity-content-img" radius="10" width="84" height="84"
+						:src="item.coverImage">
 					</van-image>
 					<!-- <image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image> -->
 					<view class="home-activity-content-title t-over">{{item.productName}}</view>
@@ -87,18 +88,17 @@
 		mapGetters,
 		mapMutations
 	} from 'vuex'
-	
+	import {
+		debounce
+	} from "@/utils/lodash.js";
+	import bus from '@/utils/bus.js'
 	export default {
-		props:{
-			num:{
-				default:''
-			}
-		},
 		data() {
 			return {
 				banner: [], // 轮播图
 				courseList: [], // 社区课程
-				spellClassList: [] ,// 附件拼班
+				spellClassList: [], // 附件拼班
+				campusName:''
 			}
 		},
 		computed: {
@@ -107,17 +107,19 @@
 				return this.$url
 			}
 		},
-		watch:{
-			num(){
-				this.getMounted()
-			}
-		},
 		created() {
-			this.getMounted()
+			// this.getMounted()
+			bus.$on('getMounted',()=>{
+				console.log('执行');
+				this.getMounted()
+			})
+		},
+		mounted() {
+			
 		},
 		methods: {
 			// home 页面调用
-			getMounted() {
+			getMounted: debounce(function(e) {
 				const active = 'home'
 				if (this.active !== active) {
 					this.SET_ACTIVE(active)
@@ -126,7 +128,7 @@
 					title: '首页'
 				})
 				this.getData()
-			},
+			}),
 			...mapMutations(['SET_ACTIVE', 'SET_STORAGE']),
 			// 请求数据
 			async getData() {
@@ -135,6 +137,7 @@
 				this.SET_STORAGE({
 					str: 'campus'
 				})
+				console.log('校区',this.campus);
 				// 读取登录时获取的坐标轴
 				this.SET_STORAGE({
 					str: 'location'
@@ -184,8 +187,8 @@
 					const data = [
 						...res3.data,
 					]
-					data.forEach(item=>{
-						item.coverImage = this.$url+item.coverImage
+					data.forEach(item => {
+						item.coverImage = this.$url + item.coverImage
 					})
 					if (data.length > 4) {
 						this.courseList = data.slice(0, 4)
@@ -199,20 +202,21 @@
 					campusId: this.campus.campusId
 				})
 				if (res4.code == 200) {
-					res4.data.forEach(item=>{
-						item.headUrl = this.$url+item.headUrl
-						item.weChatUserList.forEach(row=>{
-							item.avatar = self.$url+item.avatar
+					res4.data.forEach(item => {
+						item.headUrl = this.$url + item.headUrl
+						item.weChatUserList.forEach(row => {
+							item.avatar = self.$url + item.avatar
 						})
 					})
 					this.spellClassList = [
 						...res4.data
 					]
 				}
+				this.$forceUpdate()
 			},
 			// 跳转到其他小程序
-			hanldeNext(item){
-				this.$utils.router.other(item.linkUrl,item.appid)
+			hanldeNext(item) {
+				this.$utils.router.other(item.linkUrl, item.appid)
 			}
 		}
 	}
@@ -274,7 +278,8 @@
 				background: #D8D8D8;
 				border-radius: 16rpx;
 			}
-			&-view{
+
+			&-view {
 				text-align: center;
 			}
 
@@ -437,6 +442,7 @@
 	.swiper {
 		width: 686rpx;
 		height: 376rpx;
+		overflow: hidden;
 		border-radius: 16rpx;
 	}
 </style>

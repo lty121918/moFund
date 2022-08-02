@@ -64,6 +64,8 @@
 <style lang="scss" scoped>
 	.coach {
 		min-height: 100vh;
+		padding: 32rpx 0;
+		box-sizing: border-box;
 		background: #EEF1FA;
 
 		&-status {

@@ -3,7 +3,10 @@
 
 		<view class="mine-head">
 			<view class="mine-head-flex">
-				<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
+				<button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
+					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
+				</button>
+				<!-- <image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image> -->
 				<view>
 					<view>
 						<text class="mine-head-name">{{userInfo.name}}</text>
@@ -124,6 +127,34 @@
 
 		},
 		methods: {
+			bindchooseavatar(e){
+				const self = this
+				console.log('11',e);
+				let baseUrl = self.$config.BASE_URL
+				if (process.env.NODE_ENV === 'development') {
+				  baseUrl = self.$config.BASE_URL_DEV
+				} 
+				uni.uploadFile({
+					name: "file", //文件上传的name值
+					url: baseUrl+'/file/upload', //接口地址
+					header: {
+						"Content-Type": "multipart/form-data"
+					}, //头信息
+					formData: {
+						
+					}, //上传额外携带的参数
+					filePath: e, //临时路径
+					fileType: "image", //文件类型
+					success: (uploadFileRes) => {
+						const url = (ret[0] || '')
+						const result= {
+							...this.userInfo,
+							avatar:url
+						}
+						this.SET_STORAGE({str:'userInfo',data:result})
+					},
+				});
+			},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			getData() {
@@ -131,6 +162,9 @@
 				this.$http['mine'].getUserInfo().then(res=>{
 					console.log(res);
 					if(res.code==200){
+						if(!res.data.avatar){
+							res.data.avatar = this.avatar
+						}
 						if(res.data.avatar.indexOf('http')==-1){
 							res.data.avatar = this.$url + res.data.avatar
 						}
@@ -173,7 +207,14 @@
 			}
 
 			&-img {
+				width: 90rpx;
+				height: 90rpx;
+				border-radius: 50%;
+			}
+			&-img2 {
+				padding: 0 !important;
 				margin-right: 28rpx;
+				margin-left: 0rpx;
 				width: 90rpx;
 				height: 90rpx;
 				border-radius: 50%;

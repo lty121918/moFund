@@ -6,7 +6,12 @@
 					:duration="500">
 					<swiper-item v-for="(item,index) in banner" :key="index">
 						<view class="course-swiper-view">
-							<image class="course-swiper-img" :src="item" mode="heightFix" alt="加载失败"></image>
+							<image class="course-swiper-img" :src="url+item" mode="heightFix" alt="加载失败"></image>
+						</view>
+					</swiper-item>
+					<swiper-item v-if="banner.length==0">
+						<view class="course-swiper-view">
+							<image class="course-swiper-img" src="/static/default.png" mode="heightFix" alt="加载失败"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -28,7 +33,7 @@
 					</view> -->
 					<view class="text-c course-title-content-r2">
 						<view class="color999 fz24">最多</view>
-						<view class="color fz28">{{productInfo.maxNum}}</view>
+						<view class="color fz28"> {{productInfo.maxNum}} </view>
 						<view class="color999 fz24">人</view>
 
 					</view>
@@ -145,7 +150,7 @@
 				campusOther: {},
 				isEvaluate: false, //评论是否超出5条
 				value: "",
-				banner:['/static/default.png']
+				banner:[]
 			}
 		},
 		watch: {
@@ -175,6 +180,7 @@
 			 * @function 获取当前商品详情所有数据
 			 */
 			async getCourseDetail() {
+				const self = this
 				console.log('campusOther', this.campusOther);
 				const {
 					getCourseDetails,
@@ -191,9 +197,6 @@
 						title: res.data.productName
 					})
 					const banner = res.data.imageUrl.split(',')
-					banner.forEach(item=>{
-						item.imageUrl = this.$url + item.imageUrl
-					})
 					if(banner.length>0){
 						this.banner = banner
 					}
@@ -327,20 +330,7 @@
 					align-items: center;
 					// width: 50%;
 
-					&:first-child {
-						position: relative;
-
-						&:before {
-							content: '';
-							position: absolute;
-							top: 50%;
-							right: 0;
-							margin-top: -27rpx;
-							width: 2rpx;
-							height: 54rpx;
-							background-color: #E8E8E8;
-						}
-					}
+					
 				}
 			}
 		}

@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<index ref="index" :num="num" v-show="isTeach==2" />
-		<class ref="calsses" :num="num2" v-show="isTeach==1" />
+		<index ref="homeIndex" v-if="isTeach==2" />
+		<class ref="calsses" v-if="isTeach==1" />
 	</view>
 </template>
 
@@ -9,6 +9,7 @@
 	import Index from './index.vue'
 	import Class from '../class/class.vue'
 	import mixin from '@/mixin.js'
+	import bus from '@/utils/bus.js'
 	export default {
 		mixins: [mixin],
 		components: {
@@ -17,18 +18,8 @@
 		},
 		data() {
 			return {
-				num:0,
-				num2:0
+				isShow: true
 			}
-		},
-		onShow() {
-			if(this.isTeach==2){
-				this.num++
-			} else {
-				this.num2++
-			}
-			// 为了处理切换会员端和教师端 会有一闪而过的卡顿
-			
 		},
 		computed: {},
 		created() {
@@ -38,6 +29,19 @@
 				this.getLocation()
 			}
 		},
-		methods: {}
+		methods: {
+			Ginit() {
+				console.log('2deeeeeeeeeeeeeeeeeeeeeeeeee');
+				this.$nextTick(()=>{
+					console.log('教师',this.isTeach);
+					if(this.isTeach==1){
+						bus.$emit('getMounted2')
+					} else if(this.isTeach==2){
+						bus.$emit('getMounted')
+					}
+					
+				})
+			}
+		}
 	}
 </script>

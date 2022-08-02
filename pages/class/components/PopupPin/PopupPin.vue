@@ -22,7 +22,7 @@
 								<text v-if="data.courseType==1">按星期: {{data.weekCodeName}}</text>
 							</view>
 							<!-- 上课时段 -->
-							<view class="popup-nearby-content-cycle">
+							<view class="popup-nearby-content-cycle" v-if="data.startPeriod&&data.endPeriod">
 								<image class="popup-nearby-content-cycle-img" src="/static/class/time.png"
 									mode="widthFix">
 								</image>
@@ -203,7 +203,7 @@
 			},
 			handleShow(val) {
 				const self = this
-				val.campusId = 'de3854becdf21cabc921cdeffaf84d78'
+				// val.campusId = 'de3854becdf21cabc921cdeffaf84d78'
 				this.$refs.popup.open('bottom')
 				this.$http['classes'].getSpellClass(val).then(res => {
 					if (res.code == 200) {

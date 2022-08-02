@@ -96,10 +96,9 @@
 	.student {
 		min-height: 100vh;
 		background: #EEF1FA;
-
 		&::before {
 			content: '';
-			position: absolute;
+			position: fixed;
 			top: 0;
 			left: -150rpx;
 			width: 1050rpx;

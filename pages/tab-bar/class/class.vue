@@ -48,36 +48,36 @@
 	} from 'vuex'
 	import ClassItem from '@/components/ClassItem/ClassItem.vue'
 	import mixin from '@/mixin.js'
+	import bus from '@/utils/bus.js'
+	import {
+		debounce
+	} from "@/utils/lodash.js";
 	export default {
 		mixins: [mixin],
 		components: {
 			ClassItem
 		},
-		props: {
-			num: {
-				default: ''
-			}
-		},
 		data() {
 			return {
-				data: []
+				data: [],
 			}
 		},
-		watch: {
-			num() {
-				console.log('11111111111111111111111111111111111111');
-				this.getMounted()
-			}
-		},
+		
 		computed: {
 			...mapGetters(['active']),
 		},
 		onShow() {
 			this.getMounted()
 		},
-		mounted() {},
+		created() {
+			bus.$on('getMounted2',()=>{
+				console.log('执行');
+				this.getTeach()
+				this.getMounted()
+			})
+		},
 		methods: {
-			getMounted() {
+			getMounted:debounce(function() {
 				const active = 'class'
 				if (this.active !== active) {
 					this.SET_ACTIVE(active)
@@ -85,11 +85,11 @@
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
-				this.getTeach()
+				
 				this.search({
 					isTeach: this.isTeach
 				})
-			},
+			}),
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			search(val) {

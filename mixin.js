@@ -49,6 +49,7 @@ const minxin = {
 			str: 'userInfo'
 		})
 		this.getTeach()
+		this.Ginit()
 	},
 
 	created() {
@@ -66,6 +67,9 @@ const minxin = {
 		}
 	},
 	methods: {
+		Ginit(){
+			// 空壳
+		},
 		...mapMutations(['SET_TEACH', 'SET_STORAGE']),
 		getTeach() {
 			let isTeach = this.$utils.util.getCache('role')
@@ -86,7 +90,7 @@ const minxin = {
 				this.isTeach = isTeach
 				this.SET_TEACH(isTeach)
 				this.SET_STORAGE({str:'Authorization',data:res.data.accessToken})
-				if(isTeach==1){
+				if(isTeach==2){
 					this.$utils.router.swtTo(this.$page.Home)
 				} else{
 					this.$utils.router.swtTo(this.$page.Class)
