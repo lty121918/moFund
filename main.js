@@ -13,6 +13,7 @@ Vue.component('page-tabpars', pageTabpars);
 Vue.component('van-image',vanImage)
 console.log(config.IMAGE_URL );
 Vue.config.productionTip = false
+Vue.prototype.$config = config //配置
 Vue.prototype.$utils = utils //工具包管理
 Vue.prototype.$page = config.ROUTER_LIST //路由管理
 Vue.prototype.$http = http //路由管理

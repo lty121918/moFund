@@ -60,7 +60,7 @@
 				</view>
 			</view>
 			<view class="home-nearby-content" v-for="(item,index) in spellClassList" :key="index"
-				@click="$utils.router.navTo($page.OrderInfo,item)">
+				@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
 				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
 				<view class="home-nearby-content-center">
 					<view>{{item.nickName}}</view>
@@ -203,9 +203,12 @@
 				})
 				if (res4.code == 200) {
 					res4.data.forEach(item => {
-						item.headUrl = this.$url + item.headUrl
+						if(item.headUrl.indexOf('http')==-1){
+							item.headUrl = this.$url + item.headUrl
+						}
+						item.weChatUserList = item.weChatUserList || []
 						item.weChatUserList.forEach(row => {
-							item.avatar = self.$url + item.avatar
+							item.avatar = this.$url + item.avatar
 						})
 					})
 					this.spellClassList = [

@@ -5,7 +5,7 @@
 				<!-- 当前商品信息 -->
 				<view class=" flex-bc">
 					<view class="popup-nearby-content popup-content2">
-						<image class="popup-nearby-content-img" :sssrc="data.coverImage" mode="aspectFit"></image>
+						<image class="popup-nearby-content-img" :src="coverImage" mode="aspectFit"></image>
 						<view class="">
 							<view class="">
 								<text class="color fz24">￥</text>

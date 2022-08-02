@@ -129,7 +129,7 @@
 		methods: {
 			bindchooseavatar(e){
 				const self = this
-				console.log('11',e);
+				console.log('11',e.detail.avatarUrl);
 				let baseUrl = self.$config.BASE_URL
 				if (process.env.NODE_ENV === 'development') {
 				  baseUrl = self.$config.BASE_URL_DEV
@@ -143,13 +143,18 @@
 					formData: {
 						
 					}, //上传额外携带的参数
-					filePath: e, //临时路径
+					filePath: e.detail.avatarUrl, //临时路径
 					fileType: "image", //文件类型
 					success: (uploadFileRes) => {
-						const url = (ret[0] || '')
+						
+						const data = JSON.parse(uploadFileRes.data)
+						let url = ''
+						for(let item in data){
+							url= data[item]
+						}
 						const result= {
 							...this.userInfo,
-							avatar:url
+							avatar:self.$url+url
 						}
 						this.SET_STORAGE({str:'userInfo',data:result})
 					},

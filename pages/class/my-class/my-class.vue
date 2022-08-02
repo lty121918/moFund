@@ -21,7 +21,7 @@
 		},
 		data() {
 			return {
-				data:[]
+				data: []
 			}
 		},
 		computed: {},
@@ -49,15 +49,21 @@
 					let data = []
 					if (res.code == 200) {
 						data = res.data || []
-						data = data.filter(item => item.classStatus == 0 || item.classStatus ==
-							1 || item.classStatus == 3)
+
 						data.forEach(item => {
-							item.coverImage = self.url + item.coverImages
+							if (item.classStatus == 2 || item.classStatus == 4 || item.classStatus ==
+								5 || item.classStatus == 6) {
+									item.nextCLassTime =null
+							}
+							if (item.coverImage.indexOf('http') == -1) {
+								item.coverImage = self.$url + item.coverImage
+							}
 							item.startPeriod = self.$utils.dateTime.getLocalTime(
 								`2022-01-01 ${item.startPeriod}`, 'hh:mm')
 							item.endPeriod = self.$utils.dateTime.getLocalTime(
 								`2022-01-01 ${item.endPeriod}`,
 								'hh:mm')
+							item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
 							if (item.nextCLassTime) {
 								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
 									item.nextCLassTime,

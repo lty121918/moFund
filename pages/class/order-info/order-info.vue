@@ -52,6 +52,7 @@
 				确定
 			</view>
 		</view>
+		<view style="height: 180rpx"></view>
 		<view v-if="!isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
 			<view>
 			</view>
@@ -120,6 +121,9 @@
 					if (res.code == 200) {
 						console.log(res.data);
 						this.isHead = res.data.regimentalCommander
+						if(res.data.coverImage.indexOf('http')==-1){
+							res.data.coverImage = this.$url + res.data.coverImage
+						}
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
 						this.data = res.data
 						uni.setNavigationBarTitle({
@@ -145,7 +149,7 @@
 			handleAdd() {
 				this.data.weChatUserList = this.data.weChatUserList || []
 				const ls = this.data.weChatUserList.map(item => item.studentId)
-				this.$refs.popupAddStu.handleShow(this.classInfoId, ls)
+				this.$refs.popupAddStu.handleShow(this.classId, ls)
 				console.log('添加学员');
 			},
 			// 调起充值界面
@@ -154,10 +158,10 @@
 			},
 			// 执行解散班级
 			handleDisolution() {
-				const ls = this.data.weChatUserList.map(item => item.studentId)
+				// const ls = this.data.weChatUserList.map(item => item.studentId)
 				this.$http['classes'].indexDisbandClass({
-					classId: this.classInfoId,
-					studentIds: ls
+					classId: this.classId,
+					// studentIds: ls
 				}).then(res => {
 					if (res.code == 200) {
 						this.submit()
@@ -168,7 +172,7 @@
 			handleShare() {
 				this.$refs.popupShare.handleShow({
 					title: this.data.productName,
-					query: 'classInfoId=${this.classInfoId}&wxUserId=${this.data.wxUserId}',
+					query: `classId=${this.classId}&wxUserId=${this.data.wxUserId}`,
 					path: `/pages/class/order-info/order-info`
 				})
 			},
@@ -180,14 +184,13 @@
 					showCancel: true,
 					confirmCallback: function() {
 						self.$http['classes'].indexRemoveClassStudent({
-							classInfoId: self.classInfoId,
+							classInfoId: self.classId,
 							classStudentId: val.classStudentId,
 							studentId: val.studentId,
-							courseScheduleId: val.courseScheduleId,
-							spellClassDetailsId: val.spellClassDetailsId,
+							courseScheduleId: self.data.courseScheduleId,
+							spellClassDetailsId: self.data.spellClassDetailsId,
 							courseScheduleDetailId: self.data.courseScheduleDetailId,
-							wxUserId: self.data.wxUserId,
-							IsFormData: true
+							wxUserId: val.wxUserId,
 						}).then(res => {
 							if (res.code == 200) {
 								self.getMineSpellClass()

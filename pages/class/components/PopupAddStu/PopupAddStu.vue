@@ -53,7 +53,7 @@
 		methods: {
 			// 选择学员
 			changeBox(val) {
-				if(this.activeData.indexOf(val.id)>-1){
+				if (this.activeData.indexOf(val.id) > -1) {
 					return false
 				}
 				let index = this.boxActive.indexOf(val.id)
@@ -89,19 +89,19 @@
 					if (res.code == 200) {
 						if (!res.data) {
 							self.$utils.model.showMsgModal({
-								content:'您的余额不足，最少需要满足一节课的余额！',
-								confirmText:'去充值',
-								showCancel:true,
-								confirmCallback:function(){
+								content: '您的余额不足，最少需要满足一节课的余额！',
+								confirmText: '去充值',
+								showCancel: true,
+								confirmCallback: function() {
 									self.$emit('recharge')
 								}
 							})
 						} else {
-							self.$utils.model.showToast('参与拼班将冻结课款，拼班成功后自动扣课款。',2500)
+							self.$utils.model.showToast('参与拼班将冻结课款，拼班成功后自动扣课款。', 2500)
 						}
 						self.close()
 						self.$emit('change')
-						
+
 					}
 				})
 
@@ -110,6 +110,11 @@
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
 			close() {
+				this.boxActive = []
+				this.data = []
+				this.activeData = [] //已经选中的学员
+				this.classId = ''
+				this.num = 0
 				this.$refs.popup.close('bottom')
 			},
 			async handleShow(classId, ls) {
@@ -170,7 +175,8 @@
 					border-radius: 8rpx;
 					border: 2rpx solid #E7E8EB;
 				}
-				&-dis{
+
+				&-dis {
 					background: #E7E8EB;
 				}
 

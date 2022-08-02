@@ -53,7 +53,10 @@
 				if (res.code == 200) {
 					data = res.data
 					data.forEach(item=>{
-						item.headUrl = self.$url+item.headUrl
+						if(item.headUrl.indexOf('http')==-1){
+							item.headUrl = self.$url + item.headUrl
+						}
+						item.weChatUserList = item.weChatUserList || []
 						item.weChatUserList.forEach(row=>{
 							item.avatar = self.$url+item.avatar
 						})

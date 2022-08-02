@@ -6,7 +6,7 @@
 		</view>
 		<view class="class-content-bottom">
 			<view class="class-content-left">
-				<van-image use-error-slot class="class-content-img"  radius="10" width="140" height="132" :src="item.coverImage" >
+				<van-image use-error-slot class="class-content-img"  radius="10" width="140" height="132" :src="data.coverImage" >
 s				</van-image>
 			</view>
 			<view class="">
@@ -139,7 +139,7 @@ s				</van-image>
 				width: 470rpx;
 				margin-bottom: 12rpx;
 				&-title{
-					width: 300rpx;
+					width: 310rpx;
 					font-size: 32rpx;
 					font-family: SourceHanSansSC-Bold, SourceHanSansSC;
 					font-weight: bold;

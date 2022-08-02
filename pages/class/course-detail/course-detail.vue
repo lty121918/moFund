@@ -245,7 +245,7 @@
 			submit() {
 				this.$refs.popupPin.handleShow({
 					productId: this.productId,
-					campusId: this.campusOther.campusId
+					campusId: this.campusOther.campusId,
 				})
 			},
 			// 切换tab

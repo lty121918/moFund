@@ -11,11 +11,11 @@
 					<view class="class-title">
 						<view class="class-title-item">
 							<text>待开课: </text>
-							<text class="color pl12">0</text>
+							<text class="color pl12">{{item.wait}}</text>
 						</view>
 						<view class="">
 							<text>进行中: </text>
-							<text class="color pl12">1</text>
+							<text class="color pl12">{{item.conduct}}</text>
 						</view>
 					</view>
 				</view>
@@ -62,7 +62,7 @@
 				data: [],
 			}
 		},
-		
+
 		computed: {
 			...mapGetters(['active']),
 		},
@@ -70,14 +70,14 @@
 			this.getMounted()
 		},
 		created() {
-			bus.$on('getMounted2',()=>{
+			bus.$on('getMounted2', () => {
 				console.log('执行');
 				this.getTeach()
 				this.getMounted()
 			})
 		},
 		methods: {
-			getMounted:debounce(function() {
+			getMounted: debounce(function() {
 				const active = 'class'
 				if (this.active !== active) {
 					this.SET_ACTIVE(active)
@@ -85,7 +85,7 @@
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
-				
+
 				this.search({
 					isTeach: this.isTeach
 				})
@@ -111,34 +111,27 @@
 						data = res.data || []
 						let list = []
 						if (val.isTeach == 1) {
-							data.classWxPageVOList = data.classWxPageVOList || []
-							list = data.classWxPageVOList
+							data.forEach(item => {
+								item.classWxPageVOList = item.classWxPageVOList || []
+								item['wait'] = 0
+								item['conduct'] = 0
+								item.classWxPageVOList.forEach(row => {
+									row = self.setItem(row)
+								})
+								const wait = item.classWxPageVOList.filter(ls => ls.classStatus == 1)
+								const conduct = item.classWxPageVOList.filter(ls => ls.classStatus == 3)
+								item['wait'] = wait.length
+								item['conduct'] = conduct.length
+
+							})
 						} else {
 							data = data.filter(item => item.classStatus == 0 || item.classStatus ==
 								1 || item.classStatus == 3)
-							list = data
-
+							data.forEach(item => {
+								item = self.setItem(item)
+							})
 						}
-						list.forEach(item => {
-							item.coverImage = self.url + item.coverImages
-							item.startPeriod = self.$utils.dateTime.getLocalTime(
-								`2022-01-01 ${item.startPeriod}`, 'hh:mm')
-							item.endPeriod = self.$utils.dateTime.getLocalTime(
-								`2022-01-01 ${item.endPeriod}`,
-								'hh:mm')
-							item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
-							if (item.nextCLassTime) {
-								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
-									item.nextCLassTime,
-									'yyyy-MM-dd hh:mm')
-							}
-						})
-						if (val.isTeach == 1) {
-							data.classWxPageVOList = list
-						} else {
-							data = list
 
-						}
 						this.data = data
 
 					}
@@ -146,6 +139,24 @@
 
 				})
 			},
+			setItem(item) {
+				const self = this
+				if (item.coverImage.indexOf('http') == -1) {
+					item.coverImage = self.$url + item.coverImage
+				}
+				item.startPeriod = self.$utils.dateTime.getLocalTime(
+					`2022-01-01 ${item.startPeriod}`, 'hh:mm')
+				item.endPeriod = self.$utils.dateTime.getLocalTime(
+					`2022-01-01 ${item.endPeriod}`,
+					'hh:mm')
+				item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
+				if (item.nextCLassTime) {
+					item.nextCLassTime = self.$utils.dateTime.getLocalTime(
+						item.nextCLassTime,
+						'yyyy-MM-dd hh:mm')
+				}
+				return item
+			}
 
 		}
 	}
@@ -172,6 +183,6 @@
 	}
 
 	.home-title {
-		padding-bottom: 0;
+		padding-top: 0;
 	}
 </style>

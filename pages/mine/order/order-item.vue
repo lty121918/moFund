@@ -1,7 +1,7 @@
 <template>
 	<view class="class-content">
 		<view class="class-content-top">
-			<text class="fwb">订单编号：{{item.orderNo}}</text>
+			<text class="fwb">订单编号：{{item.tradeNo}}</text>
 			<text class="color fw4">消费订单</text>
 		</view>
 		<image class="class-content-eval"  @click="handleChange(item)" v-if="item.type=='consume'" src="/static/mine/evaluate.png" mode="aspectFit"></image>
@@ -23,7 +23,7 @@
 			</view>
 			<view class="">
 				<view class="class-content-cycle mt0">下单时间：{{item.operateTime}}</view>
-				<view class="class-content-cycle">订单金额：￥{{item.orderAmount}}</view>
+				<view class="class-content-cycle">订单金额：￥{{item.amount}}</view>
 			</view>
 		</view>
 	</view>

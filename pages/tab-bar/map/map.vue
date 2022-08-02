@@ -28,8 +28,7 @@
 						<cover-view class="course">
 							<cover-view class="course-list-item" v-for="item in data" :key="item"
 								@click="$utils.router.navTo($page.CourseDetail,item)">
-								<cover-image class="course-list-item-img" :src="item.coverImages"
-									mode="aspectFit">
+								<cover-image class="course-list-item-img" :src="item.coverImage" mode="aspectFit">
 								</cover-image>
 								<cover-view class="">
 									<cover-view class="course-list-item-title t-over">{{item.productName}}</cover-view>
@@ -53,7 +52,8 @@
 								</cover-view>
 							</cover-view>
 							<cover-view class="default-empty" v-if="data.length===0">
-								<cover-image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+								<cover-image class="default-empty-image" :src="require('@/static/notData.png')"
+									mode="widthFix">
 								</cover-image>
 								<cover-view class="">暂无数据</cover-view>
 							</cover-view>
@@ -129,8 +129,10 @@
 				}).then(res => {
 					if (res.code == 200) {
 						this.isShow = true
-						res.data.forEach(item=>{
-							item.coverImage = this.$url+item.coverImages
+						res.data.forEach(item => {
+							if (item.coverImage.indexOf('http') == -1) {
+								item.coverImage = this.$url + item.coverImage
+							}
 						})
 						this.data = [
 							...res.data
@@ -349,7 +351,8 @@
 		line-height: 20rpx;
 		width: 10rpx;
 	}
-	.default-empty{
+
+	.default-empty {
 		margin: 0rpx;
 	}
 </style>
