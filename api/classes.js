@@ -32,8 +32,11 @@ export const indexRemoveClassStudent = params => post(apis._wx_user_index_remove
 export const getClassDetail = params => get(apis._wx_user_class_detail, params)
 // 获取教练对学员的评价
 export const getEvaluate = params => get(apis._wx_user_class_get_evaluate, params)
-// 班级风采
+// 班级风采 会员
 export const getClassMien = params => get(apis._wx_user_class_mien, params)
+// 班级风采 教练
+export const getClassStuMien = params => get(apis._wx_organization_class_student_mien, params)
+
 // 解散拼班(团长)
 export const disbandClass = params => post(apis._wx_user_class_disband_class, params)
 // 退出班级（家长）
@@ -49,9 +52,9 @@ export const getClassStudenDetail = params => get(apis._wx_organization_class_st
 // 班级列表分页 -教练
 export const getClassStudentPage = params => get(apis._wx_organization_class_student_page, params)
 // 教学评价
-export const studentEvaluation = params => get(apis._wx_organization_class_student_evaluation, params)
+export const studentEvaluation = params => post(apis._wx_organization_class_student_evaluation, params)
 // 学员考勤
-export const CourseScheduleAttendance = params => get(apis._wx_user_wx_course_schedule_attendance, params)
+export const CourseScheduleAttendance = params => post(apis._wx_user_wx_course_schedule_attendance, params)
 
 // 分享
 export const shareGenerateUrlLink = params => post(apis._wx_user_share_generate_url_link, params)

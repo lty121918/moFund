@@ -106,6 +106,7 @@
 			background: linear-gradient(180deg, #DE501F 0%, #DE501F 100%);
 			border-bottom-left-radius: 50%;
 			border-bottom-right-radius: 50%;
+			z-index: 1;
 		}
 
 		&-sex {
@@ -116,6 +117,7 @@
 
 		&-content {
 			position: relative;
+			z-index: 99;
 			margin: 32rpx 32rpx 0 32rpx;
 			padding: 32rpx;
 			width: 686rpx;
@@ -177,6 +179,7 @@
 
 		&-footer {
 			position: fixed;
+			z-index: 999;
 			bottom: 0;
 			width: 750rpx;
 			padding: 32rpx 30rpx;

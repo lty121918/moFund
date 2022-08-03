@@ -1,5 +1,30 @@
 class DateTime {
 	constructor() {}
+	getBirthday(idCard) {
+		var birthday = "";
+		if (idCard != null && idCard != "") {
+			if (idCard.length == 15) {
+				birthday = "19" + idCard.substr(6, 6);
+			} else if (idCard.length == 18) {
+				birthday = idCard.substr(6, 8);
+			}
+			console.log('vvv',idCard);
+			birthday = birthday.replace(/(.{4})(.{2})/, "$1-$2-");
+		}
+
+		return birthday;
+	}
+	getSex(idCard){
+		const num = idCard.charAt(16);
+		if(num%2==0){
+		  console.log('女');
+		  return '女'
+		}else{
+		  console.log('男');
+		   return '男'
+		}
+		 
+	}
 	/**
 	 * @description 格式化年月日的时间
 	 * @param {*} date 2018年4月15日 10:10
@@ -380,29 +405,24 @@ class DateTime {
 	}
 
 	// 给时间或者星期返回时间
-	getRangeDay(data, num, type = 'date') {
+	getRangeDay(data, num,week=[], type = 'date') {
 		let list = []
-		if (type == 'date') {
-			let start = data[0]
-			let end = data[0]
-			for (let i = 0; i <= num; i++) {
+		let start = data[0]
+		let end = data[1]
+		let weeks = week.join(',')
+		for (let i = 0; i <= num; i++) {
+			const code = this.getNowWeek(start)
+			if(type == 'week' && weeks.indexOf(code) > -1){
 				list.push(start)
-				start = this.getNextDay(1, start)
 			}
-		} else {
-			let start = this.getLocalTime()
-			const ls = Math.ceil(num / data.length)*7
-			for (let i = 0; i < ls; i++) {
-				const code = this.getNowWeek(start)
-				if(data.indexOf(code)>-1){
-					list.push(start)
-				}
-				console.log(start);
-				start = this.getNextDay(1, start)
+			if(type=='date'){
+				list.push(start)
 			}
-			
+			start = this.getNextDay(1, start)
+			if(start>end){
+				break;
+			}
 		}
-		list = list.slice(0, num)
 		return list
 	}
 }

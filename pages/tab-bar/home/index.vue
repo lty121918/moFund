@@ -4,7 +4,7 @@
 		<view class="home-head">
 			<view class="home-head-address" @click="$utils.router.navTo($page.Search)">
 				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFit"></image>
-				<text> {{campus.campusName}}</text>
+				<text> {{campus.campusName ||''}}</text>
 				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFit"></image>
 			</view>
 			<view class="home-head-swiper">
@@ -177,6 +177,15 @@
 								data: list[0]
 							})
 						}
+					}
+					if(list.length==0){
+						this.SET_STORAGE({
+							str: 'campus',
+							data: {
+								campusId:'',
+								campusName:''
+							}
+						})
 					}
 				}
 				// 获取课程

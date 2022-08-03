@@ -12,7 +12,7 @@
 							<image class="popup-content-img" src="/static/notData.png" mode="aspectFit"></image>
 						</view>
 						<view class="">
-							<view class="popup-content-cycle mt0">下单时间：{{data.operateTime}}</view>
+							<view class="popup-content-cycle mt0">下单时间：{{data.operateTime ||data.orderTime}}</view>
 							<view class="popup-content-cycle">订单课程：{{data.courseName}}</view>
 							<view class="popup-content-cycle">订单班级：{{data.className}}</view>
 							<view class="popup-content-cycle">订单学员：{{data.studentName}}</view>
@@ -60,7 +60,7 @@
 				this.$http['mine'].insertServiceEvaluation({
 					evaluationLevel: this.evaluationLevel,
 					content: this.content,
-					orderNo: this.data.orderNo
+					ordersId: this.data.orderId
 				}).then(res=>{
 					if(res.code==200){
 						this.$refs.popup.close('bottom')

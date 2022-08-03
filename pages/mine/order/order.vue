@@ -76,7 +76,7 @@
 
 					res.data.forEach(item => {
 						if (self.active == 1) {
-							if (item.wxFtbOrderVO.orderNo) {
+							if (item.wxFtbOrderVO) {
 								data.push({
 									...item.wxFtbOrderVO,
 									type: 'invest'
@@ -105,6 +105,7 @@
 <style lang="scss" scoped>
 	.order {
 		min-height: 100vh;
+		padding-bottom:32rpx ;
 		background: #EEF1FA;
 		box-sizing: border-box;
 

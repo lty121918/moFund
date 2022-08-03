@@ -133,9 +133,9 @@
 							str: 'shareInfo',
 							data: {}
 						})
-						if(res.data.classStatus!=0){
-							this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
-						}
+						// if(res.data.classStatus!=0){
+						// 	this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
+						// }
 						
 					}
 				})

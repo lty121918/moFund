@@ -21,6 +21,12 @@
 							<view class="mt12">出生日期：{{item.birthday}}</view>
 						</view>
 					</view>
+					<view class="default-empty" v-if="data.length===0">
+						<image class="default-empty-image" :src="require('@/static/notData.png')"
+							mode="widthFix">
+						</image>
+						<view class="">暂无数据</view>
+					</view>
 				</view>
 
 				<view class="popup-footer">
@@ -219,5 +225,8 @@
 			}
 		}
 
+	}
+	.default-empty {
+		margin: 0rpx;
 	}
 </style>

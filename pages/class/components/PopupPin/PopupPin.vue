@@ -18,8 +18,13 @@
 								<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png"
 									mode="widthFix">
 								</image>
-								<text v-if="data.courseType==2">周期: {{data.startDate}}~ {{data.endDate}}</text>
-								<text v-if="data.courseType==1">按星期: {{data.weekCodeName}}</text>
+								<text>周期: {{data.startDate}}~ {{data.endDate}}</text>
+							</view>
+							<view class="popup-nearby-content-cycle" v-if="data.courseType==1">
+								<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png"
+									mode="widthFix">
+								</image>
+								<text >按星期: {{data.weekCodeName}}</text>
 							</view>
 							<!-- 上课时段 -->
 							<view class="popup-nearby-content-cycle" v-if="data.startPeriod&&data.endPeriod">
@@ -44,6 +49,7 @@
 							!item.status?'popup-content-cycle-dis':'']"
 							v-for="(item,index) in myCourseScheduleList" :key="index">
 							{{item.scheduleName}}
+							<!-- {{item.startDate}}~ {{item.endDate}} -->
 						</view>
 					</view>
 					<!-- 上课时段 -->
@@ -121,6 +127,8 @@
 					})
 					return false
 				}
+				console.log('aa',JSON.stringify(this.data));
+				// return false
 				this.$http['classes'].getInitiateSpellClass(this.data).then(res => {
 					if (res.code == 200) {
 						this.$utils.router.navTo(this.$page.OrderInfo, {
@@ -142,9 +150,13 @@
 					ls = this.$utils.dateTime.getRangeDay([
 						this.data.startDate, //	上课开始日期(周期)
 						this.data.endDate, //上课结束日期(周期)
-					], this.data.totalNum)
+					], 1000)
 				} else {
-					ls = this.$utils.dateTime.getRangeDay(this.data.weekCode, this.data.totalNum, 'week')
+					ls = this.$utils.dateTime.getRangeDay([
+						this.data.startDate, //	上课开始日期(周期)
+						this.data.endDate, //上课结束日期(周期)
+					],1000, this.data.weekCode,'week')
+					console.log(ls);
 				}
 
 				console.log(ls);

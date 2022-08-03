@@ -3,10 +3,10 @@
 
 		<view class="mine-head">
 			<view class="mine-head-flex">
-				<button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
+				<!-- <button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
 					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
-				</button>
-				<!-- <image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image> -->
+				</button> -->
+				<image class="mine-head-img2" :src="userInfo.avatar" mode="aspectFit"></image>
 				<view>
 					<view>
 						<text class="mine-head-name">{{userInfo.name}}</text>

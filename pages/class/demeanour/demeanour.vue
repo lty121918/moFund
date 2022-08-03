@@ -33,12 +33,21 @@
 		onLoad(e) {
 			this.classId = e.classId
 			this.scheduleDetailId = e.scheduleDetailId
+				this.getTeach()
 			this.getClassMien()
 		},
 		methods: {
 			getClassMien(){
-				this.$http['classes'].getClassMien({classId:this.classId}).then(res=>{
+				const { getClassStuMien,getClassMien} = this.$http['classes']
+				let getData = getClassMien
+				if(this.isTeach==1){
+					getData = getClassStuMien
+				}
+				getData({classId:this.classId}).then(res=>{
 					if(res.code==200){
+						 res.data.forEach(item=>{
+							 item.image = this.$url+item.imgUrl
+						 })
 						this.list = res.data || []
 					}
 				})
@@ -52,7 +61,7 @@
 						//可以判断有没有超过最大限制
 						// let  fileSize = res.size;
 						//获取文件选择之后的临时路径
-						let tempFilePath = res.tempFilePath;
+						let tempFilePath = res.tempFilePaths[0];
 						// uni.showLoading({
 						// 	title: "上传中...",
 						// });
@@ -73,7 +82,7 @@
 						} 
 						uni.uploadFile({
 							name: "file", //文件上传的name值
-							url: baseUrl+'/polar/file/upload', //接口地址
+							url: baseUrl+'/file/upload', //接口地址
 							header: {
 								"Content-Type": "multipart/form-data"
 							}, //头信息
@@ -83,12 +92,14 @@
 							filePath: tempFilePath, //临时路径
 							fileType: "video", //文件类型
 							success: (uploadFileRes) => {
-								uni.hideLoading();
-								const ret = JSON.parse(uploadFileRes.data);
-								console.log(ret);
-								// self.videoUrl = (ret[0] || '')
+								console.log(uploadFileRes);
+								const data = JSON.parse(uploadFileRes.data)
+								let url = ''
+								for(let item in data){
+									url= data[item]
+								}
 								self.$http['classes'].ClassStudentUploadMien({
-									imgUrl:ret[0],
+									imgUrl:url,
 									classInfoId:self.classId,
 									scheduleDetailId:self.scheduleDetailId
 								}).then(res=>{

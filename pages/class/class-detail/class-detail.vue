@@ -11,7 +11,7 @@
 			<view class="class-detail-head">
 				<view class="class-detail-head-flex">
 					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFit"></image>
-					<text class="fwb fz32">{{data.wxName}}</text>
+					<text class="fwb fz32">{{data.wxName || ''}}</text>
 					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
 				</view>
 				<view class="class-detail-head-contact" @click="handlePhone(data.wxPhone)">
@@ -52,8 +52,7 @@
 					<image class="class-detail-attendance-img" src="/static/attendance.png" mode="widthFix">
 						<text class="color4">考勤名单</text>
 				</view>
-				<text class="color2">{{studentVOList.courseDate}}
-					{{studentVOList.startTime}}~{{studentVOList.endTime}}</text>
+				<text class="color2">{{studentVOList.courseDate}} {{studentVOList.startTime}}~{{studentVOList.endTime}}</text>
 			</view>
 			<view class="class-detail-stu">
 				<view class="class-detail-stu-flex fz28" v-for="(item,index) in studentVOList.data" :key="index"
@@ -62,7 +61,7 @@
 					</view>
 					<image v-else class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
 					</image>
-					<image class="class-detail-stu-img" :src="item.headUrl" mode="aspectFit"></image>
+					<image class="class-detail-stu-img" :src="avatar" mode="aspectFit"></image>
 					<view class="fwb class-detail-stu-name">{{item.studentName}}</view>
 					<view class="class-detail-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="class-detail-stu-age">{{item.age}}岁</view>
@@ -78,16 +77,21 @@
 		<!-- 家长展示 -->
 		<view class="class-detail-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }"
 			v-if="isTeach==2 && !isAttendance">
-			<view class="class-detail-footer-button class-detail-footer-button2" @click="handleDismiss">
+			<view v-if="'456'.indexOf(data.classStatus)==-1"
+				class="class-detail-footer-button class-detail-footer-button2" @click="handleDismiss">
 				{{isHead?'解散班级':'退出班级'}}
 			</view>
-			<view class="class-detail-footer-button " @click="checkTimetable">
+			<view class="class-detail-footer-button"
+				:class="['456'.indexOf(data.classStatus)==-1?'':'class-detail-footer-button3']" @click="checkTimetable">
 				查看课表
 			</view>
-			<view class="class-detail-footer-button " @click="$utils.router.navTo($page.Demeanour,{classId})">
+			<view class="class-detail-footer-button"
+				:class="['456'.indexOf(data.classStatus)==-1?'':'class-detail-footer-button3']"
+				@click="$utils.router.navTo($page.Demeanour,{classId})">
 				班级风采
 			</view>
-			<view class="class-detail-footer-button " @click="handleRecharge">
+			<view class="class-detail-footer-button"
+				:class="['456'.indexOf(data.classStatus)==-1?'':'class-detail-footer-button3']" @click="handleRecharge">
 				去充值
 			</view>
 		</view>
@@ -184,6 +188,13 @@
 							`2022-01-01 ${res.data.startPeriod}`, 'hh:mm')
 						res.data.endPeriod = this.$utils.dateTime.getLocalTime(`2022-01-01 ${res.data.endPeriod}`,
 							'hh:mm')
+						if (res.data.classStatus == 2 || res.data.classStatus == 4 || res.data.classStatus ==
+							5 || res.data.classStatus == 6) {
+							res.data.nextCLassTime = null
+						}
+						if (res.data.coverImage.indexOf('http') == -1) {
+							res.data.coverImage = this.$url + res.data.coverImage
+						}
 						if (res.data.nextCLassTime) {
 							res.data.nextCLassTime = this.$utils.dateTime.getLocalTime(
 								res.data.nextCLassTime,

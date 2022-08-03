@@ -31,5 +31,5 @@ export const getOrderConsume = params => get(apis._wx_user_wx_order_get_order_co
 // 查询充值订单信息
 export const getOrderInvest = params => get(apis._wx_user_wx_order_get_order_invest, params)
 // 加服务评价
-export const insertServiceEvaluation = params => get(apis._wx_user_wx_order_insert_service_evaluation, params)
+export const insertServiceEvaluation = params => post(apis._wx_user_wx_order_insert_service_evaluation, params)
 

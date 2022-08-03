@@ -16,11 +16,10 @@
 							<view class="course-detail-evaluate-info2">
 								<text class="color4 fz28">{{item.nickname}}</text>
 								<view class="course-detail-evaluate-info3">
-									<image v-for="item in productEvaluate" :key="item.id" class="course-detail-evaluate-info-img"
-										src="/static/class/eva.png" mode="scaleToFill"></image>
+									<uni-rate v-model="item.evaluationLevel" disabled size="20" disabledColor="#DE501F" color="#838899" active-color="#DE501F" />
 								</view>
 							</view>
-							<view class="fz24 color2">{{item.evaluationTime}}</view>
+							<view class="fz24 color2">{{item.createdDate||''}}</view>
 						</view>
 						<view class="course-detail-evaluate-text">{{item.content}}</view>
 					</view>
@@ -53,12 +52,16 @@
 		},
 		async onLoad(e) {
 			const res = await this.$http['classes'].getProductEvaluate({
-				productId: this.productId
+				productId: e.productId
 			})
 			if (res.code == 200) {
 				res.data = res.data.filter(item => item)
 				res.data.forEach(item => {
-					item.avatar = this.$url + item.avatar
+					if( item.avatar.indexOf('http')==-1){
+						item.avatar = this.$url + item.avatar
+					}
+					item.createdDate = this.$utils.dateTime.getLocalTime(item.createdDate)
+					item.evaluationLevel = item.evaluationLevel || 0
 				})
 				this.productEvaluate = res.data
 			}
@@ -150,7 +153,8 @@
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-
+					width: 510rpx;
+					
 					&-img {
 						margin-right: 8rpx;
 						width: 24rpx;

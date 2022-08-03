@@ -38,6 +38,7 @@
 			},
 			handleShow(item) {
 				this.data = item
+				this.value = ''
 				this.$refs.popup.open('bottom')
 			},
 			handleConfirm() {
@@ -53,7 +54,7 @@
 					evaluationContent: this.value,
 					scheduleDetailId: this.data.scheduleDetailId,
 					scheduleId: this.data.scheduleId,
-					studentId: this.data.ids,
+					studentId: this.data.id,
 				}).then(res => {
 					if (res.code == 200) {
 						this.$refs.popup.close('bottom')

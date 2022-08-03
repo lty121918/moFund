@@ -42,7 +42,7 @@
 		</view>
 		<!-- 推荐拼班 -->
 		<view class="course-nearby">
-			<view class="course-head-address" @click="$utils.router.navTo($page.Search,{type:'no'})">
+			<view class="course-head-address" @click="$utils.router.navTo($page.Search,{type:'no',productId})">
 				<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
 				<text> {{campusOther.campusName}}</text>
 				<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
@@ -67,8 +67,8 @@
 						<text>{{item.startTime}}~{{item.endTime }}</text>
 					</view>
 				</view>
-				<view v-if="item.unUseNum > 0">
-					<view class="course-nearby-content-button" @click="$utils.router.navTo($page.OrderInfo)">加入拼班</view>
+				<view v-if="item.useStudentNum < item.maxNum">
+					<view class="course-nearby-content-button" @click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">加入拼班</view>
 					<view class="course-nearby-content-success" v-if="item.minNumMax">差{{item.minNumMax}}人拼成</view>
 					<view class="course-nearby-content-success" v-else>差{{item.unUseNum}}人拼满</view>
 				</view>
@@ -99,11 +99,12 @@
 							<view class="course-detail-evaluate-info2">
 								<text class="color4 fz28">{{item.nickname}}</text>
 								<view class="course-detail-evaluate-info3">
-									<image v-for="item in 5" :key="item" class="course-detail-evaluate-info-img"
-										src="/static/class/eva.png" mode="scaleToFill"></image>
+									<uni-rate v-model="item.evaluationLevel" disabled  disabledColor="#DE501F"  size="20" color="#838899" active-color="#DE501F" />
+									<!-- <image v-for="item in 5" :key="item" class="course-detail-evaluate-info-img"
+										src="/static/class/eva.png" mode="scaleToFill"></image> -->
 								</view>
 							</view>
-							<view class="fz24 color2">{{item.evaluationTime}}</view>
+							<view class="fz24 color2">{{item.createdDate || ''}}</view>
 						</view>
 						<view class="course-detail-evaluate-text">
 							{{item.content||''}}
@@ -111,7 +112,7 @@
 					</view>
 				</view>
 				<view v-if="isEvaluate" class="course-detail-evaluate-more"
-					@click="$utils.router.navTo($page.Evaluate)">
+					@click="$utils.router.navTo($page.Evaluate,{productId})">
 					<text>查看更多</text>
 					<image class="course-detail-evaluate-more-img" src="/static/class/more.png" mode=""></image>
 				</view>
@@ -202,6 +203,7 @@
 					}
 					this.productInfo = res.data
 					res.data.productSpellClassList.forEach(item=>{
+						item.unUseNum = item.maxNum-item.useStudentNum
 						if(item.minNum-item.useStudentNum>0){
 							item.minNumMax  = item.minNum-item.useStudentNum
 						} 
@@ -223,7 +225,11 @@
 				if (res3.code == 200) {
 					res3.data = res3.data.filter(item => item)
 					res3.data.forEach(item => {
-						item.avatar = this.$url + item.avatar
+						if( item.avatar.indexOf('http')==-1){
+							item.avatar = this.$url + item.avatar
+						}
+						item.evaluationLevel = item.evaluationLevel || 0
+						item.createdDate = this.$utils.dateTime.getLocalTime(item.createdDate)
 					})
 					if (res3.data.length > 5) {
 						this.isEvaluate = true
@@ -538,6 +544,7 @@
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
+					width: 510rpx;
 
 					&-img {
 						margin-right: 8rpx;

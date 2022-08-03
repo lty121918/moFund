@@ -35,11 +35,13 @@
 			return {
 				campusName:'', //搜索社区名称
 				campusList:[], //校区列表
+				productId:'',
 				isShowMore:false //是否展示全部校区
 			}
 		},
 		onLoad(e) {
 			this.type = e.type || 'y' //判断是否要进入缓存
+			this.productId = e.productId
 			this.isShowMore = false
 			this.search()
 		},
@@ -53,16 +55,15 @@
 				let res2 = await this.$http['map'].getSearchList({
 					lat: this.location.latitude,
 					lng: this.location.longitude,
+					productId:this.productId,
 					campusName:this.campusName
 				})
 				if (res2.code == 200) {
 					let list = res2.data
 					list.forEach(item=>{
 						// 处理距离显示
-						if(item.distance>1200){
-							item.distance2 = '>1.2Km'
-						} else if(item.distance<500){
-							item.distance2 = '500m<'
+						if(item.distance>1000){
+							item.distance2 = `${(item.distance/1000).toFixed(1)}Km`
 						} else {
 							item.distance2 = `${item.distance}m`
 						}

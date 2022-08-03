@@ -125,8 +125,8 @@
 
 							})
 						} else {
-							data = data.filter(item => item.classStatus == 0 || item.classStatus ==
-								1 || item.classStatus == 3)
+							// data = data.filter(item => item.classStatus == 0 || item.classStatus ==
+							// 	1 || item.classStatus == 3)
 							data.forEach(item => {
 								item = self.setItem(item)
 							})

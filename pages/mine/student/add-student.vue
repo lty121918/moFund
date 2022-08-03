@@ -5,14 +5,15 @@
 				<uni-forms-item label="姓名" required name="name">
 					<uni-easyinput maxlength="20" v-model="customFormData.studentName" placeholder="请输入姓名" />
 				</uni-forms-item>
+				<uni-forms-item label="证件号码" required name="idCard">
+					<uni-easyinput maxlength="20" @blur="handleChage" @input="handleInput"
+						v-model="customFormData.idCard" placeholder="请输入证件号码" />
+				</uni-forms-item>
 				<uni-forms-item label="性别" required name="gender">
 					<view @click="handleShow">
 						<uni-easyinput disabled :styles="{disableColor:'#fff',color: '#333',borderColor: '#e5e5e5'}"
 							v-model="customFormData.gender" placeholder="请选择性别" />
 					</view>
-				</uni-forms-item>
-				<uni-forms-item label="证件号码" required name="idCard">
-					<uni-easyinput maxlength="20" v-model="customFormData.idCard" placeholder="请输入证件号码" />
 				</uni-forms-item>
 				<uni-forms-item label="出生日期" required name="birthday">
 					<uni-datetime-picker :border="false" type="date" :value="customFormData.birthday" :end="endTime"
@@ -107,12 +108,31 @@
 			this.endTime = this.$utils.dateTime.getLocalTime()
 		},
 		methods: {
+			handleInput(e) {
+				console.log('birthday', e)
+				const birthday = this.$utils.dateTime.getBirthday(e)
+				if (birthday.indexOf('-') > -1) {
+					this.customFormData.birthday = birthday;
+				}
+				if (e.length >= 18) {
+					const sex = this.$utils.dateTime.getSex(e)
+					this.customFormData.gender = sex;
+				}
+			},
+			handleChage(e) {
+				const birthday = this.$utils.dateTime.getBirthday(e.detail.value)
+				this.customFormData.birthday = birthday;
+				if (e.length >= 18) {
+					const sex = this.$utils.dateTime.getSex(e.detail.value)
+					this.customFormData.gender = sex;
+				}
+			},
 			change(e) {
 				this.customFormData.birthday = e;
 				console.log("-change事件:", e);
 			},
 			handleShow() {
-				this.$refs.popupSex.toggle()
+				this.$refs.popupSex.toggle(this.customFormData.gender)
 			},
 			getSex(e) {
 				console.log(e);
@@ -124,14 +144,14 @@
 					console.log('success', res);
 					self.$http['mine'].setStudent({
 						...self.customFormData,
-						gender:self.customFormData.gender =='男'?'1':'2'
-					}).then(res=>{
+						gender: self.customFormData.gender == '男' ? '1' : '2'
+					}).then(res => {
 						console.log(res);
-						if(res.code==200){
+						if (res.code == 200) {
 							self.$utils.router.navBack()
 						}
 					})
-					
+
 				}).catch(err => {
 					console.log('err', err);
 				})
@@ -222,9 +242,10 @@
 	/deep/.uni-easyinput__placeholder-class {
 		color: #666;
 	}
+
 	/deep/.is-disabled {
 		color: #666 !important;
-		/deep/.uni-easyinput__placeholder-class {
-		}
+
+		/deep/.uni-easyinput__placeholder-class {}
 	}
 </style>

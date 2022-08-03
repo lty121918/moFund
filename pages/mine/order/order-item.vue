@@ -1,8 +1,8 @@
 <template>
 	<view class="class-content">
 		<view class="class-content-top">
-			<text class="fwb">订单编号：{{item.tradeNo}}</text>
-			<text class="color fw4">消费订单</text>
+			<text class="fwb">订单编号：{{item.tradeNo || item.orderNo}}</text>
+			<text class="color fw4">{{item.type=='consume'?'消费订单':'充值订单'}}</text>
 		</view>
 		<image class="class-content-eval"  @click="handleChange(item)" v-if="item.type=='consume'" src="/static/mine/evaluate.png" mode="aspectFit"></image>
 		<view class="class-content-bottom" v-if="item.type=='consume'">
@@ -10,7 +10,7 @@
 				<image class="class-content-img" :src="item.coverImage" mode="aspectFit"></image>
 			</view>
 			<view class="">
-				<view class="class-content-cycle mt0">下单时间：{{item.operateTime}}</view>
+				<view class="class-content-cycle mt0">下单时间：{{item.operateTime || item.orderTime}}</view>
 				<view class="class-content-cycle">订单课程：{{item.courseName}}</view>
 				<view class="class-content-cycle">订单班级：{{item.className}}</view>
 				<view class="class-content-cycle">订单学员：{{item.studentName}}</view>
@@ -39,7 +39,7 @@
 			}
 		},
 		methods: {
-			handleChange() {
+			handleChange(item) {
 				this.$emit('change',item)
 			}
 		}
