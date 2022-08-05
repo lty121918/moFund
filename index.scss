@@ -170,6 +170,9 @@
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;//只显示两行
 }
+.ww{
+	word-wrap: break-word; word-break: normal;
+}
 // 通用标题头部
 .home-title{
 	display: flex;

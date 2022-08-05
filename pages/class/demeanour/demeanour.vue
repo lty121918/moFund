@@ -1,6 +1,6 @@
 <template>
 	<view class="demeanour">
-		<custom-waterfalls-flow :value="list"></custom-waterfalls-flow>
+		<custom-waterfalls-flow @imageClick="imageClick" :value="list"></custom-waterfalls-flow>
 		<view class="demeanour-footer2" v-if="isTeach==1" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view class="demeanour-footer" v-if="isTeach==1">
 			<view class="demeanour-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
@@ -21,8 +21,8 @@
 		mixins: [mixin],
 		data() {
 			return {
-				classId:'',
-				scheduleDetailId:'',
+				classId: '',
+				scheduleDetailId: '',
 				list: [
 					// {
 					// 	image: 'https://via.placeholder.com/200x200.png/2878ff',
@@ -33,21 +33,26 @@
 		onLoad(e) {
 			this.classId = e.classId
 			this.scheduleDetailId = e.scheduleDetailId
-				this.getTeach()
+			this.getTeach()
 			this.getClassMien()
 		},
 		methods: {
-			getClassMien(){
-				const { getClassStuMien,getClassMien} = this.$http['classes']
+			getClassMien() {
+				const {
+					getClassStuMien,
+					getClassMien
+				} = this.$http['classes']
 				let getData = getClassMien
-				if(this.isTeach==1){
+				if (this.isTeach == 1) {
 					getData = getClassStuMien
 				}
-				getData({classId:this.classId}).then(res=>{
-					if(res.code==200){
-						 res.data.forEach(item=>{
-							 item.image = this.$url+item.imgUrl
-						 })
+				getData({
+					classId: this.classId
+				}).then(res => {
+					if (res.code == 200) {
+						res.data.forEach(item => {
+							item.image = this.$url + item.imgUrl
+						})
 						this.list = res.data || []
 					}
 				})
@@ -65,7 +70,7 @@
 						// uni.showLoading({
 						// 	title: "上传中...",
 						// });
-						if(res.size > 10*1024*1024){
+						if (res.size > 10 * 1024 * 1024) {
 							self.$utils.showToast('上传图片不超过10M')
 							return false
 						}
@@ -73,21 +78,21 @@
 						// 	self.$utils.showToast('仅支持上传MP4格式视频')
 						// 	return false
 						// }
-						
+
 						console.log(res);
 						// 上传视频
 						let baseUrl = self.$config.BASE_URL
 						if (process.env.NODE_ENV === 'development') {
-						  baseUrl = self.$config.BASE_URL_DEV
-						} 
+							baseUrl = self.$config.BASE_URL_DEV
+						}
 						uni.uploadFile({
 							name: "file", //文件上传的name值
-							url: baseUrl+'/file/upload', //接口地址
+							url: baseUrl + '/file/upload', //接口地址
 							header: {
 								"Content-Type": "multipart/form-data"
 							}, //头信息
 							formData: {
-								
+
 							}, //上传额外携带的参数
 							filePath: tempFilePath, //临时路径
 							fileType: "video", //文件类型
@@ -95,15 +100,15 @@
 								console.log(uploadFileRes);
 								const data = JSON.parse(uploadFileRes.data)
 								let url = ''
-								for(let item in data){
-									url= data[item]
+								for (let item in data) {
+									url = data[item]
 								}
 								self.$http['classes'].ClassStudentUploadMien({
-									imgUrl:url,
-									classInfoId:self.classId,
-									scheduleDetailId:self.scheduleDetailId
-								}).then(res=>{
-									if(res.code==200){
+									imgUrl: url,
+									classInfoId: self.classId,
+									scheduleDetailId: self.scheduleDetailId
+								}).then(res => {
+									if (res.code == 200) {
 										self.getClassMien()
 									}
 								})
@@ -112,6 +117,24 @@
 					},
 				});
 			},
+			imageClick(item) {
+				const index = this.list.findIndex(row=>item.imgUrl = row.imgUrl)
+				const urls = this.list.map(row=>row.image)
+				console.log(item);
+				uni.previewImage({
+					urls: urls,
+					current:index,
+					longPressActions: {
+						itemList: ['发送给朋友', '保存图片', '收藏'],
+						success: function(data) {
+							console.log('选中了第' + (data.tapIndex + 1) + '个按钮,第' + (data.index + 1) + '张图片');
+						},
+						fail: function(err) {
+							console.log(err.errMsg);
+						}
+					}
+				});
+			}
 		}
 	}
 </script>

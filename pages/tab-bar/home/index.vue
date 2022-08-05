@@ -12,7 +12,12 @@
 					:duration="500">
 					<swiper-item v-for="item in banner" :key="item.id" @click="hanldeNext(item)">
 						<view class="home-head-view">
-							<image class="home-head-img" :src="url+item.imageUrl" mode="heightFix" alt="加载失败"></image>
+							<image class="home-head-img" :src="url+item.imageUrl" mode="center" alt="加载失败"></image>
+						</view>
+					</swiper-item>
+					<swiper-item v-if="banner.length==0">
+						<view class="home-head-view">
+							<image class="home-head-img" src="/static/default.png" mode="widthFix" alt="加载失败"></image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -34,7 +39,7 @@
 				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
 					@click="$utils.router.navTo($page.CourseDetail,item)">
 					<van-image use-error-slot class="home-activity-content-img" radius="10" width="84" height="84"
-						:src="item.coverImage">
+						:src="item.coverImage" fit="cover">
 					</van-image>
 					<!-- <image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image> -->
 					<view class="home-activity-content-title t-over">{{item.productName}}</view>
@@ -287,7 +292,7 @@
 				margin-top: 20rpx;
 				width: 686rpx;
 				height: 376rpx;
-				background: #D8D8D8;
+				// background: #D8D8D8;
 				border-radius: 16rpx;
 			}
 
@@ -296,7 +301,8 @@
 			}
 
 			&-img {
-				height: 376rpx;
+				width: 100%;
+				// height: 376rpx;
 			}
 		}
 

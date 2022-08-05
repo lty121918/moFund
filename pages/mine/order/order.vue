@@ -14,7 +14,7 @@
 			<view class="">暂无数据</view>
 		</view>
 		<!-- 订单评价 -->
-		<popup-eval ref="popupEval" />
+		<popup-eval ref="popupEval" @change="search"/>
 	</view>
 </template>
 
@@ -53,7 +53,14 @@
 			 * @param {Object} item
 			 */
 			handleShow(item) {
-				this.$refs.popupEval.handleShow(item)
+				let isCheck = false
+				if(item.evaluationLevel){
+					isCheck = true
+				}
+				this.$refs.popupEval.handleShow({
+					...item,
+					isCheck
+				})
 			},
 			// 模拟请求数据
 			async search() {

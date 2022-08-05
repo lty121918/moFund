@@ -54,7 +54,7 @@ export const getClassStudentPage = params => get(apis._wx_organization_class_stu
 // 教学评价
 export const studentEvaluation = params => post(apis._wx_organization_class_student_evaluation, params)
 // 学员考勤
-export const CourseScheduleAttendance = params => post(apis._wx_user_wx_course_schedule_attendance, params)
+export const scheduleAttendance = params => post(apis._wx_user_wx_course_schedule_attendance, params)
 
 // 分享
 export const shareGenerateUrlLink = params => post(apis._wx_user_share_generate_url_link, params)

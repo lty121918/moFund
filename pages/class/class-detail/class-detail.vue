@@ -45,19 +45,22 @@
 		<view class="class-detail-user class-detail-attendance" v-if="isAttendance">
 			<view class="class-detail-attendance-item fz28 flex-bc">
 				<text class="color4">考勤</text>
-				<text class="color2">教练未签到</text>
+				<text class="color2">{{studentVOList.isSign?'教练已签到':'教练未签到'}}</text>
 			</view>
 			<view class="class-detail-attendance-title flex-bc">
 				<view class="flex-sc">
 					<image class="class-detail-attendance-img" src="/static/attendance.png" mode="widthFix">
 						<text class="color4">考勤名单</text>
 				</view>
-				<text class="color2">{{studentVOList.courseDate}} {{studentVOList.startTime}}~{{studentVOList.endTime}}</text>
+				<text class="color2">
+					<text>{{studentVOList.courseDate}}</text>
+					<text class="ml12">{{studentVOList.startTime}}~{{studentVOList.endTime}}</text>
+				</text>
 			</view>
 			<view class="class-detail-stu">
 				<view class="class-detail-stu-flex fz28" v-for="(item,index) in studentVOList.data" :key="index"
-					@click="changeBox(item.classStudentId)">
-					<view v-if="boxActive.indexOf(item.classStudentId)==-1" class="class-detail-attendance-check">
+					@click="changeBox(item)">
+					<view v-if="boxActive.indexOf(item.id)==-1" class="class-detail-attendance-check">
 					</view>
 					<image v-else class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
 					</image>
@@ -195,15 +198,21 @@
 						if (res.data.coverImage.indexOf('http') == -1) {
 							res.data.coverImage = this.$url + res.data.coverImage
 						}
+						if(res.data.avatar.indexOf('http')==-1){
+							res.data.avatar = this.$url + res.data.avatar
+						}
 						if (res.data.nextCLassTime) {
 							res.data.nextCLassTime = this.$utils.dateTime.getLocalTime(
 								res.data.nextCLassTime,
 								'yyyy-MM-dd hh:mm')
 						}
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
+						res.data.studentVOList = res.data.studentVOList || []
 						res.data.studentVOList.forEach(item => {
 							if (item.headUrl) {
-								item.headUrl = this.$url + item.headUrl
+								if(item.headUrl.indexOf('http')==-1){
+									item.headUrl = this.$url + item.headUrl
+								}
 							} else {
 								item.headUrl = this.avatar
 							}
@@ -245,9 +254,9 @@
 			},
 			// 解散
 			handleDismiss() {
-				uni.showToast({
-					title: this.isHead ? "解散" : "退出"
-				})
+				// uni.showToast({
+				// 	title: this.isHead ? "解散" : "退出"
+				// })
 				if (this.isHead) {
 					this.$http['classes'].disbandClass({
 						classId: this.classId,
@@ -270,12 +279,16 @@
 			// 考勤按钮
 			async getAttendance(dataObj) {
 				const res = await this.$http['classes'].coachScheduleStuInfo({
-					id: dataObj.id
+					id: dataObj.id,
+					classId:this.classId
 				}).then(res => {
 					if (res.code == 200) {
 						this.isAttendance = true
+						let isSign = false
+						isSign = res.data.some(row=>row.attendanceStatus>0)
 						this.studentVOList = {
 							...dataObj,
+							isSign,
 							data: res.data
 						}
 					}
@@ -285,7 +298,8 @@
 			handleAttendance() {
 				this.$refs.popupDate.handleShow(false, {
 					isTeach: this.isTeach,
-					scheduleId: this.data.scheduleId
+					scheduleId: this.data.scheduleId,
+					classId:this.classId
 				}, true)
 			},
 			// 修改学员考勤状态
@@ -294,7 +308,7 @@
 				// 	title: type
 				// })
 				const self = this
-				let data = self.studentVOList.data
+				let data = JSON.parse(JSON.stringify(self.studentVOList.data))
 				if (val == 1) {
 					data.forEach(item => {
 						item.attendanceStatus = val
@@ -308,22 +322,29 @@
 					}
 					data = data.filter(item => {
 						item.attendanceStatus = val
-						let index = self.boxActive.indexOf(item.classStudentId)
+						let index = self.boxActive.indexOf(item.id)
 						return index > -1
 					})
 				}
 				// this.studentVOList
-				self.$http['clases'].CourseScheduleAttendance({
+				console.log('考勤数据：', {
 					attendanceStatus: val,
 					attendances: data,
-					classId: self.studentVOList.classId,
+					classId: self.classId,
 					id: self.studentVOList.id
-				}).then(res => {
-					if (res.code == 200) {
-						self.getAttendance(self.studentVOList)
-						self.boxActive = []
-					}
 				})
+				self.$http['classes'].scheduleAttendance({
+						attendanceStatus: val,
+						attendances: data,
+						classId: self.classId,
+						id: self.studentVOList.id
+					})
+					.then(res => {
+						if (res.code == 200) {
+							self.getAttendance(self.studentVOList)
+							self.boxActive = []
+						}
+					})
 			},
 			// 查看课表
 			checkTimetable() {
@@ -332,17 +353,18 @@
 				// })
 				this.$refs.popupDate.handleShow(false, {
 					isTeach: this.isTeach,
-					scheduleId: this.data.scheduleId
+					scheduleId: this.data.scheduleId,
+					classId: this.classId,
 				})
 			},
 
 			changeBox(val) {
-				let index = this.boxActive.indexOf(val.classStudentId)
+				let index = this.boxActive.indexOf(val.id)
 				console.log(val, index);
 				if (index > -1) {
 					this.boxActive.splice(index, 1)
 				} else {
-					this.boxActive.push(val.classStudentId)
+					this.boxActive.push(val.id)
 				}
 				console.log(this.boxActive);
 			},

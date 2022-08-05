@@ -3,19 +3,22 @@
 
 		<view class="mine-head">
 			<view class="mine-head-flex">
-				<!-- <button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
+				<button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
 					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
-				</button> -->
-				<image class="mine-head-img2" :src="userInfo.avatar" mode="aspectFit"></image>
+				</button>
+				<!-- <image class="mine-head-img2" :src="userInfo.avatar" mode="aspectFit"></image> -->
 				<view>
-					<view>
-						<text class="mine-head-name">{{userInfo.name}}</text>
+					<view class="flex-sc">
+						<text class="mine-head-name" v-show="!showName" @click="showName=true,name=''">
+							{{userInfo.name}}
+						</text>
+						<input type="nickname" @blur="handleBlur" v-if="showName" placeholder-style="font-size:30rpx;color:#cecece" maxlength="20" v-model="name" class="weui-input" placeholder="请输入昵称"/>
 						<text class="mine-head-role" v-if="isTeach==2">家长</text>
 						<text class="mine-head-role mine-head-role2" v-if="isTeach==1">教练</text>
 					</view>
 					<view class="mine-head-balance">
 						<image class="mine-head-balance-img" src="/static/mine/balance.png" mode="aspectFit"></image>
-						<text>账户余额：￥{{userInfo.remainingSum}}</text>
+						<text @click="setCopy">账户余额：￥{{userInfo.remainingSum}}</text>
 					</view>
 				</view>
 			</view>
@@ -41,7 +44,7 @@
 					<view>我的钱包</view>
 				</view>
 			</view>
-			<view class="mine-operation mine-operation2" v-if="isTeach==1" >
+			<view class="mine-operation mine-operation2" v-if="isTeach==1">
 				<view class="mine-operation-item mine-operation-item2" @click="$utils.router.navTo($page.Wallet)">
 					<view class="mine-operation-item-left">
 						<image class="mine-operation-item-img" src="/static/mine/balance2.png" mode="aspectFit"></image>
@@ -59,7 +62,7 @@
 			</view>
 		</view>
 
-		<view class="mine-operation" v-if="isTeach==2" >
+		<view class="mine-operation" v-if="isTeach==2">
 			<view class="mine-operation-item" @click="$utils.router.navTo($page.Declare)">
 				<view class="mine-operation-item-left">
 					<image class="mine-operation-item-img" src="/static/mine/declare.png" mode="aspectFit"></image>
@@ -109,6 +112,9 @@
 			return {
 				isGetData: false, // 数据加载
 				// userInfo:{}
+				name:'',
+				showName: false,
+				num:0
 			}
 		},
 		computed: {
@@ -127,60 +133,111 @@
 
 		},
 		methods: {
-			bindchooseavatar(e){
+			setCopy(){
+				if(this.num==3){
+					const Authorization = this.$utils.util.getCache('Authorization');
+					uni.setClipboardData({
+						data: 'Bearer ' +Authorization,
+						success: function() {
+						},
+					});
+					this.num = 0
+				} else {
+					this.num++
+				}
+				
+			},
+			bindchooseavatar(e) {
 				const self = this
-				console.log('11',e.detail.avatarUrl);
+				console.log('11', e.detail.avatarUrl);
 				let baseUrl = self.$config.BASE_URL
 				if (process.env.NODE_ENV === 'development') {
-				  baseUrl = self.$config.BASE_URL_DEV
-				} 
+					baseUrl = self.$config.BASE_URL_DEV
+				}
 				uni.uploadFile({
 					name: "file", //文件上传的name值
-					url: baseUrl+'/file/upload', //接口地址
+					url: baseUrl + '/file/upload', //接口地址
 					header: {
 						"Content-Type": "multipart/form-data"
 					}, //头信息
 					formData: {
-						
+
 					}, //上传额外携带的参数
 					filePath: e.detail.avatarUrl, //临时路径
 					fileType: "image", //文件类型
 					success: (uploadFileRes) => {
-						
+
 						const data = JSON.parse(uploadFileRes.data)
 						let url = ''
-						for(let item in data){
-							url= data[item]
+						for (let item in data) {
+							url = data[item]
 						}
-						const result= {
-							...this.userInfo,
-							avatar:self.$url+url
-						}
-						this.SET_STORAGE({str:'userInfo',data:result})
+						this.$http['mine'].centerUpdate({
+							avatar: url,
+							nickname: this.userInfo.name
+						}).then(res=>{
+							const result = {
+								...this.userInfo,
+								avatar: self.$url + url
+							}
+							this.SET_STORAGE({
+								str: 'userInfo',
+								data: result
+							})
+						})
+						
 					},
 				});
+			},
+			handleBlur(){
+				if(this.name==''){
+					this.showName = false
+					return false
+				}
+				console.log(this.name);
+				const url = this.userInfo.avatar.replace(this.$url,'')
+				this.$http['mine'].centerUpdate({
+					avatar: url,
+					nickname: this.name
+				}).then(res=>{
+					if(res.code==200){
+						this.showName = false
+						const result = {
+							...this.userInfo,
+							name:  this.name
+						}
+						this.SET_STORAGE({
+							str: 'userInfo',
+							data: result
+						})
+					}
+				})
+				
 			},
 			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			getData() {
 				console.log('获取我的数据');
-				this.$http['mine'].getUserInfo().then(res=>{
+				this.$http['mine'].getUserInfo().then(res => {
 					console.log(res);
-					if(res.code==200){
-						if(!res.data.avatar){
+					if (res.code == 200) {
+						if (!res.data.avatar) {
 							res.data.avatar = this.avatar
 						}
-						if(res.data.avatar.indexOf('http')==-1){
+						if (res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
-						const result= {
+						const result = {
 							...this.userInfo,
-							avatar: res.data.avatar,
-							name:  res.data.name,
-							remainingSum:  res.data.remainingSum,
-							roleName:  res.data.roleName,
+							avatar: res.data.avatar || this.avatar,
+							name: res.data.name || '微信昵称',
+							remainingSum: res.data.remainingSum,
+							roleName: res.data.roleName,
 						}
-						this.SET_STORAGE({str:'userInfo',data:result})
+						this.SET_STORAGE({
+							str: 'userInfo',
+							data: result
+						})
 						this.$forceUpdate()
 					}
 				})
@@ -216,6 +273,7 @@
 				height: 90rpx;
 				border-radius: 50%;
 			}
+
 			&-img2 {
 				padding: 0 !important;
 				margin-right: 28rpx;
@@ -348,11 +406,12 @@
 		}
 
 		// 操作栏
-		&-operation2{
+		&-operation2 {
 			position: absolute;
 			left: 0;
 			bottom: -66rpx;
 		}
+
 		&-operation {
 			margin-bottom: 40rpx;
 			margin-left: 32rpx;
@@ -389,5 +448,15 @@
 				border-bottom: none
 			}
 		}
+	}
+	.weui-input{
+		display: inline-block;
+		height: 48rpx;
+		width: 150rpx;
+		font-size: 32rpx;
+		font-family: SourceHanSansSC-Bold, SourceHanSansSC;
+		font-weight: bold;
+		color: #FFFFFF;
+		line-height: 48rpx;
 	}
 </style>

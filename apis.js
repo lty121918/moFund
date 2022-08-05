@@ -21,18 +21,21 @@ const APIS_LIST = {
   "_campus": '/campus', // 校区下拉
   "_captcha_check": '/captcha/check', // check
   "_captcha_get": '/captcha/get', // get
+  "_classify_level": '/classify-level', // 分类分阶对应关系下拉
   "_coach": '/coach', // 教练下拉
   "_common_download": '/common/download', // 通用下载请求
   "_course": '/course', // 课程下拉
   "_course_by_campusId": '/course-by-campusId', // 校区课程下拉
-  "_error": '/error', // errorHtml
+  "_error": '/error', // error
   "_file_download": '/file/download', // 下载文件
   "_file_remove_attachment": '/file/remove-attachment', // 删除附件
   "_file_upload": '/file/upload', // 文件上传(自动获取文件名)
   "_file_upload_attachment": '/file/upload-attachment', // 上传附件
-  "_get_template": '/get-template', // 获取所有节次
+  "_get_level_sub": '/get-level-sub', // 课程分阶（授课类型）下拉
+  "_get_template": '/get-template', // 所有节次下拉
   "_location": '/location', // 获取省市区
   "_locationByCode": '/locationByCode', // 根据编码获取省市区
+  "_merge_rule": '/merge-rule', // 拼班规则列表
   "_operation_banner_add": '/operation/banner/add', // 添加轮播图
   "_operation_banner_del": '/operation/banner/del', // 删除轮播图
   "_operation_banner_page": '/operation/banner/page', // 查询轮播图列表
@@ -52,7 +55,7 @@ const APIS_LIST = {
   "_organization_wx_product_get_evaluate": '/organization/wx-product/get-evaluate', // 商品评价
   "_schedule_by_campusId": '/schedule-by-campusId', // 校区课表下拉
   "_schedule_template": '/schedule-template', // 上课时段列表
-  "_testttt_test": '/testttt/test', // 微信消息
+  "_spell_type_drop_down": '/spell-type-drop-down', // 机构获取当前班型名称下拉
   "_wx_campus_apply": '/wx-campus/apply', // 社区申请
   "_wx_coach_apply": '/wx-coach/apply', // 教练申请
   "_wx_coach_get_apply": '/wx-coach/get-apply', // 我的申请
@@ -64,6 +67,7 @@ const APIS_LIST = {
   "_wx_user_center_detail": '/wx/user/center/detail', // 当前登录用户学生集合
   "_wx_user_center_get_apply": '/wx/user/center/get-apply', // 我的申报
   "_wx_user_center_role_switching": '/wx/user/center/role-switching', // 切换角色
+  "_wx_user_center_update": '/wx/user/center/update', // 修改当前用户信息
   "_wx_user_class_detail": '/wx/user/class/detail', // 获取班级详情
   "_wx_user_class_disband_class": '/wx/user/class/disband-class', // 解散拼班(团长)
   "_wx_user_class_exit": '/wx/user/class/exit', // 退出班级（家长）

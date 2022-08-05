@@ -1,9 +1,9 @@
 <template>
 	<view class="declare">
 		<view class="declare-content" v-for="(item,index) in data" :key="index">
-			<view class="">社区名称：{{item.campusName}}</view>
-			<view class="pt16">社区物业：{{item.property}}</view>
-			<view class="pt16">社区场地：{{item.campusSpace}}</view>
+			<view class="ww">社区名称：{{item.campusName}}</view>
+			<view class="pt16 ww">社区物业：{{item.property}}</view>
+			<view class="pt16 ww">社区场地：{{item.campusSpace}}</view>
 		</view>
 		<view class="default-empty" v-if="data.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">

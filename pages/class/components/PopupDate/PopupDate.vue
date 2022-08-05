@@ -93,7 +93,8 @@
 			async handleShow(isShow = false, ls, isAttendance = false) {
 				if (isAttendance || !isShow) {
 					const res = await this.$http['classes'].courseScheduleView({
-						scheduleId: ls.scheduleId
+						// scheduleId: ls.scheduleId,
+						classId:ls.classId
 					})
 					if (res.code == 200) {
 						this.data = res.data

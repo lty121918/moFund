@@ -2,10 +2,10 @@
 	<view class="add-student">
 		<view class="add-student-content">
 			<uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData" labelWidth="100">
-				<uni-forms-item label="姓名" required name="name">
+				<uni-forms-item label="姓名" required name="studentName">
 					<uni-easyinput maxlength="20" v-model="customFormData.studentName" placeholder="请输入姓名" />
 				</uni-forms-item>
-				<uni-forms-item label="证件号码" required name="idCard">
+				<uni-forms-item label="证件号码" name="idCard">
 					<uni-easyinput maxlength="20" @blur="handleChage" @input="handleInput"
 						v-model="customFormData.idCard" placeholder="请输入证件号码" />
 				</uni-forms-item>
@@ -77,7 +77,7 @@
 					},
 					idCard: {
 						rules: [{
-								required: true,
+								required: false,
 								errorMessage: '请输入证件号码'
 							},
 							{

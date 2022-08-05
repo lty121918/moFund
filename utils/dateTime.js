@@ -71,7 +71,11 @@ class DateTime {
 		if (date == undefined || date == '') {
 			date = new Date()
 		} else {
-			if ((date + '').indexOf('-') > -1 && (date + '').indexOf('T') == -1) {
+			let index = (date+'').indexOf('.')
+			if ((date + '').indexOf('-') > -1 || (date + '').indexOf('T') == -1) {
+				if(index>-1){
+					date = date.substr(0,index)
+				}
 				date = new Date(date.replace(/-/g, '/'))
 			} else {
 				date = new Date(date)
@@ -80,7 +84,6 @@ class DateTime {
 		if (format == undefined || format == '') {
 			format = 'yyyy-MM-dd'
 		}
-
 		let o = {
 			'M+': date.getMonth() + 1,
 			'd+': date.getDate(),
@@ -381,6 +384,7 @@ class DateTime {
 		if (!value) {
 			return ''
 		}
+		value = value.sort((a,b)=>a-b)
 		let weekTime = ['一', '二', '三', '四', '五', '六', '日']
 		let ncontinuity = 0 //用于连续个数的统计
 		for (let i = 1; i < value.length; i++) {

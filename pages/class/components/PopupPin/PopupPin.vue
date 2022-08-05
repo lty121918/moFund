@@ -142,9 +142,9 @@
 			},
 			// 查看周期
 			check() {
-				uni.showToast({
-					title: "查看周期"
-				})
+				// uni.showToast({
+				// 	title: "查看周期"
+				// })
 				let ls = []
 				if (this.data.courseType == 2) {
 					ls = this.$utils.dateTime.getRangeDay([

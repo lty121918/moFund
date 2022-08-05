@@ -41,7 +41,7 @@
 		},
 		onLoad(e) {
 			this.type = e.type || 'y' //判断是否要进入缓存
-			this.productId = e.productId
+			this.productId = e.productId || ''
 			this.isShowMore = false
 			this.search()
 		},

@@ -84,7 +84,13 @@
 			return {
 				isHead: false, //是否 是团长进入该页面
 				data: {},
-				classId: ''
+				classId: '',
+				numData:0
+			}
+		},
+		onShow() {
+			if(this.numData){
+				this.getMineSpellClass()
 			}
 		},
 		onLoad(e) {
@@ -99,8 +105,6 @@
 				menus: ["shareAppMessage"]
 			})
 			this.getMineSpellClass()
-			
-
 		},
 		// 分享给朋友
 		onShareAppMessage(res) {
@@ -124,7 +128,20 @@
 						if(res.data.coverImage.indexOf('http')==-1){
 							res.data.coverImage = this.$url + res.data.coverImage
 						}
+						if(res.data.avatar.indexOf('http')==-1){
+							res.data.avatar = this.$url + res.data.avatar
+						}
+						
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
+						res.data.weChatUserList = res.data.weChatUserList || []
+						res.data.weChatUserList.forEach(item=>{
+							if(item.avatar.indexOf('http')==-1){
+								item.avatar = this.$url + item.avatar
+							}
+							if(!item.avatar){
+								item.avatar = this.avatar
+							}
+						})
 						this.data = res.data
 						uni.setNavigationBarTitle({
 							title: this.isHead ? '我的拼单' : '加入拼单'
@@ -133,6 +150,7 @@
 							str: 'shareInfo',
 							data: {}
 						})
+						this.numData ++
 						// if(res.data.classStatus!=0){
 						// 	this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
 						// }

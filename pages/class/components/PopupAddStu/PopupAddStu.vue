@@ -72,6 +72,7 @@
 			},
 			// 曲去添加新学员
 			handelAdd() {
+				this.close()
 				this.$utils.router.navTo(this.$page.AddStudent)
 			},
 			// 确认添加学员

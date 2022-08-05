@@ -6,11 +6,15 @@
 					<uni-easyinput maxlength="50" v-model="customFormData.campusName" placeholder="请输入社区名称" />
 				</uni-forms-item>
 				<uni-forms-item label="社区物业" required name="property">
-					<uni-easyinput type="textarea" maxlength="200" v-model="customFormData.property" placeholder="请输入社区物业" />
+					<textarea maxlength="200" placeholder-style="font-size:24rpx;color: #888" class="add-declare-textarea" v-model="customFormData.property"
+						placeholder="请输入社区物业" />
+					<!-- <uni-easyinput type="textarea" maxlength="200" v-model="customFormData.property" placeholder="请输入社区物业" /> -->
 				</uni-forms-item>
 				<uni-forms-item label="社区场地" required name="campusSpace">
-					<uni-easyinput type="textarea" maxlength="500" v-model="customFormData.campusSpace"
-					 placeholder="请输入社区场地" />
+					<textarea maxlength="500" placeholder-style="font-size:24rpx;color: #888" class="add-declare-textarea" v-model="customFormData.campusSpace"
+						placeholder="请输入社区场地" />
+					<!-- <uni-easyinput type="textarea" maxlength="500" v-model="customFormData.campusSpace"
+					 placeholder="请输入社区场地" /> -->
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -69,8 +73,8 @@
 				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
-					this.$http['map'].setCampusApply(this.customFormData).then(res=>{
-						if(res.code==200){
+					this.$http['map'].setCampusApply(this.customFormData).then(res => {
+						if (res.code == 200) {
 							self.$utils.router.redTo(this.$page.Declare)
 						}
 					})
@@ -86,7 +90,8 @@
 	.add-declare {
 		min-height: 100vh;
 		background: #EEF1FA;
-		&-content{
+
+		&-content {
 			position: relative;
 			top: 32rpx;
 			left: 32rpx;
@@ -97,10 +102,21 @@
 			background: #FFFFFF;
 			border-radius: 16px;
 		}
-		&-footer2{
+
+		&-textarea {
+			width: 100%;
+			padding: 20rpx 24rpx;
+			border: 1px solid #DCDFE6;
+			border-radius: 4px;
+			box-sizing: border-box;
+			font-size: 24rpx;
+		}
+
+		&-footer2 {
 			height: 92rpx;
 			padding: 32rpx 30rpx;
 		}
+
 		&-footer {
 			position: fixed;
 			bottom: 0;
@@ -126,7 +142,8 @@
 			}
 		}
 	}
-	/deep/.uni-forms-item{
+
+	/deep/.uni-forms-item {
 		padding: 16rpx 0;
 		display: flex;
 		justify-content: space-between;
@@ -135,26 +152,30 @@
 		min-height: 106rpx;
 		margin-bottom: 0;
 		border-bottom: 2rpx solid #F3F3F5;
-		&:last-child{
+
+		&:last-child {
 			border-bottom: none;
 		}
 	}
+
 	// /deep/.uni-forms-item__label{
 	// 	height: auto !important;
 	// }
-	/deep/.is-input-border{
+	/deep/.is-input-border {
 		// border: none;
 	}
-	/deep/.uni-easyinput__content-input{
+
+	/deep/.uni-easyinput__content-input {
 		// text-align: right;
 	}
+
 	// /deep/.uni-forms-item__error{
 	// 	top: 70%;
 	// 	left: unset;
 	// 	right: 0;
 	// }
-	/deep/.uni-easyinput__content-textarea{
-		margin: 8px 0!important;
+	/deep/.uni-easyinput__content-textarea {
+		margin: 8px 0 !important;
 		// text-align: right;
 		// line-height: normal !important;
 		// font-size: 28rpx;

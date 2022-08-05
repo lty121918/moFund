@@ -22,7 +22,7 @@
 					<view class="fz32 mt32">服务评价</view>
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32">等级</view>
-						<uni-rate v-model="evaluationLevel" color="#838899" active-color="#DE501F" />
+						<uni-rate :disabled="isCheck" disabledColor="#DE501F" v-model="evaluationLevel" color="#838899" active-color="#DE501F" />
 					</view>
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32 flex0">评价</view>
@@ -32,7 +32,7 @@
 					</view>
 				</view>
 				<view class="popup-footer">
-					<view class="popup-footer-button" @click="handleConfirm">提交</view>
+					<view class="popup-footer-button" @click="handleConfirm">{{isCheck?'关闭':'提交'}}</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -45,7 +45,8 @@
 			return {
 				evaluationLevel: '',
 				content: '',
-				data:{}
+				data:{},
+				isCheck:false
 			}
 		},
 		methods: {
@@ -54,18 +55,27 @@
 			},
 			handleShow(data) {
 				this.data = data
+				this.evaluationLevel= data.evaluationLevel || ''
+				this.content= data.content || ''
+				this.isCheck = data.isCheck
 				this.$refs.popup.open('bottom')
 			},
 			handleConfirm(){
-				this.$http['mine'].insertServiceEvaluation({
-					evaluationLevel: this.evaluationLevel,
-					content: this.content,
-					ordersId: this.data.orderId
-				}).then(res=>{
-					if(res.code==200){
-						this.$refs.popup.close('bottom')
-					}
-				})
+				if(!this.isCheck){
+					this.$http['mine'].insertServiceEvaluation({
+						evaluationLevel: this.evaluationLevel,
+						content: this.content,
+						ordersId: this.data.orderId
+					}).then(res=>{
+						if(res.code==200){
+							this.$refs.popup.close('bottom')
+							this.$emit('change')
+						}
+					})
+				} else {
+					this.$refs.popup.close('bottom')
+				}
+				
 			}
 		}
 	}
