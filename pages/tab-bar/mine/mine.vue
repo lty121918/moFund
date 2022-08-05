@@ -101,10 +101,6 @@
 </template>
 
 <script>
-	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],
@@ -118,14 +114,9 @@
 			}
 		},
 		computed: {
-			...mapGetters(['active']),
 		},
 		onShow() {
 			this.getData()
-			const active = 'mine'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
 		},
 		created() {
 			// console.log('身份验证',this.$utils.validate.validateIdNum('350623199611085735'));
@@ -214,7 +205,6 @@
 				})
 				
 			},
-			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			getData() {
 				console.log('获取我的数据');

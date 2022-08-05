@@ -11,7 +11,8 @@
 					</swiper-item>
 					<swiper-item v-if="banner.length==0">
 						<view class="course-swiper-view">
-							<image class="course-swiper-img" src="/static/default.png" mode="heightFix" alt="加载失败"></image>
+							<image class="course-swiper-img" src="/static/default.png" mode="heightFix" alt="加载失败">
+							</image>
 						</view>
 					</swiper-item>
 				</swiper>
@@ -19,7 +20,7 @@
 			<!-- <image class="course-title-img" src="/static/default.png"></image> -->
 			<view class="course-title-content">
 				<view>
-					<view class="fz36 fwb">{{productInfo.productName}}A</view>
+					<view class="fz36 fwb">{{productInfo.productName}}</view>
 					<view class="pt16">
 						<text class="color fz24">￥</text>
 						<text class="color fz32">{{productInfo.price}}</text>
@@ -68,7 +69,8 @@
 					</view>
 				</view>
 				<view v-if="item.useStudentNum < item.maxNum">
-					<view class="course-nearby-content-button" @click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">加入拼班</view>
+					<view class="course-nearby-content-button"
+						@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">加入拼班</view>
 					<view class="course-nearby-content-success" v-if="item.minNumMax">差{{item.minNumMax}}人拼成</view>
 					<view class="course-nearby-content-success" v-else>差{{item.unUseNum}}人拼满</view>
 				</view>
@@ -99,7 +101,8 @@
 							<view class="course-detail-evaluate-info2">
 								<text class="color4 fz28">{{item.nickname}}</text>
 								<view class="course-detail-evaluate-info3">
-									<uni-rate v-model="item.evaluationLevel" disabled  disabledColor="#DE501F"  size="20" color="#838899" active-color="#DE501F" />
+									<uni-rate v-model="item.evaluationLevel" disabled disabledColor="#DE501F" size="20"
+										color="#838899" active-color="#DE501F" />
 									<!-- <image v-for="item in 5" :key="item" class="course-detail-evaluate-info-img"
 										src="/static/class/eva.png" mode="scaleToFill"></image> -->
 								</view>
@@ -151,7 +154,7 @@
 				campusOther: {},
 				isEvaluate: false, //评论是否超出5条
 				value: "",
-				banner:[]
+				banner: []
 			}
 		},
 		watch: {
@@ -166,13 +169,28 @@
 				return this.$url
 			}
 		},
-		onLoad(e) {
+		async onLoad(e) {
 			console.log('商品id', e.productId);
 			this.SET_STORAGE({
 				str: 'campus'
 			})
 			this.productId = e.productId
-			this.campusOther = this.campus
+			if (e.lat && e.lng) {
+				let res = await  this.$http['map'].getSearchList({
+					lat: e.lat,
+					lng: e.lng
+				})
+				if (res.code == 200) {
+					let list = res.data
+					// 如果之前缓存的社区已经被删除 则重新选取
+					const ls = list.filter(item => item.campusId = e.campusId)[0] || null
+					this.campusOther =  ls || this.campus
+
+				}
+			} else {
+				this.campusOther = this.campus
+			}
+
 
 
 		},
@@ -198,16 +216,16 @@
 						title: res.data.productName
 					})
 					const banner = res.data.imageUrl.split(',')
-					if(banner.length>0){
+					if (banner.length > 0) {
 						this.banner = banner
 					}
 					this.productInfo = res.data
-					res.data.productSpellClassList.forEach(item=>{
-						item.unUseNum = item.maxNum-item.useStudentNum
-						if(item.minNum-item.useStudentNum>0){
-							item.minNumMax  = item.minNum-item.useStudentNum
-						} 
-						
+					res.data.productSpellClassList.forEach(item => {
+						item.unUseNum = item.maxNum - item.useStudentNum
+						if (item.minNum - item.useStudentNum > 0) {
+							item.minNumMax = item.minNum - item.useStudentNum
+						}
+
 					})
 					this.productSpellClassList = [...res.data.productSpellClassList]
 				}
@@ -216,7 +234,8 @@
 					productId: this.productId
 				})
 				if (res2.code == 200) {
-					res2.data =  res2.data.replace('<img ', '<img style="max-width:100%;height:auto;display:block;margin:10rpx 0;"') 
+					res2.data = res2.data.replace('<img ',
+						'<img style="max-width:100%;height:auto;display:block;margin:10rpx 0;"')
 					this.productDetail = res2.data
 				}
 				// 获取当前商品的评价
@@ -226,7 +245,7 @@
 				if (res3.code == 200) {
 					res3.data = res3.data.filter(item => item)
 					res3.data.forEach(item => {
-						if( item.avatar.indexOf('http')==-1){
+						if (item.avatar.indexOf('http') == -1) {
 							item.avatar = this.$url + item.avatar
 						}
 						item.evaluationLevel = item.evaluationLevel || 0
@@ -277,6 +296,7 @@
 			width: 100%;
 			height: 364rpx;
 			z-index: 11;
+
 			&-swiper {
 				margin-top: 20rpx;
 				width: 750rpx;
@@ -337,7 +357,7 @@
 					align-items: center;
 					// width: 50%;
 
-					
+
 				}
 			}
 		}
@@ -616,6 +636,7 @@
 
 		}
 	}
+
 	.swiper {
 		width: 750rpx;
 		height: 424rpx;

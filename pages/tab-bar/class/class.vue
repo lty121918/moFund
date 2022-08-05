@@ -42,10 +42,6 @@
 </template>
 
 <script>
-	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
 	import ClassItem from '@/components/ClassItem/ClassItem.vue'
 	import mixin from '@/mixin.js'
 	import bus from '@/utils/bus.js'
@@ -64,7 +60,6 @@
 		},
 
 		computed: {
-			...mapGetters(['active']),
 		},
 		onShow() {
 			this.getMounted()
@@ -78,10 +73,6 @@
 		},
 		methods: {
 			getMounted: debounce(function() {
-				const active = 'class'
-				if (this.active !== active) {
-					this.SET_ACTIVE(active)
-				}
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
@@ -90,7 +81,6 @@
 					isTeach: this.isTeach
 				})
 			}),
-			...mapMutations(['SET_ACTIVE']),
 			// 模拟请求数据
 			search(val) {
 				const self = this
@@ -150,7 +140,11 @@
 					`2022-01-01 ${item.endPeriod}`,
 					'hh:mm')
 				item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
-				if (item.nextCLassTime) {
+				if (item.classStatus == 2 || item.classStatus == 4 || item.classStatus ==
+					5 || item.classStatus == 6) {
+					item.nextCLassTime = -1
+				}
+				if (item.nextCLassTime && item.nextCLassTime != -1) {
 					item.nextCLassTime = self.$utils.dateTime.getLocalTime(
 						item.nextCLassTime,
 						'yyyy-MM-dd hh:mm')

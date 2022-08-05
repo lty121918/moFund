@@ -22,7 +22,7 @@
 					v-for="(item,index) in weekListPrevCo" :key="index">
 					<view class="date-calendar-dd" @click="itemClick(vo,index,key)" v-for="(vo,key) in item" :key="key">
 						<view class="date-calendar-num" v-show="vo.type == 'month'"
-							:class="[(vo.dot&&vo.type == 'month') ? 'date-calendar-today' : '',vo.type == 'month' ? 'date-calendar-month' : (retract ? '' : 'date-calendar-disabled')]">
+							:class="[(vo.dot&&vo.type == 'month') ? 'date-calendar-today' : '',vo.type == 'month' ? 'date-calendar-month' : (retract ? '' : 'date-calendar-disabled'),vo.expire?'date-calendar-expire':'']">
 							{{vo.day}}
 						</view>
 						<!-- <view v-show="vo.dot && (vo.type == 'month' || retract)" class="date-calendar-dot"></view> -->
@@ -35,7 +35,7 @@
 					v-for="(item,index) in weekList" :key="index">
 					<view class="date-calendar-dd" @click="itemClick(vo,index,key)" v-for="(vo,key) in item" :key="key">
 						<view class="date-calendar-num" v-show="vo.type == 'month'"
-							:class="[(vo.dot&&vo.type == 'month') ? 'date-calendar-today' : '',vo.type == 'month' ? 'date-calendar-month' : (retract ? '' : 'date-calendar-disabled')]">
+							:class="[(vo.dot&&vo.type == 'month') ? 'date-calendar-today' : '',vo.type == 'month' ? 'date-calendar-month' : (retract ? '' : 'date-calendar-disabled'),vo.expire?'date-calendar-expire':'']">
 							{{vo.day}}
 						</view>
 						<!-- <view v-show="vo.dot && (vo.type == 'month' || retract)" class="date-calendar-dot"></view> -->
@@ -48,7 +48,7 @@
 					v-for="(item,index) in  weekListNextCo" :key="index">
 					<view class="date-calendar-dd" @click="itemClick(vo,index,key)" v-for="(vo,key) in item" :key="key">
 						<view class="date-calendar-num" v-show="vo.type == 'month'"
-							:class="[(vo.dot&&vo.type == 'month') ? 'date-calendar-today' : '',vo.type == 'month' ? 'date-calendar-month' : (retract ? '' : 'date-calendar-disabled')]">
+							:class="[(vo.dot&&vo.type == 'month') ? 'date-calendar-today' : '',vo.type == 'month' ? 'date-calendar-month' : (retract ? '' : 'date-calendar-disabled'),vo.expire?'date-calendar-expire':'']">
 							{{vo.day}}
 						</view>
 						<!-- <view v-show="vo.dot && (vo.type == 'month' || retract)" class="date-calendar-dot"></view> -->
@@ -338,9 +338,17 @@
 				let list = [];
 				this[weekList].map((item, index) => {
 					list.push(item.map((vo, key) => {
+						vo.expire = false
 						if (this.dotList.indexOf(vo.date) > -1 || this.dotList.indexOf(vo.date.replace(
 								/-(\d)(?!\d)/g, '-0$1')) > -1) {
 							vo.dot = true;
+							let date = this.$utils.dateTime.ltgtDate2(vo.date)
+							console.log('111:',date);
+							if(date==1){
+								vo.expire = true
+							} else {
+								vo.expire = false
+							}
 
 						} else {
 							vo.dot = false;
@@ -780,6 +788,7 @@
 				left: 50%;
 				transform: translateX(-50%);
 			}
+			
 		}
 
 		.date-calendar-today {
@@ -791,6 +800,10 @@
 			width: 60rpx;
 			height: 60rpx;
 			background: #DE501F;
+		}
+		.date-calendar-expire{
+			background: #CECECE;
+			color: #141D3D;
 		}
 	}
 

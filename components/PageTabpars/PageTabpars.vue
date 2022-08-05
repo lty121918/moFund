@@ -1,5 +1,5 @@
 <template>
-	<lb-tabbar ref="tabbar" :value="active" :animate="animate">
+	<lb-tabbar ref="tabbar" :value="active">
 		<lb-tabbar-item v-for="item in tabbars" :key="item.name" :name="item.name"
 			:icon="item.name==active?item.iconActive:item.icon" :info="item.info" :raisede="item.raisede"
 			icon-prefix="iconfont" @click="handleTabbarItemClick">
@@ -22,11 +22,33 @@
 		},
 		data() {
 			return {
+				active:'home'
+			}
+		},
+		watch: {
+			$route: {
+				immediate: true,
+				handler(to) {
+					let tabbars = this.$store.state.tabbars
+					let routes = getCurrentPages() //获取当前页面栈
+					let curRoute = routes[routes.length - 1].route //获取当前页面的路由
+					const list = tabbars.filter(item => {
+						return `/${curRoute}` == item.path
+					})
+					let isTeach = this.teach
+					if(list.length>0){
+						if (isTeach == 1 && list[0].name=='home') {
+							this.active = 'class'
+						} else {
+							this.active = list[0].name
+						}
+					}
+				}
 			}
 		},
 		computed: {
-			...mapGetters(['active', 'animate','teach']),
-	
+			...mapGetters([ 'animate', 'teach']),
+
 			tabbars() {
 				let isTeach = this.teach
 				let tabbars = this.$store.state.tabbars
@@ -43,19 +65,28 @@
 			}
 		},
 		created() {
+			this.SET_STORAGE({
+				str: 'active',
+				type: 'string'
+			})
 		},
 		methods: {
-			...mapMutations(['SET_ACTIVE']),
+			...mapMutations(['SET_ACTIVE', 'SET_STORAGE']),
 			handleTabbarItemClick(e) {
 				console.log('click::', e)
 				const name = e.name
-				this.SET_ACTIVE(name)
+				// this.SET_ACTIVE(name)
+				this.SET_STORAGE({
+					data: name,
+					str: 'active',
+					type: 'string'
+				})
 				const tabbar = this.tabbars.find(item => item.name === name)
 				uni.switchTab({
 					url: tabbar.path,
 					success: () => {
 						// 切换后重新设置，因为不在在触发页面的created生命周期
-						this.SET_ACTIVE(name)
+						// this.SET_ACTIVE(name)
 					}
 				})
 			}

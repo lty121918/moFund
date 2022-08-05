@@ -117,10 +117,10 @@
 			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(1,'签到')">
 				教练签到
 			</view>
-			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(2,'请假')">
+			<view class="class-detail-footer-button class-detail-footer-button3" :class="[studentVOList.isSign?'':'class-detail-footer-button4']" @click="handleStutas(2,'请假')">
 				学员请假
 			</view>
-			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(3,'未到')">
+			<view class="class-detail-footer-button class-detail-footer-button3" :class="[studentVOList.isSign?'':'class-detail-footer-button4']" @click="handleStutas(3,'未到')">
 				学员未到
 			</view>
 		</view>
@@ -193,7 +193,7 @@
 							'hh:mm')
 						if (res.data.classStatus == 2 || res.data.classStatus == 4 || res.data.classStatus ==
 							5 || res.data.classStatus == 6) {
-							res.data.nextCLassTime = null
+							res.data.nextCLassTime = -1
 						}
 						if (res.data.coverImage.indexOf('http') == -1) {
 							res.data.coverImage = this.$url + res.data.coverImage
@@ -201,7 +201,7 @@
 						if(res.data.avatar.indexOf('http')==-1){
 							res.data.avatar = this.$url + res.data.avatar
 						}
-						if (res.data.nextCLassTime) {
+						if (res.data.nextCLassTime&& res.data.nextCLassTime != -1) {
 							res.data.nextCLassTime = this.$utils.dateTime.getLocalTime(
 								res.data.nextCLassTime,
 								'yyyy-MM-dd hh:mm')
@@ -286,6 +286,7 @@
 						this.isAttendance = true
 						let isSign = false
 						isSign = res.data.some(row=>row.attendanceStatus>0)
+						this.boxActive = res.data.map(item=>item.id)
 						this.studentVOList = {
 							...dataObj,
 							isSign,
@@ -314,6 +315,9 @@
 						item.attendanceStatus = val
 					})
 				} else {
+					if(!this.studentVOList.isSign){
+						return false
+					}
 					if (self.boxActive.length == 0) {
 						uni.showToast({
 							title: '请选择考勤学员'
@@ -611,6 +615,11 @@
 
 			&-button3 {
 				width: 218rpx;
+			}
+			&-button4 {
+				background: #999999;
+				color: #141D3D;
+				border: 2rpx solid #999999;
 			}
 
 		}

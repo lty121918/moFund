@@ -72,10 +72,13 @@ class DateTime {
 			date = new Date()
 		} else {
 			let index = (date+'').indexOf('.')
-			if ((date + '').indexOf('-') > -1 || (date + '').indexOf('T') == -1) {
+			if( (date + '').indexOf('T') > -1){
+				date = new Date(date)
+			} else if ((date + '').indexOf('-') > -1) {
 				if(index>-1){
 					date = date.substr(0,index)
 				}
+				console.log(date);
 				date = new Date(date.replace(/-/g, '/'))
 			} else {
 				date = new Date(date)

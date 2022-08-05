@@ -21,6 +21,7 @@
 				isShow: true
 			}
 		},
+	
 		computed: {},
 		created() {
 			// 初次进入获取地理位置 增加判断如果没有Authorization 不去执行 

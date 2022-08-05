@@ -68,11 +68,6 @@
 
 <script>
 	import mixin from '@/mixin.js'
-
-	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
 	export default {
 		mixins: [mixin],
 		data() {
@@ -86,9 +81,7 @@
 
 			}
 		},
-		computed: {
-			...mapGetters(['active']),
-		},
+		computed: {},
 		onShow() {
 			const self = this
 			// self.getData()
@@ -108,13 +101,9 @@
 
 		},
 		created() {
-			const active = 'map'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
+
 		},
 		methods: {
-			...mapMutations(['SET_ACTIVE']),
 			/**
 			 * @function 点击坐标获取当前校区的商品
 			 * @param {Object} e
@@ -133,6 +122,8 @@
 							if (item.coverImage.indexOf('http') == -1) {
 								item.coverImage = this.$url + item.coverImage
 							}
+							item.lat = campus.lat
+							item.lng = campus.lng
 						})
 						this.data = [
 							...res.data
@@ -285,6 +276,7 @@
 					margin-right: 30rpx;
 					width: 180rpx;
 					height: 204rpx;
+					border-radius: 16rpx;
 					// background-color: rgba(0, 0, 0, 0.1);
 				}
 

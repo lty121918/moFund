@@ -55,6 +55,7 @@
 				this.SET_STORAGE({str:'userInfo',data})
 				// console.log('1是2否教练', isTeach);
 				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)
+				
 				if (this.shareInfo.classId) {
 					if(data.isCoach==1){
 						this.$utils.router.redTo(this.$page.ClassDetail,this.shareInfo)

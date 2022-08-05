@@ -11,9 +11,14 @@
 		</uni-popup>
 		<uni-popup ref="popup2" @change="change">
 			<view class="popup-stu">
+				<view class="color2 popup-stu-flex">
+					<text>上课时间:</text>
+					<text>{{date.courseDate}}</text>
+					<text class="ml12">{{date.startTime}}~{{date.endTime}}</text>
+				</view>
 				<view class="popup-stu-flex fz28" v-for="row in studentVOList" :key="row.id">
 					<view class="fwb popup-stu-name">{{row.studentName}}</view>
-					<view class="fwb popup-stu-name">{{row.contactPhone}}</view>
+					<view class="fwb popup-stu-name">{{row.contactPhone ||''}}</view>
 					<view class="popup-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="popup-stu-age">{{row.age}}岁</view>
 					<view class="text-rpopup-stu-status" v-if="row.attendanceStatus==0">待签到</view>
@@ -29,7 +34,7 @@
 <script>
 	import DateCalendar from '../DateCalendar/DateCalendar'
 	export default {
-		props:{
+		props: {
 			value: {
 				type: [String, Number],
 				default: ''
@@ -46,7 +51,8 @@
 				isMaskClick: true,
 				isTeach: 2,
 				studentVOList: [],
-				isAttendance:false
+				date:{},
+				isAttendance: false
 			}
 		},
 		methods: {
@@ -54,12 +60,12 @@
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
 			async change2(e = {}) {
-				const date = this.$utils.dateTime.ltgtDate2( e.fulldate)
+				const date = this.$utils.dateTime.ltgtDate2(e.fulldate)
 				console.log(date);
 				if (this.dotLists.indexOf(e.fulldate) > -1 && this.isAttendance) {
 					// 历史记录的是显示
 					const dataObj = this.data.find(item => item.courseDate == e.fulldate)
-					if( date==1){
+					if (date == 1) {
 						const {
 							coachScheduleStuInfo,
 							vipScheduleStuInfo
@@ -75,12 +81,14 @@
 							})
 						}
 						if (res.code == 200) {
+							this.date = dataObj
+							this.studentVOList = res.data
 							// this.$refs.popup.close('bottom')
 							this.$refs.popup2.open('center')
 						}
 					} else {
 						// 切换考勤
-						this.$emit('attendance',dataObj)
+						this.$emit('attendance', dataObj)
 						this.$refs.popup.close('bottom')
 					}
 				}
@@ -94,7 +102,7 @@
 				if (isAttendance || !isShow) {
 					const res = await this.$http['classes'].courseScheduleView({
 						// scheduleId: ls.scheduleId,
-						classId:ls.classId
+						classId: ls.classId
 					})
 					if (res.code == 200) {
 						this.data = res.data

@@ -1,7 +1,9 @@
 <template>
 	<view class="class-content" @click="handleNavTo">
 		<view class="class-content-top" v-if="type!=3">
-			<text>下节课：{{data.nextCLassTime || '已结课'}}</text>
+			<text >
+				<text v-if="data.nextCLassTime!=-1">下节课：{{data.nextCLassTime || '已结课'}}</text>
+			</text>
 			<text class="color fw4">{{classStatus[data.classStatus]}}</text>
 		</view>
 		<view class="class-content-bottom">

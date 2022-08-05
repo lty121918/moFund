@@ -70,7 +70,7 @@
 				<view class="home-nearby-content-center">
 					<view>{{item.nickName}}</view>
 					<view class="home-nearby-content-class">
-						<view class="home-nearby-content-name">{{item.spellType}}</view>
+						<view class="home-nearby-content-name">{{item.productName}}<text class="ml12">{{item.spellType}}</text></view>
 						<view class="home-nearby-content-url">
 							<image v-for="row in item.weChatUserList" :key="row.studentId"
 								class="home-nearby-content-icon" :src="row.avatar" mode="aspectFit">
@@ -107,7 +107,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['active', 'location', 'campus']),
+			...mapGetters(['location', 'campus']),
 			url() {
 				return this.$url
 			}
@@ -125,16 +125,12 @@
 		methods: {
 			// home 页面调用
 			getMounted: debounce(function(e) {
-				const active = 'home'
-				if (this.active !== active) {
-					this.SET_ACTIVE(active)
-				}
 				uni.setNavigationBarTitle({
 					title: '首页'
 				})
 				this.getData()
 			}),
-			...mapMutations(['SET_ACTIVE', 'SET_STORAGE']),
+			...mapMutations(['SET_STORAGE']),
 			// 请求数据
 			async getData() {
 				console.log('数据请求home');
@@ -408,7 +404,7 @@
 					display: flex;
 					justify-content: flex-start;
 					margin-top: 18rpx;
-					height: 60rpx;
+					// height: 60rpx;
 					width: 320rpx;
 					background: rgba(20, 29, 61, 0.05);
 					border-radius: 12rpx;
@@ -419,8 +415,8 @@
 
 				&-name {
 					width: 140rpx;
-					height: 60rpx;
-					line-height: 60rpx;
+					// height: 60rpx;
+					// line-height: 60rpx;
 					text-align: center;
 					background: rgba(20, 29, 61, 0.1);
 					border-radius: 12rpx;

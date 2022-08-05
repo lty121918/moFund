@@ -53,7 +53,7 @@
 						data.forEach(item => {
 							if (item.classStatus == 2 || item.classStatus == 4 || item.classStatus ==
 								5 || item.classStatus == 6) {
-									item.nextCLassTime =null
+									item.nextCLassTime = -1
 							}
 							if (item.coverImage.indexOf('http') == -1) {
 								item.coverImage = self.$url + item.coverImage
@@ -64,7 +64,7 @@
 								`2022-01-01 ${item.endPeriod}`,
 								'hh:mm')
 							item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
-							if (item.nextCLassTime) {
+							if (item.nextCLassTime&& item.nextCLassTime != -1) {
 								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
 									item.nextCLassTime,
 									'yyyy-MM-dd hh:mm')
