@@ -60,9 +60,11 @@
 			<view class="class-detail-stu">
 				<view class="class-detail-stu-flex fz28" v-for="(item,index) in studentVOList.data" :key="index"
 					@click="changeBox(item)">
-					<view v-if="boxActive.indexOf(item.id)==-1" class="class-detail-attendance-check">
+					<view v-if="boxActive.indexOf(item.id)==-1 && studentVOList.isSign"
+						class="class-detail-attendance-check">
 					</view>
-					<image v-else class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
+					<image v-if="boxActive.indexOf(item.id)>-1&& studentVOList.isSign "
+						class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
 					</image>
 					<image class="class-detail-stu-img" :src="avatar" mode="aspectFit"></image>
 					<view class="fwb class-detail-stu-name">{{item.studentName}}</view>
@@ -82,7 +84,8 @@
 			v-if="isTeach==2 && !isAttendance">
 			<view v-if="'456'.indexOf(data.classStatus)==-1"
 				class="class-detail-footer-button class-detail-footer-button2" @click="handleDismiss">
-				{{isHead?'解散班级':'退出班级'}}
+				退出班级
+				<!-- {{isHead?'解散班级':'退出班级'}} -->
 			</view>
 			<view class="class-detail-footer-button"
 				:class="['456'.indexOf(data.classStatus)==-1?'':'class-detail-footer-button3']" @click="checkTimetable">
@@ -117,10 +120,12 @@
 			<view class="class-detail-footer-button class-detail-footer-button3" @click="handleStutas(1,'签到')">
 				教练签到
 			</view>
-			<view class="class-detail-footer-button class-detail-footer-button3" :class="[studentVOList.isSign?'':'class-detail-footer-button4']" @click="handleStutas(2,'请假')">
+			<view class="class-detail-footer-button class-detail-footer-button3"
+				:class="[studentVOList.isSign?'':'class-detail-footer-button4']" @click="handleStutas(2,'请假')">
 				学员请假
 			</view>
-			<view class="class-detail-footer-button class-detail-footer-button3" :class="[studentVOList.isSign?'':'class-detail-footer-button4']" @click="handleStutas(3,'未到')">
+			<view class="class-detail-footer-button class-detail-footer-button3"
+				:class="[studentVOList.isSign?'':'class-detail-footer-button4']" @click="handleStutas(3,'未到')">
 				学员未到
 			</view>
 		</view>
@@ -156,16 +161,44 @@
 				isAttendance: false, //是否考勤
 				boxActive: [],
 				studentVOList: [], // 教练考勤人员
-				data: {},
+				data: {
+					"avatar": "",
+					"campusId": "",
+					"campusName": "",
+					"classId": "",
+					"className": "",
+					"classStatus": "",
+					"coachId": "",
+					"courseId": "",
+					"courseName": "",
+					"courseScheduleDetailId": "",
+					"courseType": "",
+					"coverImage": "",
+					"endDate": "",
+					"endPeriod": "",
+					"isBoss": true,
+					"isSufficient": true,
+					"nextCLassTime": "",
+					"price": 0,
+					"scheduleDetailId": "",
+					"scheduleId": "",
+					"staffName": "",
+					"startDate": "",
+					"startPeriod": "",
+					"studentVOList": [],
+					"typeName": "",
+					"weekCode": [],
+					"wxName": "",
+					"wxPhone": ""
+				},
 				classId: ''
 
 			}
 		},
 		async onLoad(e) {
+			this.getTeach()
 			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
-			this.$nextTick(() => {
-				this.getClassDetail()
-			})
+			this.getClassDetail()
 		},
 		methods: {
 			getClassDetail() {
@@ -198,10 +231,10 @@
 						if (res.data.coverImage.indexOf('http') == -1) {
 							res.data.coverImage = this.$url + res.data.coverImage
 						}
-						if(res.data.avatar.indexOf('http')==-1){
+						if (res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
-						if (res.data.nextCLassTime&& res.data.nextCLassTime != -1) {
+						if (res.data.nextCLassTime && res.data.nextCLassTime != -1) {
 							res.data.nextCLassTime = this.$utils.dateTime.getLocalTime(
 								res.data.nextCLassTime,
 								'yyyy-MM-dd hh:mm')
@@ -210,7 +243,7 @@
 						res.data.studentVOList = res.data.studentVOList || []
 						res.data.studentVOList.forEach(item => {
 							if (item.headUrl) {
-								if(item.headUrl.indexOf('http')==-1){
+								if (item.headUrl.indexOf('http') == -1) {
 									item.headUrl = this.$url + item.headUrl
 								}
 							} else {
@@ -257,36 +290,39 @@
 				// uni.showToast({
 				// 	title: this.isHead ? "解散" : "退出"
 				// })
-				if (this.isHead) {
-					this.$http['classes'].disbandClass({
-						classId: this.classId,
-						studentIds: this.data.data.studentVOList.map(item => item.id)
-					}).then(res => {
-						if (res.code == 200) {
-							this.$utils.router.navBackData()
-						}
-					})
-				} else {
-					this.$http['classes'].exitClass({
-						classId: this.classId
-					}).then(res => {
-						if (res.code == 200) {
-							this.$utils.router.navBackData()
-						}
-					})
-				}
+				// if (this.isHead) {
+				// 	this.$http['classes'].disbandClass({
+				// 		classId: this.classId,
+				// 		studentIds: this.data.studentVOList.map(item => item.id)
+				// 	}).then(res => {
+				// 		if (res.code == 200) {
+				// 			this.$utils.router.navBackData()
+				// 		}
+				// 	})
+				// } else {
+				this.$http['classes'].exitClass({
+					classId: this.classId
+				}).then(res => {
+					if (res.code == 200) {
+						this.$utils.router.navBackData()
+					}
+				})
+				// }
 			},
 			// 考勤按钮
 			async getAttendance(dataObj) {
 				const res = await this.$http['classes'].coachScheduleStuInfo({
 					id: dataObj.id,
-					classId:this.classId
+					classId: this.classId
 				}).then(res => {
 					if (res.code == 200) {
 						this.isAttendance = true
 						let isSign = false
-						isSign = res.data.some(row=>row.attendanceStatus>0)
-						this.boxActive = res.data.map(item=>item.id)
+						isSign = res.data.some(row => row.attendanceStatus > 0)
+						const boxActive = res.data.map(item => item.id)
+						if (isSign) {
+							this.boxActive = boxActive
+						}
 						this.studentVOList = {
 							...dataObj,
 							isSign,
@@ -300,7 +336,7 @@
 				this.$refs.popupDate.handleShow(false, {
 					isTeach: this.isTeach,
 					scheduleId: this.data.scheduleId,
-					classId:this.classId
+					classId: this.classId
 				}, true)
 			},
 			// 修改学员考勤状态
@@ -310,26 +346,21 @@
 				// })
 				const self = this
 				let data = JSON.parse(JSON.stringify(self.studentVOList.data))
-				if (val == 1) {
-					data.forEach(item => {
-						item.attendanceStatus = val
-					})
-				} else {
-					if(!this.studentVOList.isSign){
-						return false
-					}
-					if (self.boxActive.length == 0) {
-						uni.showToast({
-							title: '请选择考勤学员'
-						})
-						return false
-					}
-					data = data.filter(item => {
-						item.attendanceStatus = val
-						let index = self.boxActive.indexOf(item.id)
-						return index > -1
-					})
+				if (!this.studentVOList.isSign && val != 1) {
+					return false
 				}
+				if (self.boxActive.length == 0) {
+					uni.showToast({
+						title: '请选择考勤学员'
+					})
+					return false
+				}
+				data = data.filter(item => {
+					item.attendanceStatus = val
+					let index = self.boxActive.indexOf(item.id)
+					return index > -1
+				})
+
 				// this.studentVOList
 				console.log('考勤数据：', {
 					attendanceStatus: val,
@@ -346,6 +377,7 @@
 					.then(res => {
 						if (res.code == 200) {
 							self.getAttendance(self.studentVOList)
+							self.getClassDetail()
 							self.boxActive = []
 						}
 					})
@@ -363,6 +395,9 @@
 			},
 
 			changeBox(val) {
+				if (!this.studentVOList.isSign) {
+					return false
+				}
 				let index = this.boxActive.indexOf(val.id)
 				console.log(val, index);
 				if (index > -1) {
@@ -616,6 +651,7 @@
 			&-button3 {
 				width: 218rpx;
 			}
+
 			&-button4 {
 				background: #999999;
 				color: #141D3D;

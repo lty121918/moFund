@@ -96,9 +96,11 @@ const APIS_LIST = {
   "_wx_user_wx_course_schedule_coach_schedule_stu_info": '/wx/user/wx-course-schedule/coach-schedule-stu-info', // 教练查看-班级详情-查看课表-学员信息
   "_wx_user_wx_course_schedule_view": '/wx/user/wx-course-schedule/view', // 班级详情-查看课表
   "_wx_user_wx_course_schedule_vip_schedule_stu_info": '/wx/user/wx-course-schedule/vip-schedule-stu-info', // 会员查看-班级详情-查看课表-学员信息
+  "_wx_user_wx_order_get_ftb_order_by_id": '/wx/user/wx-order/get-ftb-order-by-id', // 小程序-根据订单id查询充值订单信息
   "_wx_user_wx_order_get_order": '/wx/user/wx-order/get-order', // 根据用户id查询全部订单信息
   "_wx_user_wx_order_get_order_consume": '/wx/user/wx-order/get-order-consume', // 根据用户id查询消费订单信息
   "_wx_user_wx_order_get_order_invest": '/wx/user/wx-order/get-order-invest', // 根据用户id查询充值订单信息
+  "_wx_user_wx_order_get_order_invest_by_id": '/wx/user/wx-order/get-order-invest-by-id', // 小程序-根据订单id查询消费订单信息
   "_wx_user_wx_order_insert_service_evaluation": '/wx/user/wx-order/insert-service-evaluation' // 添加服务评价
 }
 export default APIS_LIST

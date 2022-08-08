@@ -200,9 +200,9 @@ const minxin = {
 															]
 														) {
 															// 授权成功，重新定位
-															uni.getLocation({
-																success: res => {}
-															});
+															// uni.getLocation({
+															// 	success: res => {}
+															// });
 														} else {
 															// 没有允许定位权限
 															uni.showToast({

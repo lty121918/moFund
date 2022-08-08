@@ -62,10 +62,10 @@
 			async change2(e = {}) {
 				const date = this.$utils.dateTime.ltgtDate2(e.fulldate)
 				console.log(date);
-				if (this.dotLists.indexOf(e.fulldate) > -1 && this.isAttendance) {
+				if (this.dotLists.indexOf(e.fulldate) > -1 ) {
 					// 历史记录的是显示
 					const dataObj = this.data.find(item => item.courseDate == e.fulldate)
-					if (date == 1) {
+					if (date == 1 || !this.isAttendance) {
 						const {
 							coachScheduleStuInfo,
 							vipScheduleStuInfo
@@ -86,7 +86,7 @@
 							// this.$refs.popup.close('bottom')
 							this.$refs.popup2.open('center')
 						}
-					} else {
+					} else if(this.isAttendance) {
 						// 切换考勤
 						this.$emit('attendance', dataObj)
 						this.$refs.popup.close('bottom')

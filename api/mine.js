@@ -33,4 +33,7 @@ export const getOrderInvest = params => get(apis._wx_user_wx_order_get_order_inv
 // 加服务评价
 export const insertServiceEvaluation = params => post(apis._wx_user_wx_order_insert_service_evaluation, params)
 export const centerUpdate = params => post(apis._wx_user_center_update, params)
-
+// 程序-根据订单id查询充值订单信息
+export const ftbOrder = params => get(apis._wx_user_wx_order_get_ftb_order_by_id, params)
+// -根据订单id查询消费订
+export const orderInvest = params => get(apis._wx_user_wx_order_get_order_invest_by_id, params)

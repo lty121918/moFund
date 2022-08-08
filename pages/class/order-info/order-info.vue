@@ -45,8 +45,10 @@
 		</view>
 		<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<view class="order-info-footer-button" @click="handleDisolution">
+			<!-- <view class="order-info-footer-button" @click="handleDisolution">
 				解散班级
+			</view> -->
+			<view>
 			</view>
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
 				确定
@@ -188,8 +190,10 @@
 			},
 			// 执行分享界面
 			handleShare() {
+				console.log( this.data);
 				this.$refs.popupShare.handleShow({
-					title: this.data.productName,
+					coverImage:this.data.coverImage,
+					title: this.data.className,
 					query: `classId=${this.classId}&wxUserId=${this.data.wxUserId}`,
 					path: `/pages/class/order-info/order-info`
 				})

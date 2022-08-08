@@ -4,7 +4,7 @@
 			"style": {
 				"navigationBarTitleText": "首页",
 				"enablePullDownRefresh": false
-				
+
 			}
 
 		}, {
@@ -93,7 +93,7 @@
 				"navigationBarTitleText": "我的拼班",
 				"enablePullDownRefresh": false,
 				"usingComponenets": {
-					"van-image":"/wxcomponents/vant/image/index"
+					"van-image": "/wxcomponents/vant/image/index"
 				}
 			}
 
@@ -164,6 +164,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "order-detail/order-detail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"enablePullDownRefresh": false
+			}
+
 		}]
 	}],
 	"globalStyle": {
@@ -175,7 +182,7 @@
 		"backgroundColorTop": "#DE501F",
 		"backgroundColorBottom": "#003920",
 		"usingComponenets": {
-			"van-image":"/wxcomponents/vant/image/index"
+			"van-image": "/wxcomponents/vant/image/index"
 		}
 	},
 	"tabBar": {

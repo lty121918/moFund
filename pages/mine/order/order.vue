@@ -54,7 +54,7 @@
 			 */
 			handleShow(item) {
 				let isCheck = false
-				if(item.evaluationLevel){
+				if(item.isEvaluation){
 					isCheck = true
 				}
 				this.$refs.popupEval.handleShow({
@@ -91,6 +91,7 @@
 							} else {
 								data.push({
 									...item.wxOrderVO,
+									coverImages : item.coverImage,
 									coverImage: self.$url + item.wxOrderVO.coverImage,
 									type: 'consume'
 								})
@@ -99,6 +100,7 @@
 							data.push({
 								...item,
 								coverImage: self.$url + item.coverImage,
+								coverImages : item.coverImage,
 								type: self.active == 2 ? 'consume' : 'invest'
 							})
 						}

@@ -20,10 +20,10 @@
 			<!-- <image class="course-title-img" src="/static/default.png"></image> -->
 			<view class="course-title-content">
 				<view>
-					<view class="fz36 fwb">{{productInfo.productName}}</view>
+					<view class="fz36 fwb">{{productInfo.productName|| ''}}</view>
 					<view class="pt16">
 						<text class="color fz24">￥</text>
-						<text class="color fz32">{{productInfo.price}}</text>
+						<text class="color fz32">{{productInfo.price || 0}}</text>
 						<text class="fz24">起/节/人</text>
 					</view>
 				</view>
@@ -34,7 +34,7 @@
 					</view> -->
 					<view class="text-c course-title-content-r2">
 						<view class="color999 fz24">最多</view>
-						<view class="color fz28"> {{productInfo.maxNum}} </view>
+						<view class="color fz28"> {{productInfo.maxNum || 0}} </view>
 						<view class="color999 fz24">人</view>
 
 					</view>
@@ -45,7 +45,7 @@
 		<view class="course-nearby">
 			<view class="course-head-address" @click="$utils.router.navTo($page.Search,{type:'no',productId})">
 				<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-				<text> {{campusOther.campusName}}</text>
+				<text> {{campusOther.campusName || ''}}</text>
 				<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
 			</view>
 			<view class="course-nearby-content" v-for="item in productSpellClassList" :key="item">
@@ -190,8 +190,6 @@
 			} else {
 				this.campusOther = this.campus
 			}
-
-
 
 		},
 		methods: {

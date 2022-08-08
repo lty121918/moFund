@@ -19,6 +19,7 @@ module.exports = {
 		Map:'/pages/tab-bar/map/map',// 地图
 		Mine:'/pages/tab-bar/mine/mine',// 我的
 		Order:'/pages/mine/order/order', //订单
+		OrderDetail:'/pages/mine/order-detail/order-detail', //订单详情
 		Coach:'/pages/mine/coach/coach', //成为教练
 		AddCoach:'/pages/mine/coach/add-coach', // 申请成为教练
 		Student:'/pages/mine/student/student', // 我的学员

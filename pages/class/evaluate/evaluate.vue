@@ -21,7 +21,7 @@
 							</view>
 							<view class="fz24 color2">{{item.createdDate||''}}</view>
 						</view>
-						<view class="course-detail-evaluate-text">{{item.content}}</view>
+						<view class="course-detail-evaluate-text">{{item.content || ""}}</view>
 					</view>
 				</view>
 			</view>
