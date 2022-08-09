@@ -38,7 +38,7 @@
 			<view class="home-activity-content">
 				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
 					@click="$utils.router.navTo($page.CourseDetail,item)">
-					<van-image use-error-slot class="home-activity-content-img" radius="10" width="84" height="84"
+					<van-image use-error-slot class="home-activity-content-img" radius="10" width="216" height="124"
 						:src="item.coverImage" fit="cover">
 					</van-image>
 					<!-- <image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image> -->
@@ -68,7 +68,7 @@
 				@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
 				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
 				<view class="home-nearby-content-center">
-					<view>{{item.nickName}}</view>
+					<view>{{item.nickName || '微信昵称'}}</view>
 					<view class="home-nearby-content-class">
 						<view class="home-nearby-content-name">{{item.productName}}<text class="ml12">{{item.spellType}}</text></view>
 						<view class="home-nearby-content-url">
@@ -213,17 +213,25 @@
 				})
 				if (res4.code == 200) {
 					res4.data.forEach(item => {
-						if(item.headUrl.indexOf('http')==-1){
+						if(item.headUrl && item.headUrl.indexOf('http')==-1){
 							item.headUrl = this.$url + item.headUrl
+						} else if(!item.headUrl){
+							item.headUrl = this.avatar
 						}
 						item.weChatUserList = item.weChatUserList || []
 						item.weChatUserList.forEach(row => {
-							item.avatar = this.$url + item.avatar
+							if(row.avatar && row.avatar.indexOf('http')==-1){
+								row.avatar = this.$url + row.avatar
+							} else if(!row.avatar){
+								row.avatar = this.avatar
+							}
+							
 						})
 					})
 					this.spellClassList = [
 						...res4.data
 					]
+					console.log(this.spellClassList);
 				}
 				this.$forceUpdate()
 			},
@@ -320,8 +328,8 @@
 					flex-shrink: 0;
 					margin-left: 24rpx;
 					padding: 20rpx;
-					width: 200rpx;
-					height: 280rpx;
+					width: 256rpx;
+					height: 312rpx;
 					box-sizing: border-box;
 					background-image: url('~@/static/home/bg-item.png');
 					background-repeat: no-repeat;
@@ -356,8 +364,11 @@
 				}
 
 				&-img {
-					width: 84rpx;
-					height: 84rpx;
+					// width: 84rpx;
+					// height: 84rpx;
+					width: 216rpx;
+					height: 124rpx;
+					border-radius: 8rpx;
 				}
 
 				&-icon {
@@ -433,6 +444,7 @@
 					margin-left: -20rpx;
 					width: 44rpx;
 					height: 44rpx;
+					border-radius: 50%
 				}
 
 				&-button {

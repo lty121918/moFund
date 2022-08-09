@@ -11,7 +11,7 @@
 			<view class="class-detail-head">
 				<view class="class-detail-head-flex">
 					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFit"></image>
-					<text class="fwb fz32">{{data.wxName || ''}}</text>
+					<text class="fwb fz32">{{data.wxName || '微信昵称'}}</text>
 					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
 				</view>
 				<view class="class-detail-head-contact" @click="handlePhone(data.wxPhone)">
@@ -234,6 +234,9 @@
 						if (res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
+						if (!res.data.avatar) {
+							res.data.avatar = this.avatar
+						}
 						if (res.data.nextCLassTime && res.data.nextCLassTime != -1) {
 							res.data.nextCLassTime = this.$utils.dateTime.getLocalTime(
 								res.data.nextCLassTime,
@@ -320,7 +323,7 @@
 						let isSign = false
 						isSign = res.data.some(row => row.attendanceStatus > 0)
 						const boxActive = res.data.map(item => item.id)
-						if (isSign) {
+						if (!isSign) {
 							this.boxActive = boxActive
 						}
 						this.studentVOList = {

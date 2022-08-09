@@ -14,7 +14,7 @@
 					<view>
 						<view class="course-detail-evaluate-info">
 							<view class="course-detail-evaluate-info2">
-								<text class="color4 fz28">{{item.nickname}}</text>
+								<text class="color4 fz28">{{item.nickname || '微信昵称'}}</text>
 								<view class="course-detail-evaluate-info3">
 									<uni-rate v-model="item.evaluationLevel" disabled size="20" disabledColor="#DE501F" color="#838899" active-color="#DE501F" />
 								</view>
@@ -59,6 +59,9 @@
 				res.data.forEach(item => {
 					if( item.avatar.indexOf('http')==-1){
 						item.avatar = this.$url + item.avatar
+					}
+					if(!item.avatar){
+						item.avatar = this.avatar
 					}
 					item.createdDate = this.$utils.dateTime.getLocalTime(item.createdDate)
 					item.evaluationLevel = item.evaluationLevel || 0
@@ -139,6 +142,7 @@
 					margin-right: 28rpx;
 					width: 88rpx;
 					height: 88rpx;
+					border-radius: 16rpx;
 				}
 
 				&-text {

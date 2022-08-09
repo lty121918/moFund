@@ -2,7 +2,7 @@
 	<view class="" @click.stop>
 		<uni-popup ref="popup" :isMaskClick="isMaskClick" @change="change">
 			<view class="popup-content">
-				<DateCalendar ref="dateCalendar" @change="change2" :value="value" :dotLists="dotLists">
+				<DateCalendar :isShow="isShow" ref="dateCalendar" @change="change2" :value="value" :dotLists="dotLists">
 				</DateCalendar>
 				<view class="popup-footer" v-if="isShow">
 					<view class="popup-footer-button" @click="close">返回拼班</view>
@@ -52,7 +52,8 @@
 				isTeach: 2,
 				studentVOList: [],
 				date:{},
-				isAttendance: false
+				isAttendance: false,
+				classId:''
 			}
 		},
 		methods: {
@@ -65,7 +66,8 @@
 				if (this.dotLists.indexOf(e.fulldate) > -1 ) {
 					// 历史记录的是显示
 					const dataObj = this.data.find(item => item.courseDate == e.fulldate)
-					if (date == 1 || !this.isAttendance) {
+					console.log(dataObj);
+					if ((date == 1 || !this.isAttendance) && !this.isShow) {
 						const {
 							coachScheduleStuInfo,
 							vipScheduleStuInfo
@@ -73,11 +75,13 @@
 						let res = null
 						if (this.isTeach == 1) {
 							res = await coachScheduleStuInfo({
-								id: dataObj.id
+								id: dataObj.id,
+								classId: this.classId
 							})
 						} else {
 							res = await vipScheduleStuInfo({
-								id: dataObj.id
+								id: dataObj.id,
+								classId: this.classId
 							})
 						}
 						if (res.code == 200) {
@@ -113,6 +117,7 @@
 					this.isTeach = 2
 					this.dotLists = ls
 				}
+				this.classId = ls.classId
 				this.isAttendance = isAttendance
 				this.$refs.popup.open('bottom')
 				this.isShow = isShow

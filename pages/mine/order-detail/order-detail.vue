@@ -17,9 +17,12 @@
 			</view>
 		</view>
 		<view class="order-detail-center">
-			<view class="order-detail-center-item">
-				<text>订单编号:</text>
-				<text class="ml12">{{listData.orderNo || listData.tradeNo}}</text>
+			<view class="order-detail-center-item flex-bc">
+				<view class="">
+					<text>订单编号:</text>
+					<text class="ml12">{{listData.orderNo || listData.tradeNo}}</text>
+				</view>
+				<view class="order-detail-center-copy" @click="handleCopy(listData.orderNo || listData.tradeNo)">复制</view>
 			</view>
 			<view class="order-detail-center-item">
 				<text>下单时间:</text>
@@ -38,7 +41,7 @@
 				<text class="ml12">{{listData.actuallyAmount ||listData.amount}}元</text>
 			</view>
 		</view>
-		
+
 		<view class="order-detail-center" v-if="data.type == 'consume'">
 			<view class="order-detail-center-item">
 				<text>校区:</text>
@@ -57,7 +60,7 @@
 				<text class="ml12">{{listData.classTime}}</text>
 			</view>
 		</view>
-		
+
 		<view class="order-detail-center">
 			<view class="order-detail-center-item">
 				<text>会员:</text>
@@ -107,13 +110,25 @@
 				console.log(this.data.type);
 				getApi({
 					tradeId: this.data.tradeId || null,
-					orderId: this.data.orderId|| null,
+					orderId: this.data.orderId || null,
 				}).then(res => {
 					if (res.code == 200) {
-						res.data['coverImage'] = this.$url + this.data.coverImages
+						res.data['coverImage'] = this.data.coverImage
 						this.listData = res.data
 					}
 				})
+			},
+			handleCopy(val) {
+				uni.setClipboardData({
+					data: val,
+					success: function() {
+						uni.showToast({
+							title: '复制成功',
+							duration: 2000,
+							icon: 'none'
+						});
+					},
+				});
 			}
 		}
 	}
@@ -157,21 +172,31 @@
 				color: #141D3D;
 			}
 		}
-		&-center{
+
+		&-center {
 			margin-top: 32rpx;
 			width: 686rpx;
 			background: #FFFFFF;
 			border-radius: 16rpx;
-			&-item{
+
+			&-item {
 				padding: 24rpx;
 				font-size: 28rpx;
 				font-family: SourceHanSansSC-Regular, SourceHanSansSC;
 				font-weight: 400;
 				color: #141D3D;
 				border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
-				&:last-child{
-					border-bottom:none
+
+				&:last-child {
+					border-bottom: none
 				}
+			}
+			&-copy{
+				margin-right: 32rpx;
+				font-size: 28rpx;
+				font-family: SourceHanSansSC-Regular, SourceHanSansSC;
+				font-weight: 400;
+				color: #2080FF;
 			}
 		}
 	}

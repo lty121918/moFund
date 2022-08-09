@@ -82,6 +82,10 @@
 				type: Boolean,
 				default: false
 			},
+			isShow: {
+				type: Boolean,
+				default: true
+			},
 		},
 		data() {
 			return {
@@ -344,7 +348,7 @@
 							vo.dot = true;
 							let date = this.$utils.dateTime.ltgtDate2(vo.date)
 							console.log('111:',date);
-							if(date==1){
+							if(date==1 && !this.isShow){
 								vo.expire = true
 							} else {
 								vo.expire = false

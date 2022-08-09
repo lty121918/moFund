@@ -11,7 +11,7 @@
 			<view class="order-info-head">
 				<view class="order-info-head-flex">
 					<image class="order-info-head-img" :src="data.avatar" mode="aspectFit"></image>
-					<text class="fwb fz32">{{data.nickName}}</text>
+					<text class="fwb fz32">{{data.nickName|| '微信昵称'}}</text>
 					<image class="order-info-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
 				</view>
 				<image v-if="isHead" class="order-info-head-share" src="/static/class/share.png" mode="aspectFit"
@@ -43,11 +43,8 @@
 				<text>添加学员</text>
 			</view>
 		</view>
-		<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+	<!-- 	<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<!-- <view class="order-info-footer-button" @click="handleDisolution">
-				解散班级
-			</view> -->
 			<view>
 			</view>
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
@@ -61,7 +58,7 @@
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
 				确定
 			</view>
-		</view>
+		</view> -->
 		<popup-share ref="popupShare"></popup-share>
 		<popup-add-stu ref="popupAddStu" @change="getMineSpellClass" @recharge="recharge"></popup-add-stu>
 		<!-- 充值 -->
@@ -133,6 +130,9 @@
 						if(res.data.avatar.indexOf('http')==-1){
 							res.data.avatar = this.$url + res.data.avatar
 						}
+						if(!res.data.avatar){
+							res.data.avatar = this.avatar
+						}
 						
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
 						res.data.weChatUserList = res.data.weChatUserList || []
@@ -169,7 +169,7 @@
 			handleAdd() {
 				this.data.weChatUserList = this.data.weChatUserList || []
 				const ls = this.data.weChatUserList.map(item => item.studentId)
-				this.$refs.popupAddStu.handleShow(this.classId, ls)
+				this.$refs.popupAddStu.handleShow(this.classId, ls,this.data)
 				console.log('添加学员');
 			},
 			// 调起充值界面

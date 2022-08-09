@@ -53,7 +53,7 @@
 				<view>
 					<view class="course-nearby-content-center">
 						<text class="course-nearby-content-num">{{item.maxNum}}人班</text>
-						<text>{{item.nickName}}</text>
+						<text>{{item.nickName|| '微信昵称'}}</text>
 					</view>
 					<!-- 上课周期 -->
 					<view class="course-nearby-content-cycle">
@@ -219,6 +219,12 @@
 					}
 					this.productInfo = res.data
 					res.data.productSpellClassList.forEach(item => {
+						if( item.headUrl.indexOf('http')==-1){
+							item.headUrl = this.$url + item.headUrl
+						}
+						if(!item.headUrl){
+							item.headUrl = this.avatar
+						}
 						item.unUseNum = item.maxNum - item.useStudentNum
 						if (item.minNum - item.useStudentNum > 0) {
 							item.minNumMax = item.minNum - item.useStudentNum
@@ -243,8 +249,10 @@
 				if (res3.code == 200) {
 					res3.data = res3.data.filter(item => item)
 					res3.data.forEach(item => {
-						if (item.avatar.indexOf('http') == -1) {
+						if (item.avatar&&item.avatar.indexOf('http') == -1) {
 							item.avatar = this.$url + item.avatar
+						} else if(!item.avatar){
+							item.avatar = this.avatar
 						}
 						item.evaluationLevel = item.evaluationLevel || 0
 						item.createdDate = this.$utils.dateTime.getLocalTime(item.createdDate)
@@ -547,6 +555,7 @@
 				&-img {
 					flex-shrink: 0;
 					margin-right: 28rpx;
+					border-radius: 16rpx;
 					width: 88rpx;
 					height: 88rpx;
 				}

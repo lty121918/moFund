@@ -53,7 +53,8 @@
 				data: [],
 				activeData: [], //已经选中的学员
 				classId: '',
-				num: 0
+				num: 0,
+				list:{}
 			}
 		},
 		methods: {
@@ -78,6 +79,34 @@
 			// 确认添加学员
 			submit() {
 				const self = this
+				const data =[
+					...this.activeData,
+					this.boxActive
+				]
+				if(data.length >= this.list.maxNum){
+					self.$utils.model.showMsgModal({
+						content: '加入拼班成功将自动支付首节课课款，是否确认？',
+						confirmText: '确认',
+						showCancel: true,
+						confirmCallback: function() {
+							self.confirm()
+						}
+					})
+				} else{
+					self.$utils.model.showMsgModal({
+						content: '加入拼班将冻结课款，拼班成功自动支付首节课课款。是否确认？',
+						confirmText: '确认',
+						showCancel: true,
+						confirmCallback: function() {
+							self.confirm()
+						}
+					})
+				}
+				
+
+			},
+			confirm(){
+				const self = this
 				let list = []
 				this.boxActive.forEach(item => {
 					this.num++
@@ -86,12 +115,12 @@
 						sort: this.num,
 						studentId: item
 					})
-
+				
 				})
 				this.$http['classes'].indexAddStu({
 					classId: self.classId,
 					stuInfo: list
-
+				
 				}).then(res => {
 					if (res.code == 200) {
 						if (!res.data) {
@@ -104,17 +133,23 @@
 								}
 							})
 						} else {
-							self.$utils.model.showToast('参与拼班将冻结课款，拼班成功后自动扣课款。', 2500)
+							// self.$utils.model.showToast('参与拼班将冻结课款，拼班成功后自动扣课款。', 2500)
 						}
 						self.close()
 						self.$emit('change')
-
+				
 					}
 				})
-
 			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
+				if(!e.show){
+					this.boxActive = []
+					this.data = []
+					this.activeData = [] //已经选中的学员
+					this.classId = ''
+					this.num = 0
+				}
 			},
 			close() {
 				this.boxActive = []
@@ -124,10 +159,11 @@
 				this.num = 0
 				this.$refs.popup.close('bottom')
 			},
-			async handleShow(classId, ls) {
+			async handleShow(classId, ls,data) {
 				this.classId = classId
 				this.activeData = ls
 				this.num = ls.length
+				this.list = data
 				const res = await this.$http['mine'].getStudent()
 				if (res.code == 200) {
 					this.data = res.data

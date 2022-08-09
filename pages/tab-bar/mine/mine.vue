@@ -10,9 +10,9 @@
 				<view>
 					<view class="flex-sc">
 						<text class="mine-head-name" v-show="!showName" @click="showName=true,name=''">
-							{{userInfo.name}}
+							{{userInfo.name|| '授权您的微信头像及昵称'}}
 						</text>
-						<input type="nickname" @blur="handleBlur" v-if="showName" placeholder-style="font-size:30rpx;color:#cecece" maxlength="20" v-model="name" class="weui-input" placeholder="请输入昵称"/>
+						<input :focus='true' type="nickname" ref="input" @blur="handleBlur" v-if="showName" placeholder-style="font-size:30rpx;color:#cecece" maxlength="20" v-model="name" class="weui-input" placeholder="请输入昵称"/>
 						<text class="mine-head-role" v-if="isTeach==2">家长</text>
 						<text class="mine-head-role mine-head-role2" v-if="isTeach==1">教练</text>
 					</view>
@@ -211,10 +211,7 @@
 				this.$http['mine'].getUserInfo().then(res => {
 					console.log(res);
 					if (res.code == 200) {
-						if (!res.data.avatar) {
-							res.data.avatar = this.avatar
-						}
-						if (res.data.avatar.indexOf('http') == -1) {
+						if (res.data.avatar&& res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
 						const result = {

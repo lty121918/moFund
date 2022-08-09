@@ -52,7 +52,7 @@
 					coachId: this.data.coachId,
 					courseId: this.data.courseId,
 					evaluationContent: this.value,
-					scheduleDetailId: this.data.scheduleDetailId,
+					scheduleDetailId: this.data.courseScheduleDetailId,
 					scheduleId: this.data.scheduleId,
 					studentId: this.data.id,
 				}).then(res => {

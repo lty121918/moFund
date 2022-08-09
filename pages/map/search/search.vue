@@ -5,7 +5,7 @@
 			<view class="pt16">
 				<view class="search-content-item" v-for="(item,index) in campusList" :key="index" @click="back(item)">
 					<view class="search-content-name">
-						<text>{{item.campusName}}</text>
+						<text class="search-content-name2">{{item.campusName}}</text>
 						<image class="search-content-img" src="/static/home/location2.png" mode="widthFix"></image>
 					</view>
 					<view class="search-content-city">
@@ -126,7 +126,7 @@
 			padding: 32rpx 30rpx;
 			width: 686rpx;
 
-			height: calc(100vh - 64rpx);
+			min-height: calc(100vh - 64rpx);
 			box-sizing: border-box;
 			background: #FFFFFF;
 			border-radius: 16rpx;
@@ -147,8 +147,12 @@
 				display: flex;
 				width: 332rpx;
 			}
+			&-name2 {
+				word-break:break-all;
+			}
 
 			&-img {
+				flex-shrink: 0;
 				margin-left: 12rpx;
 				width: 28rpx;
 				height: 28rpx;

@@ -4,7 +4,7 @@
 			<image class="student-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
 			<view>
 				<view>
-					<text class="student-head-name">{{userInfo.name}}</text>
+					<text class="student-head-name">{{userInfo.name || '微信昵称'}}</text>
 					<text class="student-head-role">家长</text>
 				</view>
 				<view class="fz28 colorw mt16">{{userInfo.phone}}</view>

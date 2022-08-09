@@ -216,9 +216,15 @@
 			handleShow(val) {
 				const self = this
 				// val.campusId = 'de3854becdf21cabc921cdeffaf84d78'
-				this.$refs.popup.open('bottom')
 				this.$http['classes'].getSpellClass(val).then(res => {
 					if (res.code == 200) {
+						const isSchedule = !res.data.myCourseScheduleList || res.data.myCourseScheduleList.length==0
+						const isType = !res.data.spellTypeList || res.data.spellTypeList.length==0
+						if(isSchedule || isType){
+							this.$utils.model.showToast('该课程当前无可拼班课表，请浏览其他课程！', 2500)
+							return false
+						}
+						this.$refs.popup.open('bottom')
 						this.coverImage = this.$url + res.data.coverImage
 
 						// 课程周期

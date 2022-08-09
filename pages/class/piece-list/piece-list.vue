@@ -7,9 +7,9 @@
 		</view>
 		<view class="piece-content" v-for="item in data" :key="item.productSellPriceRelId"
 			@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
-			<image class="piece-content-img" :src="item.headUrl " mode="aspectFit"></image>
+			<image class="piece-content-img" :src="item.headUrl" mode="aspectFit"></image>
 			<view class="piece-content-center">
-				<view>{{item.nickName}}</view>
+				<view>{{item.nickName || '微信昵称'}}</view>
 				<view class="piece-content-class">
 					<view class="piece-content-name">{{item.productName}} <text class="ml12"> {{item.spellType}}</text> </view>
 					<view class="piece-content-url">
@@ -53,12 +53,18 @@
 				if (res.code == 200) {
 					data = res.data
 					data.forEach(item=>{
-						if(item.headUrl.indexOf('http')==-1){
+						if(item.headUrl&& item.headUrl.indexOf('http')==-1){
 							item.headUrl = self.$url + item.headUrl
+						} else if(!item.headUrl){
+							item.headUrl = self.avatar
 						}
 						item.weChatUserList = item.weChatUserList || []
 						item.weChatUserList.forEach(row=>{
-							item.avatar = self.$url+item.avatar
+							if(row.avatar && row.avatar.indexOf('http')==-1){
+								row.avatar = self.$url + row.avatar
+							} else if(!row.avatar){
+								row.avatar = self.avatar
+							}
 						})
 					})
 				}
@@ -168,6 +174,7 @@
 				margin-left: -20rpx;
 				width: 44rpx;
 				height: 44rpx;
+				border-radius: 50%
 			}
 
 			&-button {
