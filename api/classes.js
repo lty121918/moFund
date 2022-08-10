@@ -30,8 +30,11 @@ export const indexRemoveClassStudent = params => post(apis._wx_user_index_remove
 
 // 班级模块 - 获取班级详情-会员端
 export const getClassDetail = params => get(apis._wx_user_class_detail, params)
-// 获取教练对学员的评价
+// 获取教练对学员的评价 会员端
 export const getEvaluate = params => get(apis._wx_user_class_get_evaluate, params)
+// 获取教练对学员的评价 教师端
+export const getEvaluate2 = params => get(apis._wx_organization_class_student_get_evaluate, params)
+
 // 班级风采 会员
 export const getClassMien = params => get(apis._wx_user_class_mien, params)
 // 班级风采 教练

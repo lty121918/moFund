@@ -7,16 +7,19 @@
 					<view v-if="!isRange" class="uni-date-x uni-date-single">
 						<uni-icons type="calendar" color="#c0c4cc" size="22"></uni-icons>
 						<input class="uni-date__x-input" type="text" v-model="singleVal"
+							:placeholderStyle="placeholderStyle"
 							:placeholder="singlePlaceholderText" :disabled="true" />
 					</view>
 					<view v-else class="uni-date-x uni-date-range">
 						<uni-icons type="calendar" color="#c0c4cc" size="22"></uni-icons>
 						<input class="uni-date__x-input t-c" type="text" v-model="range.startDate"
+							:placeholderStyle="placeholderStyle"
 							:placeholder="startPlaceholderText" :disabled="true" />
 						<slot>
 							<view class="">{{rangeSeparator}}</view>
 						</slot>
 						<input class="uni-date__x-input t-c" type="text" v-model="range.endDate"
+							:placeholderStyle="placeholderStyle"
 							:placeholder="endPlaceholderText" :disabled="true" />
 					</view>
 					<view v-if="showClearIcon" class="uni-date__icon-clear" @click.stop="clear">
@@ -32,10 +35,12 @@
 				<view class="uni-popper__arrow"></view>
 				<view v-if="hasTime" class="uni-date-changed popup-x-header">
 					<input class="uni-date__input t-c" type="text" v-model="tempSingleDate"
+						:placeholderStyle="placeholderStyle"
 						:placeholder="selectDateText" />
 					<time-picker type="time" v-model="time" :border="false" :disabled="!tempSingleDate"
 						:start="reactStartTime" :end="reactEndTime" :hideSecond="hideSecond" style="width: 100%;">
 						<input class="uni-date__input t-c" type="text" v-model="time" :placeholder="selectTimeText"
+							:placeholderStyle="placeholderStyle"
 							:disabled="!tempSingleDate" />
 					</time-picker>
 				</view>
@@ -54,10 +59,12 @@
 				<view v-if="hasTime" class="popup-x-header uni-date-changed">
 					<view class="popup-x-header--datetime">
 						<input class="uni-date__input uni-date-range__input" type="text" v-model="tempRange.startDate"
+							:placeholderStyle="placeholderStyle"
 							:placeholder="startDateText" />
 						<time-picker type="time" v-model="tempRange.startTime" :start="reactStartTime" :border="false"
 							:disabled="!tempRange.startDate" :hideSecond="hideSecond">
 							<input class="uni-date__input uni-date-range__input" type="text"
+								:placeholderStyle="placeholderStyle"
 								v-model="tempRange.startTime" :placeholder="startTimeText"
 								:disabled="!tempRange.startDate" />
 						</time-picker>
@@ -65,10 +72,12 @@
 					<uni-icons type="arrowthinright" color="#999" style="line-height: 40px;"></uni-icons>
 					<view class="popup-x-header--datetime">
 						<input class="uni-date__input uni-date-range__input" type="text" v-model="tempRange.endDate"
+							:placeholderStyle="placeholderStyle"
 							:placeholder="endDateText" />
 						<time-picker type="time" v-model="tempRange.endTime" :end="reactEndTime" :border="false"
 							:disabled="!tempRange.endDate" :hideSecond="hideSecond">
 							<input class="uni-date__input uni-date-range__input" type="text" v-model="tempRange.endTime"
+								:placeholderStyle="placeholderStyle"
 								:placeholder="endTimeText" :disabled="!tempRange.endDate" />
 						</time-picker>
 					</view>
@@ -250,7 +259,8 @@
 			hideSecond: {
 				type: [Boolean],
 				default: false
-			}
+			},
+			placeholderStyle: String,
 		},
 		watch: {
 			type: {

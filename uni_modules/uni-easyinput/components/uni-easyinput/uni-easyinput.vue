@@ -555,8 +555,7 @@
 		border-color: $uni-error;
 
 		.uni-easyinput__placeholder-class {
-			color: mix(#fff, $uni-error, 50%);
-			;
+			color: mix(#fff, $uni-error, 50%) !important;
 		}
 	}
 

@@ -118,9 +118,9 @@
 				});
 			},
 			imageClick(item) {
-				const index = this.list.findIndex(row=>item.imgUrl = row.imgUrl)
+				const index = item.index
 				const urls = this.list.map(row=>row.image)
-				console.log(item);
+				console.log(item,index);
 				uni.previewImage({
 					urls: urls,
 					current:index,

@@ -166,7 +166,7 @@
 				this.list = data
 				const res = await this.$http['mine'].getStudent()
 				if (res.code == 200) {
-					this.data = res.data
+					this.data = res.data || []
 					this.$refs.popup.open('bottom')
 				}
 

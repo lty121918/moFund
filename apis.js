@@ -61,6 +61,7 @@ const APIS_LIST = {
   "_wx_coach_get_apply": '/wx-coach/get-apply', // 我的申请
   "_wx_organization_class_student_detail": '/wx/organization/class-student/detail', // 获取班级详情
   "_wx_organization_class_student_evaluation": '/wx/organization/class-student/evaluation', // 教学评价
+  "_wx_organization_class_student_get_evaluate": '/wx/organization/class-student/get-evaluate', // 获取教练对学员的评价
   "_wx_organization_class_student_mien": '/wx/organization/class-student/mien', // 班级风采
   "_wx_organization_class_student_page": '/wx/organization/class-student/page', // 班级列表分页
   "_wx_organization_class_student_uploadMien": '/wx/organization/class-student/uploadMien', // 上传素材

@@ -42,7 +42,7 @@
 			</view>
 		</view>
 		<view class="class-content-tip" v-if="type==2 && isTeach==2 && !data.isSufficient && data.isSufficient!=null">
-			您的余额不足，为保证上课不受影响，请尽快
+			您的余额不足，为保证上课不受影响，请尽快充值!
 		</view>
 	</view>
 </template>

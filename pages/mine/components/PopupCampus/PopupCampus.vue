@@ -85,10 +85,12 @@
 
 				&-sex {
 					width: 100%;
-					height: 88rpx;
+					padding: 20rpx;
+					box-sizing: border-box;
+					// height: 88rpx;
 					margin-bottom: 20rpx;
-					border-radius: 36rpx;
-					line-height: 88rpx;
+					border-radius:68rpx;
+					// line-height: 88rpx;
 					text-align: center;
 					border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
 				}

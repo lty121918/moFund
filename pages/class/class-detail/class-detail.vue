@@ -26,15 +26,22 @@
 				</view>
 			</view>
 			<view class="class-detail-stu">
-				<view class="class-detail-stu-flex fz28" v-for="row in data.studentVOList" :key="row.id">
+				<view class="class-detail-stu-flex fz28" v-for="row in data.studentVOList" :key="row.id"
+					@click="changeStu(row)">
+					<view v-if="stuActive.indexOf(row.id)==-1 && isTeach==2 && row.isChildren"
+						class="class-detail-attendance-check">
+					</view>
+					<image v-if="stuActive.indexOf(row.id)>-1&& isTeach==2 && row.isChildren"
+						class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
+					</image>
 					<image class="class-detail-stu-img" :src="row.headUrl" mode="aspectFit"></image>
 					<view class="fwb class-detail-stu-name">{{row.studentName}}</view>
-					<view class="class-detail-stu-sex">{{item.gender==1?'男':'女'}}</view>
+					<view class="class-detail-stu-sex">{{row.gender==1?'男':'女'}}</view>
 					<view class="class-detail-stu-age">{{row.age}}岁</view>
 					<view class="class-detail-stu-tip">
 						<text class="class-detail-stu-tip2" v-if="isTeach==1 && !row.isSufficient">余额不足</text>
 					</view>
-					<image class="class-detail-stu-icon" @click="handleShow(row)" src="/static/edit.png"
+					<image class="class-detail-stu-icon" @click.stop="handleShow(row)" src="/static/edit.png"
 						mode="widthFix">
 					</image>
 				</view>
@@ -134,7 +141,7 @@
 		<!-- 课表弹窗 -->
 		<popup-date ref="popupDate" @attendance="getAttendance"></popup-date>
 		<!-- 教练评论弹窗 -->
-		<popup-eval ref="popupEval" />
+		<popup-eval ref="popupEval" @change="getClassDetail"/>
 		<!-- 会员查看评论弹窗 -->
 		<popup-eval2 ref="popupEval2" />
 	</view>
@@ -191,7 +198,9 @@
 					"wxName": "",
 					"wxPhone": ""
 				},
-				classId: ''
+				classId: '',
+
+				stuActive: [], //选择退出学员的id
 
 			}
 		},
@@ -271,9 +280,14 @@
 			handleShow(item) {
 				if (this.isTeach == 1) {
 					// 教练评价
+					let isCheck = false
+					if(item.isEvaluate){
+						isCheck = true
+					}
 					this.$refs.popupEval.handleShow({
 						...item,
-						...this.data
+						...this.data,
+						isCheck
 					})
 				} else {
 					// 家长查看评价
@@ -303,11 +317,18 @@
 				// 		}
 				// 	})
 				// } else {
+				if (this.stuActive.length == 0) {
+					uni.showToast({
+						title: '请选择退出学员'
+					})
+					return false
+				}
 				this.$http['classes'].exitClass({
-					classId: this.classId
+					classId: this.classId,
+					studentList: this.stuActive
 				}).then(res => {
 					if (res.code == 200) {
-						this.$utils.router.navBackData()
+						this.getClassDetail()
 					}
 				})
 				// }
@@ -409,6 +430,20 @@
 					this.boxActive.push(val.id)
 				}
 				console.log(this.boxActive);
+			},
+			// 选择退出班级学员
+			changeStu(val) {
+				if (this.isTeach == 1 || !val.isChildren) {
+					return false
+				}
+				let index = this.stuActive.indexOf(val.id)
+				console.log(val, index);
+				if (index > -1) {
+					this.stuActive.splice(index, 1)
+				} else {
+					this.stuActive.push(val.id)
+				}
+				console.log(this.stuActive);
 			},
 
 		}

@@ -6,18 +6,19 @@
 					<view class="popup-content-top">
 						<image class="popup-content-img" src="/static/stu.png" mode="widthFix"></image>
 						<text class="fz28">{{data.studentName}}-{{data.age}}岁</text>
-						<image class="popup-content-sex" :src="item.gender==1?'/static/sex-m.png':'/static/sex-w.png'"
+						<image class="popup-content-sex" :src="data.gender==1?'/static/sex-m.png':'/static/sex-w.png'"
 							mode="widthFix"></image>
 					</view>
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32 flex0">评价</view>
 						<view class="popup-content-textarea">
-							<uni-easyinput type="textarea" v-model="value" placeholder="请输入内容"></uni-easyinput>
+							<uni-easyinput :disabled="isCheck" type="textarea" v-model="value" placeholder="请输入内容">
+							</uni-easyinput>
 						</view>
 					</view>
 				</view>
 				<view class="popup-footer">
-					<view class="popup-footer-button" @click="handleConfirm">提交</view>
+					<view class="popup-footer-button" @click="handleConfirm">{{isCheck?'关闭':'提交'}}</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -29,7 +30,8 @@
 		data() {
 			return {
 				value: '',
-				data: {}
+				data: {},
+				isCheck: false
 			}
 		},
 		methods: {
@@ -38,28 +40,49 @@
 			},
 			handleShow(item) {
 				this.data = item
-				this.value = ''
-				this.$refs.popup.open('bottom')
-			},
-			handleConfirm() {
-				if (!this.value) {
-					this.$utils.model.showToast('请输入内容')
-					return false
-				}
-				this.$http['classes'].studentEvaluation({
-					campusId: this.data.campusId,
-					classId: this.data.classId,
-					coachId: this.data.coachId,
-					courseId: this.data.courseId,
-					evaluationContent: this.value,
-					scheduleDetailId: this.data.courseScheduleDetailId,
-					scheduleId: this.data.scheduleId,
-					studentId: this.data.id,
-				}).then(res => {
-					if (res.code == 200) {
-						this.$refs.popup.close('bottom')
+				this.isCheck = item.isCheck
+				this.value = item.evaluationContent || ''
+				this.$http['classes'].getEvaluate2({
+					classId:item.classId,
+					courseId:item.courseId,
+					studentId:item.id,
+					campusId:item.campusId,
+				}).then(res=>{
+					if(res.code==200){
+						if(res.data){
+							this.$refs.popup.open('bottom')
+							this.value = res.data.evaluationContent || ''
+						}  else {
+							this.$refs.popup.open('bottom')
+						}
+						
 					}
 				})
+			},
+			handleConfirm() {
+				if (!this.isCheck) {
+					if (!this.value) {
+						this.$utils.model.showToast('请输入内容')
+						return false
+					}
+					this.$http['classes'].studentEvaluation({
+						campusId: this.data.campusId,
+						classId: this.data.classId,
+						coachId: this.data.coachId,
+						courseId: this.data.courseId,
+						evaluationContent: this.value,
+						scheduleDetailId: this.data.courseScheduleDetailId,
+						scheduleId: this.data.scheduleId,
+						studentId: this.data.id,
+					}).then(res => {
+						if (res.code == 200) {
+							this.$emit('change')
+							this.$refs.popup.close('bottom')
+						}
+					})
+				} else {
+					this.$refs.popup.close('bottom')
+				}
 			}
 		}
 	}

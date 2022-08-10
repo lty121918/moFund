@@ -2,22 +2,22 @@
 	<view class="add-student">
 		<view class="add-student-content">
 			<uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData" labelWidth="100">
-				<uni-forms-item label="姓名" required name="studentName">
+				<uni-forms-item label="姓名" required name="studentName" errorMessage=" ">
 					<uni-easyinput maxlength="20" v-model="customFormData.studentName" placeholder="请输入姓名" />
 				</uni-forms-item>
 				<uni-forms-item label="证件号码" name="idCard">
 					<uni-easyinput maxlength="20" @blur="handleChage" @input="handleInput"
 						v-model="customFormData.idCard" placeholder="请输入证件号码" />
 				</uni-forms-item>
-				<uni-forms-item label="性别" required name="gender">
+				<uni-forms-item label="性别" required name="gender" errorMessage=" ">
 					<view @click="handleShow">
 						<uni-easyinput disabled :styles="{disableColor:'#fff',color: '#333',borderColor: '#e5e5e5'}"
 							v-model="customFormData.gender" placeholder="请选择性别" />
 					</view>
 				</uni-forms-item>
-				<uni-forms-item label="出生日期" required name="birthday">
+				<uni-forms-item label="出生日期" required name="birthday" errorMessage=" ">
 					<uni-datetime-picker :border="false" type="date" :value="customFormData.birthday" :end="endTime"
-						@change="change" />
+						@change="change" placeholder="请选择出生日期" :placeholderStyle="birthday?'color: rgba(245,108,108,0.6);':''" />
 				</uni-forms-item>
 			</uni-forms>
 		</view>
@@ -43,6 +43,7 @@
 			PopupSex
 		},
 		data() {
+			const self = this
 			return {
 				endTime: '',
 				// 自定义表单数据
@@ -52,6 +53,7 @@
 					idCard: '',
 					birthday: ''
 				},
+				birthday: false,
 				range: [{
 						value: 1,
 						text: "男"
@@ -80,23 +82,24 @@
 								required: false,
 								errorMessage: '请输入证件号码'
 							},
-							{
-								validateFunction: function(rule, value, data, callback) {
-									const val = validates.validateIdNum(value);
-									if (val) {
-										return val;
-									} else {
-										callback("请输入正确证件号码");
-									}
-								},
-							},
+							// {
+							// 	validateFunction: function(rule, value, data, callback) {
+							// 		const val = validates.validateIdNum(value);
+							// 		if (val) {
+							// 			return val;
+							// 		} else {
+							// 			callback("请输入正确证件号码");
+							// 		}
+							// 	},
+							// },
 						]
 					},
 					birthday: {
 						rules: [{
-							required: true,
-							errorMessage: '请选择出生日期'
-						}]
+								required: true,
+								errorMessage: '请选择出生日期'
+							}
+						]
 					}
 
 				},
@@ -111,7 +114,7 @@
 			handleInput(e) {
 				console.log('birthday', e)
 				const birthday = this.$utils.dateTime.getBirthday(e)
-				if (birthday.indexOf('-') > -1) {
+				if (birthday.indexOf('-') > -1 && e.length >= 18) {
 					this.customFormData.birthday = birthday;
 				}
 				if (e.length >= 18) {
@@ -142,6 +145,7 @@
 				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
+					self.birthday = false
 					self.$http['mine'].setStudent({
 						...self.customFormData,
 						gender: self.customFormData.gender == '男' ? '1' : '2'
@@ -153,6 +157,7 @@
 					})
 
 				}).catch(err => {
+					 
 					console.log('err', err);
 				})
 			},

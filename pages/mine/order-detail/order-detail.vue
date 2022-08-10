@@ -114,6 +114,7 @@
 				}).then(res => {
 					if (res.code == 200) {
 						res.data['coverImage'] = this.data.coverImage
+						res.data.courseDate = this.$utils.dateTime.getLocalTime(res.data.courseDate)
 						this.listData = res.data
 					}
 				})

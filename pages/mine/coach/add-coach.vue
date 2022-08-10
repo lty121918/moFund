@@ -2,19 +2,19 @@
 	<view class="add-coach">
 		<view class="add-coach-content">
 			<uni-forms ref="customForm" :rules="customRules" :modelValue="customFormData" labelWidth="100">
-				<uni-forms-item label="姓名" required name="applyName">
+				<uni-forms-item label="姓名" required name="applyName"  errorMessage=" ">
 					<uni-easyinput maxlength="20" v-model="customFormData.applyName" placeholder="请输入姓名" />
 				</uni-forms-item>
-				<uni-forms-item label="证件号码" required name="idCard">
+				<uni-forms-item label="证件号码" required name="idCard"  errorMessage=" ">
 					<uni-easyinput maxlength="20" v-model="customFormData.idCard" placeholder="请输入证件号码" />
 				</uni-forms-item>
-				<uni-forms-item label="手机号码" required name="applyPhone">
+				<uni-forms-item label="手机号码" required name="applyPhone"  errorMessage=" ">
 					<uni-easyinput maxlength="11" v-model="customFormData.applyPhone" type="number" placeholder="请输入手机号码" />
 				</uni-forms-item>
-				<uni-forms-item label="服务社区" required name="campus">
+				<uni-forms-item label="服务社区" required name="campus"  errorMessage=" ">
 					<view class="" @click="handleShow">
 						<uni-easyinput disabled type="textarea" :styles="{disableColor:'#fff',color: '#333',borderColor: '#e5e5e5'}"
-							v-model="customFormData.campus" placeholder="请选择服务社区" />
+							v-model="customFormData.campus" placeholder="请选择服务社区" :placeholderStyle="campusText?'color: rgba(245,108,108,0.6);':''" />
 					</view>
 				</uni-forms-item>
 			</uni-forms>
@@ -47,6 +47,7 @@
 					applyPhone: '',
 					campus: ''
 				},
+				campusText:false,
 				// 自定义表单校验规则
 				customRules: {
 					applyName: {
@@ -114,12 +115,18 @@
 			handleChange(val){
 				console.log(val);
 				this.customFormData.campus = (val.data).join(',')
+				if(this.customFormData.campus){
+					this.campusText = false
+				} else {
+					this.campusText = true
+				}
 				this.customFormData.campusId = val.value
 			},
 			submit(ref) {
 				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
+					self.campusText = false
 					self.$http['mine'].setCoach({
 						...self.customFormData,
 					}).then(res=>{
@@ -130,6 +137,12 @@
 					})
 					
 				}).catch(err => {
+					const ls = err.filter(item=>item.key == 'campus')
+					if(ls.length>0){
+						self.campusText = true
+					} else {
+						self.campusText = false
+					}
 					console.log('err', err);
 				})
 			},

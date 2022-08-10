@@ -41,6 +41,7 @@
 					if(res.code==200){
 						if(res.data){
 							this.$refs.popup.open('bottom')
+							res.data.evaluationTime = this.$utils.dateTime.getLocalTime(res.data.evaluationTime,'yyyy-MM-dd hh:mm')
 							this.data = res.data
 						} else {
 							this.$utils.model.showToast('暂无评价')

@@ -6,12 +6,12 @@
 					:duration="500">
 					<swiper-item v-for="(item,index) in banner" :key="index">
 						<view class="course-swiper-view">
-							<image class="course-swiper-img" :src="url+item" mode="heightFix" alt="加载失败"></image>
+							<image class="course-swiper-img" :src="url+item" mode="aspectFill" alt="加载失败"></image>
 						</view>
 					</swiper-item>
 					<swiper-item v-if="banner.length==0">
 						<view class="course-swiper-view">
-							<image class="course-swiper-img" src="/static/default.png" mode="heightFix" alt="加载失败">
+							<image class="course-swiper-img" src="/static/default.png" mode="aspectFill" alt="加载失败">
 							</image>
 						</view>
 					</swiper-item>
@@ -316,6 +316,7 @@
 			}
 
 			&-img {
+				width: 750rpx;
 				height: 376rpx;
 			}
 		}
@@ -339,7 +340,7 @@
 				padding: 24rpx 32rpx;
 				width: 686rpx;
 				box-sizing: border-box;
-				height: 152rpx;
+				// height: 152rpx;
 				background: #FFFFFF;
 				border-radius: 16rpx;
 				z-index: 99;
