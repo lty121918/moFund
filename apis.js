@@ -13,6 +13,7 @@ const APIS_LIST = {
   "_management_prometheus": '/management/prometheus', // handle
   "_management_threaddump": '/management/threaddump', // handle
   "_Sections": '/Sections', // 节次下拉
+  "_SectionsBy": '/SectionsBy', // 运营端新增专属节次下拉
   "_account_relative_auth_menu_tree_platform": '/account-relative/auth-menu-tree-platform', // 用户系统菜单权限树
   "_account_relative_update_pwd": '/account-relative/update-pwd', // 首次登录更改密码
   "_auth_login": '/auth/login', // 用户密码登录
@@ -26,7 +27,7 @@ const APIS_LIST = {
   "_common_download": '/common/download', // 通用下载请求
   "_course": '/course', // 课程下拉
   "_course_by_campusId": '/course-by-campusId', // 校区课程下拉
-  "_error": '/error', // error
+  "_error": '/error', // errorHtml
   "_file_download": '/file/download', // 下载文件
   "_file_remove_attachment": '/file/remove-attachment', // 删除附件
   "_file_upload": '/file/upload', // 文件上传(自动获取文件名)
@@ -78,6 +79,7 @@ const APIS_LIST = {
   "_wx_user_index_add_stu": '/wx/user/index/add-stu', // 拼班添加学员
   "_wx_user_index_banner": '/wx/user/index/banner', // 小程序端首页获取轮播图
   "_wx_user_index_campus_search_list": '/wx/user/index/campus-search-list', // 校区搜索列表
+  "_wx_user_index_course_date": '/wx/user/index/course-date', // 获取课程日期
   "_wx_user_index_course_details": '/wx/user/index/course-details', // 商品详情
   "_wx_user_index_disband_class": '/wx/user/index/disband-class', // 解散拼班(团长)
   "_wx_user_index_initiate_spell_class": '/wx/user/index/initiate-spell-class', // 发起拼班

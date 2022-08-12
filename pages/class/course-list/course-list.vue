@@ -1,15 +1,15 @@
 <template>
 	<view class="course">
 		<view class="course-head-address" @click="$utils.router.navTo($page.Search)">
-			<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
+			<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFill"></image>
 			<text> {{campus.campusName}}</text>
-			<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
+			<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFill"></image>
 		</view>
 		<view class="course-list-item" v-for="item in data" :key="item"
 			@click="$utils.router.navTo($page.CourseDetail,item)">
-			<van-image use-error-slot class="course-list-item-img"  radius="10" width="180" height="204" :src="item.coverImage" >
+			<van-image use-error-slot class="course-list-item-img" fit="cover"  radius="10" width="180" height="204" :src="item.coverImage" >
 			</van-image>
-			<!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFit"></image> -->
+			<!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFill"></image> -->
 			<view class="">
 				<view class="course-list-item-title">{{item.productName}}</view>
 				<view>
@@ -133,7 +133,7 @@
 				}
 
 				&-title {
-					width: 300rpx;
+					// width: 300rpx;
 					min-height: 86rpx;
 					font-size: 36rpx;
 					font-family: PingFangSC-Medium, PingFang SC;

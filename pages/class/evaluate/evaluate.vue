@@ -9,7 +9,7 @@
 			</view> -->
 			<view class="">
 				<view class="course-detail-evaluate" v-for="item in productEvaluate" :key="item">
-					<image class="course-detail-evaluate-img" :src="item.avatar" mode="scaleToFill">
+					<image class="course-detail-evaluate-img" :src="item.avatar" mode="aspectFill">
 					</image>
 					<view>
 						<view class="course-detail-evaluate-info">

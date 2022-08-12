@@ -4,7 +4,6 @@
 			"style": {
 				"navigationBarTitleText": "首页",
 				"enablePullDownRefresh": false
-
 			}
 
 		}, {
@@ -91,10 +90,7 @@
 			"path": "my-class/my-class",
 			"style": {
 				"navigationBarTitleText": "我的拼班",
-				"enablePullDownRefresh": false,
-				"usingComponenets": {
-					"van-image": "/wxcomponents/vant/image/index"
-				}
+				"enablePullDownRefresh": false
 			}
 
 		}]
@@ -123,7 +119,7 @@
 		}]
 	}, {
 		"root": "pages/mine",
-		"pages": [{}, {
+		"pages": [{
 			"path": "order/order",
 			"style": {
 				"navigationBarTitleText": "订单列表",

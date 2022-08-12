@@ -78,7 +78,7 @@ class DateTime {
 				if(index>-1){
 					date = date.substr(0,index)
 				}
-				console.log(date);
+				// console.log(date);
 				date = new Date(date.replace(/-/g, '/'))
 			} else {
 				date = new Date(date)
@@ -398,7 +398,7 @@ class DateTime {
 		}
 		let str = ``
 		if (ncontinuity > value.length - 2) {
-			console.log('全部连贯')
+			// console.log('全部连贯')
 			str = `周${weekTime[value[0] - 1]}~周${
 	          weekTime[value[value.length - 1] - 1]
 	        }`

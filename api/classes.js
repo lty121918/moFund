@@ -27,6 +27,8 @@ export const indexDisbandClass = params => post(apis._wx_user_index_disband_clas
 // 移出学员(退出拼班)
 export const indexRemoveClassStudent = params => post(apis._wx_user_index_remove_class_student, params)
 
+// 获取课程日期 - 
+export const indexCourseDate = params => get(apis._wx_user_index_course_date, params)
 
 // 班级模块 - 获取班级详情-会员端
 export const getClassDetail = params => get(apis._wx_user_class_detail, params)

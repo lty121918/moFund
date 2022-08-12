@@ -3,10 +3,12 @@
 		<uni-popup ref="popup" @change="change">
 			<view class="popup-content">
 				<view class="popup-content-info">
-					<view class="popup-content-info-sex" v-for="item in markers" :key="item.campusId"
-						:class="[value.indexOf(item.campusId)>-1?'popup-content-info-active':'']"
-						@click="handleChange(item)">{{item.campusName}}</view>
-
+					<view class="popup-content-info-sex2" v-for="item in markers" :key="item.campusId">
+						<view class="popup-content-info-sex" 
+							:class="[value.indexOf(item.campusId)>-1?'popup-content-info-active':'']"
+							@click="handleChange(item)">{{item.campusName}}</view>
+						
+					</view>
 				</view>
 				<view class="popup-footer flex-cc">
 					<view class="popup-footer-button" @click="close">取消</view>
@@ -79,20 +81,24 @@
 			overflow-y: scroll;
 			background: #FFFFFF;
 			border-radius: 36rpx 36rpx 0rpx 0rpx;
-
 			&-info {
 				box-sizing: border-box;
-
+				max-height: 850rpx;
+				overflow-y: auto;
+				&-sex2 {
+					padding: 20rpx 0;
+					border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+				}
 				&-sex {
 					width: 100%;
 					padding: 20rpx;
 					box-sizing: border-box;
 					// height: 88rpx;
-					margin-bottom: 20rpx;
+					// margin-bottom: 20rpx;
 					border-radius:68rpx;
 					// line-height: 88rpx;
 					text-align: center;
-					border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+					// border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
 				}
 
 				&-active {

@@ -1,11 +1,11 @@
 <template>
 	<view class="class">
 		<view v-if="isTeach==1">
-			<view v-for="item in data" :key="item.campusName">
+			<view v-for="item in dataList" :key="item.campusName">
 				<!-- 教师端 -->
 				<view class="home-title">
 					<view class="home-title-item">
-						<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+						<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 						<text>{{item.campusName}}</text>
 					</view>
 					<view class="class-title">
@@ -32,7 +32,7 @@
 				<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 			</view>
 		</view>
-		<view class="default-empty" v-if="data.length===0">
+		<view class="default-empty" v-if="(isTeach==2&& data.length===0) || isTeach==1&& dataList.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 			</image>
 			<view class="">暂无数据</view>
@@ -56,6 +56,7 @@
 		data() {
 			return {
 				data: [],
+				dataList:[]
 			}
 		},
 
@@ -76,13 +77,13 @@
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
-
 				this.search({
 					isTeach: this.isTeach
 				})
 			}),
 			// 模拟请求数据
 			search(val) {
+				const date1 = new Date().getTime()
 				const self = this
 				console.log('class请求');
 				const {
@@ -114,16 +115,19 @@
 								item['conduct'] = conduct.length
 
 							})
+							this.dataList = data
 						} else {
 							// data = data.filter(item => item.classStatus == 0 || item.classStatus ==
 							// 	1 || item.classStatus == 3)
 							data.forEach(item => {
 								item = self.setItem(item)
 							})
+							this.data = data
 						}
 
-						this.data = data
-
+						
+						const date2 = new Date().getTime()
+						console.log(`执行时间:${(date2-date1)/1000}秒`);
 					}
 
 
@@ -152,7 +156,7 @@
 				return item
 			}
 
-		}
+		},
 	}
 </script>
 

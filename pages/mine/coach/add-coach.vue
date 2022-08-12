@@ -61,16 +61,16 @@
 								required: true,
 								errorMessage: '请输入证件号码'
 							},
-							{
-								validateFunction: function(rule, value, data, callback) {
-									const val = validates.validateIdNum(value);
-									if (val) {
-										return val;
-									} else {
-										callback("请输入证件号码");
-									}
-								},
-							},
+							// {
+							// 	validateFunction: function(rule, value, data, callback) {
+							// 		const val = validates.validateIdNum(value);
+							// 		if (val) {
+							// 			return val;
+							// 		} else {
+							// 			callback("请输入证件号码");
+							// 		}
+							// 	},
+							// },
 						]
 					},
 					applyPhone: {
@@ -126,6 +126,13 @@
 				const self = this
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
+					// const val = validates.validateIdNum(self.customFormData.idCard);
+					// if(!val && self.customFormData.idCard){
+					// 	self.$utils.model.showToast({
+					// 		title:'请输入正确的证件号'
+					// 	})
+					// 	return false
+					// }
 					self.campusText = false
 					self.$http['mine'].setCoach({
 						...self.customFormData,

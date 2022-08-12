@@ -4,24 +4,24 @@
 		<view class="class-detail-user" v-if="!isAttendance">
 			<view class="home-title">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>团长</text>
 				</view>
 			</view>
 			<view class="class-detail-head">
 				<view class="class-detail-head-flex">
-					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFit"></image>
+					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFill"></image>
 					<text class="fwb fz32">{{data.wxName || '微信昵称'}}</text>
-					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
+					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFill"></image>
 				</view>
 				<view class="class-detail-head-contact" @click="handlePhone(data.wxPhone)">
-					<image class="class-detail-head-liao" src="/static/class/liao.png" mode="aspectFit"></image>
+					<image class="class-detail-head-liao" src="/static/class/liao.png" mode="aspectFill"></image>
 					<text>联系团长</text>
 				</view>
 			</view>
 			<view class="home-title">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>团员</text>
 				</view>
 			</view>
@@ -34,7 +34,7 @@
 					<image v-if="stuActive.indexOf(row.id)>-1&& isTeach==2 && row.isChildren"
 						class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
 					</image>
-					<image class="class-detail-stu-img" :src="row.headUrl" mode="aspectFit"></image>
+					<image class="class-detail-stu-img" :src="row.headUrl" mode="aspectFill"></image>
 					<view class="fwb class-detail-stu-name">{{row.studentName}}</view>
 					<view class="class-detail-stu-sex">{{row.gender==1?'男':'女'}}</view>
 					<view class="class-detail-stu-age">{{row.age}}岁</view>
@@ -73,7 +73,7 @@
 					<image v-if="boxActive.indexOf(item.id)>-1&& studentVOList.isSign "
 						class="class-detail-attendance-check" src="/static/checkbox.png" mode="widthFix">
 					</image>
-					<image class="class-detail-stu-img" :src="avatar" mode="aspectFit"></image>
+					<image class="class-detail-stu-img" :src="avatar" mode="aspectFill"></image>
 					<view class="fwb class-detail-stu-name">{{item.studentName}}</view>
 					<view class="class-detail-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="class-detail-stu-age">{{item.age}}岁</view>

@@ -7,7 +7,15 @@
 			<view class="color666 mt32">获得你的公开信息（昵称、头像等）</view>
 			<button class="login-button" type="primary" open-type="getPhoneNumber" @getphonenumber="getphonenumber"
 				size="mini">授 权</button>
+			<view class="tip-box flex" v-if="protocolData.length > 0">
+				<view>登录即视为您同意</view>
+				<view class="blue" @click.stop="showModal(protocolData[0])">《{{protocolData[0].protocolTitle}}》</view>
+				<view v-if="protocolData[1]">及</view>
+				<view class="blue" @click.stop="showModal(protocolData[1])" v-if="protocolData[1]">
+					《{{protocolData[1].protocolTitle}}》</view>
+			</view>
 		</view>
+		<Protocol ref="protocol" />
 	</view>
 </template>
 <script>
@@ -18,19 +26,29 @@
 		mapMutations
 	} from 'vuex'
 	import mixin from '@/mixin.js'
+	import Protocol from './components/Protocol/Protocol.vue'
+	import {protocolData} from './login.js'
 	export default {
 		name: "login",
 		mixins: [mixin],
-		components: {},
+		components: {Protocol},
 		data() {
-			return {};
+			return {
+				protocolData
+			};
 		},
 		onLoad() {
-			this.SET_STORAGE({str:'shareInfo'})
+			this.SET_STORAGE({
+				str: 'shareInfo'
+			})
 		},
 		onReady() {},
 		methods: {
 			...mapMutations(['SET_STORAGE']),
+			// 协议展示
+			showModal(protocol) {
+				this.$refs.protocol.toggle(protocol)
+			},
 			//当前登录按钮操作
 			login(data) {
 				try {
@@ -48,52 +66,61 @@
 			},
 			async nextToHome(data) {
 				// this.$utils.util.setCache("Authorization", data.accessToken)
-				this.SET_STORAGE({str:'Authorization',data:data.accessToken})
+				this.SET_STORAGE({
+					str: 'Authorization',
+					data: data.accessToken
+				})
 				console.log('登录TOKEN:');
 				console.log('Bearer ' + data.accessToken);
-				
-				this.SET_STORAGE({str:'userInfo',data})
+
+				this.SET_STORAGE({
+					str: 'userInfo',
+					data
+				})
 				// console.log('1是2否教练', isTeach);
 				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)
-				
+
 				if (this.shareInfo.classId) {
-					if(data.isCoach==1){
-						this.$utils.router.redTo(this.$page.ClassDetail,this.shareInfo)
-					} else{
-						this.$utils.router.redTo(this.$page.OrderInfo,this.shareInfo)
+					if (data.isCoach == 1) {
+						this.setTeachLogin(this.shareInfo)
+						// this.$utils.router.redTo(this.$page.ClassDetail, this.shareInfo)
+					} else {
+						this.$utils.router.redTo(this.$page.OrderInfo, this.shareInfo)
 					}
-					
-				}	else {
+
+				} else {
 					this.$utils.router.swtTo(this.$page.Home)
 				}
-					
-				
-				
+
+
+
 			},
 			getphonenumber: debounce(function(e) {
 				const self = this
 				wx.getUserInfo({
-				  success: function(log) {
-				   console.log(log.userInfo);
-					uni.login({
-						success: res => {
-							console.log('CODE：', e.detail.code, 'JS_CODE：', res.code)
-							if (!e.detail.code) {
-								return false
-							}
-							self.getLocation().then(async ()=>{
-								const data = await self.$http['login'].login({
-									code: e.detail.code,
-									jsCode: res.code,
-									avatarUrl:log.userInfo.avatarUrl,
-									nickname:log.userInfo.nickName
-								});
-								self.login(data);
-							})
-						
-						},
-					});
-				}
+					success: function(log) {
+						console.log(log.userInfo);
+						uni.login({
+							success: res => {
+								console.log('CODE：', e.detail.code, 'JS_CODE：', res.code)
+								if (!e.detail.code) {
+									return false
+								}
+								self.getLocation().then(async () => {
+									const data = await self.$http['login']
+										.login({
+											code: e.detail.code,
+											jsCode: res.code,
+											avatarUrl: log.userInfo
+												.avatarUrl,
+											nickname: log.userInfo.nickName
+										});
+									self.login(data);
+								})
+
+							},
+						});
+					}
 				})
 			}, 500),
 		},
@@ -113,7 +140,7 @@
 		&-content {
 			padding: 32rpx;
 			width: 690rpx;
-			height: 812rpx;
+			// height: 812rpx;
 			box-sizing: border-box;
 			background: #FFFFFF;
 			border-radius: 32rpx;
@@ -139,5 +166,23 @@
 			color: #FFFFFF;
 			line-height: 92rpx;
 		}
+	}
+
+	.flex {
+		display: flex;
+	}
+
+	.tip-box {
+		margin-top: 32rpx;
+		width: 100%;
+		height: 60rpx;
+		justify-content: center;
+		z-index: 100;
+		flex-wrap: wrap;
+		line-height: 26rpx;
+	}
+
+	.blue {
+		color: #3B94FF;
 	}
 </style>

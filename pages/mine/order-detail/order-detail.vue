@@ -1,7 +1,7 @@
 <template>
 	<view class="order-detail">
-		<view class="order-detail-top" v-if="data.type == 'consume'">
-			<van-image use-error-slot class="order-detail-img" radius="10" width="128" height="144"
+		<view class="order-detail-top" @click="handleNavTo" v-if="data.type == 'consume'">
+			<van-image fit="cover" use-error-slot class="order-detail-img" radius="10" width="128" height="144"
 				:src="listData.coverImage">
 			</van-image>
 			<!-- 课程名称 -->
@@ -14,6 +14,7 @@
 					<text class="fz32">{{listData.actuallyAmount || 0}}</text>
 					<text class="color3 fz24">/节</text>
 				</view>
+				<view class="order-detail-status">{{orderStatus[listData.orderStatus]}}</view>
 			</view>
 		</view>
 		<view class="order-detail-center">
@@ -22,7 +23,8 @@
 					<text>订单编号:</text>
 					<text class="ml12">{{listData.orderNo || listData.tradeNo}}</text>
 				</view>
-				<view class="order-detail-center-copy" @click="handleCopy(listData.orderNo || listData.tradeNo)">复制</view>
+				<view class="order-detail-center-copy" @click="handleCopy(listData.orderNo || listData.tradeNo)">复制
+				</view>
 			</view>
 			<view class="order-detail-center-item">
 				<text>下单时间:</text>
@@ -80,14 +82,23 @@
 
 <script>
 	import vanImage from '@/wxcomponents/vant/image/index'
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		components: {
 			vanImage
 		},
 		data() {
 			return {
 				data: {},
-				listData: {}
+				listData: {},
+				orderStatus: {
+					1: '待付款',
+					2: '已付款',
+					3: '退款中',
+					4: "已退款",
+					5: '已取消'
+				}
 			}
 		},
 		onLoad(e) {
@@ -96,6 +107,36 @@
 			this.getData()
 		},
 		methods: {
+			async handleNavTo() {
+				if (this.listData.productId) {
+					this.SET_STORAGE({
+						str: 'location'
+					})
+					let res = await this.$http['map'].getSearchList({
+						lat: this.location.latitude,
+						lng: this.location.longitude,
+						// productId:e.productId
+					})
+					if (res.code == 200) {
+						let list = res.data
+						// 如果之前缓存的社区已经被删除 则重新选取
+						const ls = list.filter(item => item.campusId == this.listData.campusId || item.campusName ==
+							this.listData.campusName)[0] || null
+						if (ls) {
+							this.$utils.router.navTo(this.$page.CourseDetail, {
+								productId: this.listData.productId,
+								lat: this.location.latitude,
+								lng: this.location.longitude,
+								campusId: ls.campusId
+							})
+						} else {
+							this.$utils.model.showToast('校区暂无该商品信息！')
+						}
+
+					}
+
+				}
+			},
 			getData() {
 				const {
 					ftbOrder,
@@ -142,6 +183,19 @@
 		box-sizing: border-box;
 		background: #EEF1FA;
 
+		&-status {
+			position: absolute;
+			right: 0;
+			bottom: 0rpx;
+			padding: 6rpx 22rpx;
+			background: rgba(32, 128, 255, 0.1);
+			border-radius: 8rpx;
+			font-size: 24rpx;
+			font-family: SourceHanSansSC-Medium, SourceHanSansSC;
+			font-weight: 500;
+			color: #2080FF;
+		}
+
 		&-top {
 			width: 686rpx;
 			padding: 32rpx;
@@ -163,6 +217,7 @@
 		}
 
 		&-right {
+			position: relative;
 			width: 450rpx;
 
 			&-title {
@@ -192,7 +247,8 @@
 					border-bottom: none
 				}
 			}
-			&-copy{
+
+			&-copy {
 				margin-right: 32rpx;
 				font-size: 28rpx;
 				font-family: SourceHanSansSC-Regular, SourceHanSansSC;

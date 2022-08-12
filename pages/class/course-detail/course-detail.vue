@@ -44,12 +44,12 @@
 		<!-- 推荐拼班 -->
 		<view class="course-nearby">
 			<view class="course-head-address" @click="$utils.router.navTo($page.Search,{type:'no',productId})">
-				<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
+				<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFill"></image>
 				<text> {{campusOther.campusName || ''}}</text>
-				<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
+				<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFill"></image>
 			</view>
 			<view class="course-nearby-content" v-for="item in productSpellClassList" :key="item">
-				<image class="course-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
+				<image class="course-nearby-content-img" :src="item.headUrl" mode="aspectFill"></image>
 				<view>
 					<view class="course-nearby-content-center">
 						<text class="course-nearby-content-num">{{item.maxNum}}人班</text>
@@ -94,7 +94,7 @@
 			</view>
 			<view class="" v-if="active==2">
 				<view class="course-detail-evaluate" v-for="item in productEvaluate" :key="item.id">
-					<image class="course-detail-evaluate-img" :src="item.avatar" mode="scaleToFill">
+					<image class="course-detail-evaluate-img" :src="item.avatar" mode="aspectFill">
 					</image>
 					<view>
 						<view class="course-detail-evaluate-info">
@@ -170,7 +170,7 @@
 			}
 		},
 		async onLoad(e) {
-			console.log('商品id', e.productId);
+			console.log('商品id', e);
 			this.SET_STORAGE({
 				str: 'campus'
 			})
@@ -178,16 +178,17 @@
 			if (e.lat && e.lng) {
 				let res = await  this.$http['map'].getSearchList({
 					lat: e.lat,
-					lng: e.lng
+					lng: e.lng,
+					productId:e.productId
 				})
 				if (res.code == 200) {
 					let list = res.data
 					// 如果之前缓存的社区已经被删除 则重新选取
 					const ls = list.filter(item => item.campusId = e.campusId)[0] || null
+					console.log(ls);
 					this.campusOther =  ls || this.campus
-
 				}
-			} else {
+			}else {
 				this.campusOther = this.campus
 			}
 
@@ -300,7 +301,7 @@
 			// padding: 20rpx 32rpx 0 32rpx;
 			// margin-bottom: 142rpx;
 			width: 100%;
-			height: 364rpx;
+			// height: 375rpx;
 			z-index: 11;
 
 			&-swiper {
@@ -317,13 +318,13 @@
 
 			&-img {
 				width: 750rpx;
-				height: 376rpx;
+				height: 424rpx;
 			}
 		}
 
 		&-title {
 			position: relative;
-			margin-bottom: 42rpx;
+			// margin-bottom: 42rpx;
 
 			&-img {
 				width: 750rpx;
@@ -334,9 +335,10 @@
 				display: flex;
 				justify-content: space-between;
 				align-items: flex-start;
-				position: absolute;
-				left: 32rpx;
-				bottom: -42rpx;
+				// position: absolute;
+				margin-top: 32rpx;
+				margin-left: 32rpx;
+				// bottom: -42rpx;
 				padding: 24rpx 32rpx;
 				width: 686rpx;
 				box-sizing: border-box;
@@ -397,7 +399,7 @@
 
 		// 附近拼班
 		&-nearby {
-			margin-top: 82rpx;
+			margin-top: 32rpx;
 			z-index: 9;
 			margin-left: 32rpx;
 			padding: 0 32rpx;

@@ -4,46 +4,46 @@
 		<view class="order-info-user">
 			<view class="home-title">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>团长</text>
 				</view>
 			</view>
 			<view class="order-info-head">
 				<view class="order-info-head-flex">
-					<image class="order-info-head-img" :src="data.avatar" mode="aspectFit"></image>
+					<image class="order-info-head-img" :src="data.avatar" mode="aspectFill"></image>
 					<text class="fwb fz32">{{data.nickName|| '微信昵称'}}</text>
-					<image class="order-info-head-icon" src="/static/class/head.png" mode="aspectFit"></image>
+					<image class="order-info-head-icon" src="/static/class/head.png" mode="aspectFill"></image>
 				</view>
-				<image v-if="isHead" class="order-info-head-share" src="/static/class/share.png" mode="aspectFit"
+				<image v-if="isHead" class="order-info-head-share" src="/static/class/share.png" mode="aspectFill"
 					@click="handleShare">
 				</image>
 				<view class="order-info-head-contact" v-if="!isHead" @click="handlePhone(data.phone)">
-					<image class="order-info-head-liao" src="/static/class/liao.png" mode="aspectFit"></image>
+					<image class="order-info-head-liao" src="/static/class/liao.png" mode="aspectFill"></image>
 					<text>联系团长</text>
 				</view>
 			</view>
 			<view class="home-title">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>团员</text>
 				</view>
 			</view>
 			<view class="order-info-stu">
 				<view class="order-info-stu-flex fz28" v-for="item in data.weChatUserList" :key="item.classStudentId">
-					<image class="order-info-stu-img" :src="item.avatar" mode="aspectFit"></image>
+					<image class="order-info-stu-img" :src="item.avatar" mode="aspectFill"></image>
 					<view class="fwb order-info-stu-name">{{item.studentName}}</view>
 					<view class="order-info-stu-sex">{{item.gender==1?'男':'女'}}</view>
 					<view class="order-info-stu-age">{{item.age}}岁</view>
-					<image class="order-info-stu-del" @click="handleDel(item)" src="/static/del.png" mode="aspectFit">
+					<image class="order-info-stu-del" @click="handleDel(item)" src="/static/del.png" mode="aspectFill">
 					</image>
 				</view>
 			</view>
 			<view class="order-info-adduser" @click="handleAdd">
-				<image class="order-info-adduser-add" src="/static/class/add.png" mode="aspectFit"></image>
+				<image class="order-info-adduser-add" src="/static/class/add.png" mode="aspectFill"></image>
 				<text>添加学员</text>
 			</view>
 		</view>
-	<!-- 	<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+		<!-- 	<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
 			<view>
 			</view>
@@ -84,15 +84,16 @@
 				isHead: false, //是否 是团长进入该页面
 				data: {},
 				classId: '',
-				numData:0
+				numData: 0
 			}
 		},
 		onShow() {
-			if(this.numData){
+			if (this.numData) {
 				this.getMineSpellClass()
 			}
 		},
 		onLoad(e) {
+			console.log('返回的数据', e);
 			this.classId = e.classId
 			this.wxUserId = e.wxUserId
 			this.SET_STORAGE({
@@ -116,6 +117,12 @@
 				path: `/pages/class/order-info/order-info?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
+		onUnload: function() {
+			// wx.reLaunch({
+			// 	url: this.$page.Home
+			// })
+			this.$utils.router.navBack(3)
+		},
 		methods: {
 			getMineSpellClass() {
 				this.$http['classes'].getMineSpellClass({
@@ -124,39 +131,39 @@
 					if (res.code == 200) {
 						console.log(res.data);
 						this.isHead = res.data.regimentalCommander
-						if(res.data.coverImage.indexOf('http')==-1){
+						if (res.data.coverImage && res.data.coverImage.indexOf('http') == -1) {
 							res.data.coverImage = this.$url + res.data.coverImage
 						}
-						if(res.data.avatar.indexOf('http')==-1){
+						if (res.data.avatar && res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
-						if(!res.data.avatar){
+						if (!res.data.avatar) {
 							res.data.avatar = this.avatar
 						}
-						
+
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
 						res.data.weChatUserList = res.data.weChatUserList || []
-						res.data.weChatUserList.forEach(item=>{
-							if(item.avatar.indexOf('http')==-1){
+						res.data.weChatUserList.forEach(item => {
+							if (item.avatar.indexOf('http') == -1) {
 								item.avatar = this.$url + item.avatar
 							}
-							if(!item.avatar){
+							if (!item.avatar) {
 								item.avatar = this.avatar
 							}
 						})
 						this.data = res.data
 						uni.setNavigationBarTitle({
-							title: this.isHead ? '我的拼单' : '加入拼单'
+							title: this.isHead ? '我的拼班' : '加入拼班'
 						})
 						this.SET_STORAGE({
 							str: 'shareInfo',
 							data: {}
 						})
-						this.numData ++
+						this.numData++
 						// if(res.data.classStatus!=0){
 						// 	this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
 						// }
-						
+
 					}
 				})
 			},
@@ -169,7 +176,7 @@
 			handleAdd() {
 				this.data.weChatUserList = this.data.weChatUserList || []
 				const ls = this.data.weChatUserList.map(item => item.studentId)
-				this.$refs.popupAddStu.handleShow(this.classId, ls,this.data)
+				this.$refs.popupAddStu.handleShow(this.classId, ls, this.data)
 				console.log('添加学员');
 			},
 			// 调起充值界面
@@ -190,9 +197,9 @@
 			},
 			// 执行分享界面
 			handleShare() {
-				console.log( this.data);
+				console.log(this.data);
 				this.$refs.popupShare.handleShow({
-					coverImage:this.data.coverImage,
+					coverImage: this.data.coverImage,
 					title: this.data.className,
 					query: `classId=${this.classId}&wxUserId=${this.data.wxUserId}`,
 					path: `/pages/class/order-info/order-info`

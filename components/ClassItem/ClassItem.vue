@@ -8,7 +8,7 @@
 		</view>
 		<view class="class-content-bottom">
 			<view class="class-content-left">
-				<van-image use-error-slot class="class-content-img"  radius="10" width="140" height="132" :src="data.coverImage" >
+				<van-image use-error-slot class="class-content-img" fit="cover"  radius="10" width="140" height="132" :src="data.coverImage" >
 				</van-image>
 			</view>
 			<view class="">
@@ -77,6 +77,8 @@
 					} else {
 						this.$utils.router.navTo(this.$page.ClassDetail,{classId: this.data.classId})
 					}
+				} else if(this.type==3){
+					this.$utils.router.navTo(this.$page.CourseDetail,{productId: this.data.productId})
 				}
 			}
 		}

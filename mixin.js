@@ -99,6 +99,21 @@ const minxin = {
 			}
 
 		},
+		async setTeachLogin(shareInfo) {
+			const res = await this.$http['mine'].roleSwitching()
+			if (res.code == 200) {
+				let isTeach = res.data.isCoach ? 1 : 2
+				this.isTeach = this.$utils.util.setCache('role', isTeach)
+				this.isTeach = isTeach
+				this.SET_TEACH(isTeach)
+				this.SET_STORAGE({str:'Authorization',data:res.data.accessToken})
+				if(isTeach==2){
+					this.$utils.router.redTo(this.$page.OrderInfo, shareInfo)
+				}
+				
+			}
+		
+		},
 		// 社区初始化
 		getInit() {
 			console.log('重置/更新');

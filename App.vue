@@ -4,14 +4,14 @@
 	}
 	export default {
 		onLaunch: function() {
-			wx.onLocationChange(_locationChangeFn)
+			// wx.onLocationChange(_locationChangeFn)
 
 		},
 		onShow: function() {
 			console.log('App Show')
 		},
 		onHide: function() {
-			wx.offLocationChange(_locationChangeFn)
+			// wx.offLocationChange(_locationChangeFn)
 			console.log('App Hide')
 		}
 	}

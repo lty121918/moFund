@@ -3,16 +3,16 @@
 		<view class="home-head2"></view>
 		<view class="home-head">
 			<view class="home-head-address" @click="$utils.router.navTo($page.Search)">
-				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFit"></image>
+				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFill"></image>
 				<text> {{campus.campusName ||''}}</text>
-				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFit"></image>
+				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFill"></image>
 			</view>
 			<view class="home-head-swiper">
 				<swiper class="swiper" circular :indicator-dots="false" :autoplay="true" :interval="5000"
 					:duration="500">
 					<swiper-item v-for="item in banner" :key="item.id" @click="hanldeNext(item)">
 						<view class="home-head-view">
-							<image class="home-head-img" :src="url+item.imageUrl" mode="center" alt="加载失败"></image>
+							<image class="home-head-img" :src="url+item.imageUrl" mode="aspectFill" alt="加载失败"></image>
 						</view>
 					</swiper-item>
 					<swiper-item v-if="banner.length==0">
@@ -27,12 +27,12 @@
 		<view class="home-activity">
 			<view class="home-title" v-if="courseList.length>0">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>社区课程</text>
 				</view>
 				<view class="home-title-item" @click="$utils.router.navTo($page.Course)">
 					<text class="home-title-name">全部</text>
-					<image class="home-title-icon" src="/static/left.png" mode="aspectFit"></image>
+					<image class="home-title-icon" src="/static/left.png" mode="aspectFill"></image>
 				</view>
 			</view>
 			<view class="home-activity-content">
@@ -46,7 +46,7 @@
 					<!-- <view class="home-activity-content-msg">&nbsp;</view> -->
 					<view class="home-activity-content-price">
 						<text>￥{{item.price}}</text>
-						<image class="home-activity-content-icon" src="/static/home/right.png" mode="aspectFit"></image>
+						<image class="home-activity-content-icon" src="/static/home/right.png" mode="aspectFill"></image>
 					</view>
 				</view>
 			</view>
@@ -56,26 +56,26 @@
 		<view class="home-nearby">
 			<view class="home-title" v-if="spellClassList.length>0">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>附近拼班</text>
 				</view>
 				<view class="home-title-item" @click="$utils.router.navTo($page.PieceList)">
 					<text class="home-title-name">全部</text>
-					<image class="home-title-icon" src="/static/left.png" mode="aspectFit"></image>
+					<image class="home-title-icon" src="/static/left.png" mode="aspectFill"></image>
 				</view>
 			</view>
 			<view class="home-nearby-content" v-for="(item,index) in spellClassList" :key="index"
 				@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
-				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFit"></image>
+				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFill"></image>
 				<view class="home-nearby-content-center">
 					<view>{{item.nickName || '微信昵称'}}</view>
 					<view class="home-nearby-content-class">
 						<view class="home-nearby-content-name">{{item.productName}}<text class="ml12">{{item.spellType}}</text></view>
 						<view class="home-nearby-content-url">
 							<image v-for="row in item.weChatUserList" :key="row.studentId"
-								class="home-nearby-content-icon" :src="row.avatar" mode="aspectFit">
+								class="home-nearby-content-icon" :src="row.avatar" mode="aspectFill">
 							</image>
-							<image class="home-nearby-content-icon" src="/static/home/default-url.png" mode="aspectFit">
+							<image class="home-nearby-content-icon" src="/static/home/default-url.png" mode="aspectFill">
 							</image>
 						</view>
 					</view>
@@ -107,7 +107,7 @@
 			}
 		},
 		computed: {
-			...mapGetters(['location', 'campus']),
+			...mapGetters(['location', 'campus','avatar']),
 			url() {
 				return this.$url
 			}
@@ -215,9 +215,11 @@
 					res4.data.forEach(item => {
 						if(item.headUrl && item.headUrl.indexOf('http')==-1){
 							item.headUrl = this.$url + item.headUrl
-						} else if(!item.headUrl){
+						}  
+						if(!item.headUrl){
 							item.headUrl = this.avatar
 						}
+					
 						item.weChatUserList = item.weChatUserList || []
 						item.weChatUserList.forEach(row => {
 							if(row.avatar && row.avatar.indexOf('http')==-1){
@@ -306,7 +308,7 @@
 
 			&-img {
 				width: 100%;
-				// height: 376rpx;
+				height: 376rpx;
 			}
 		}
 
@@ -399,7 +401,7 @@
 					flex-shrink: 0;
 					margin-right: 26rpx;
 					width: 140rpx;
-					height: 132rpx;
+					height: 140rpx;
 					border-radius: 12rpx;
 				}
 

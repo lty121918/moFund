@@ -9,7 +9,7 @@
 					</view>
 					<view class="popup-content-bottom">
 						<view class="popup-content-left">
-							<image class="popup-content-img" src="/static/notData.png" mode="aspectFit"></image>
+							<image class="popup-content-img" src="/static/notData.png" mode="aspectFill"></image>
 						</view>
 						<view class="">
 							<view class="popup-content-cycle mt0">下单时间：{{data.operateTime ||data.orderTime}}</view>
@@ -27,7 +27,7 @@
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32 flex0">评价</view>
 						<view class="popup-content-textarea">
-							<uni-easyinput :disabled="isCheck" type="textarea" v-model="content" placeholder="请输入内容"></uni-easyinput>
+							<uni-easyinput :disabled="isCheck" type="textarea" v-model="content" :placeholder="isCheck?'':'请输入内容'"></uni-easyinput>
 						</view>
 					</view>
 				</view>

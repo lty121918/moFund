@@ -1,21 +1,21 @@
 <template>
 	<view class="piece">
 		<view class="piece-head-address" @click="$utils.router.navTo($page.Search)">
-			<image class="piece-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
+			<image class="piece-head-address-img" src="/static/home/location2.png" mode="aspectFill"></image>
 			<text> {{campus.campusName}}</text>
-			<image class="piece-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
+			<image class="piece-head-address-icon" src="/static/down2.png" mode="aspectFill"></image>
 		</view>
 		<view class="piece-content" v-for="item in data" :key="item.productSellPriceRelId"
 			@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
-			<image class="piece-content-img" :src="item.headUrl" mode="aspectFit"></image>
+			<image class="piece-content-img" :src="item.headUrl" mode="aspectFill"></image>
 			<view class="piece-content-center">
 				<view>{{item.nickName || '微信昵称'}}</view>
 				<view class="piece-content-class">
 					<view class="piece-content-name">{{item.productName}} <text class="ml12"> {{item.spellType}}</text> </view>
 					<view class="piece-content-url">
 						<image v-for="row in item.weChatUserList" :key="row.studentId" class="piece-content-icon"
-							:src="row.avatar" mode="aspectFit"></image>
-						<image class="piece-content-icon" src="/static/home/default-url.png" mode="aspectFit">
+							:src="row.avatar" mode="aspectFill"></image>
+						<image class="piece-content-icon" src="/static/home/default-url.png" mode="aspectFill">
 						</image>
 					</view>
 				</view>
@@ -129,7 +129,7 @@
 				flex-shrink: 0;
 				margin-right: 26rpx;
 				width: 140rpx;
-				height: 132rpx;
+				height: 140rpx;
 				border-radius: 12rpx;
 			}
 

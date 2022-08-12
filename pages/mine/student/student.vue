@@ -1,7 +1,7 @@
 <template>
 	<view class="student">
 		<view class="student-head flex-start pr32 pl32 pt32">
-			<image class="student-head-img" :src="userInfo.avatar" mode="aspectFit"></image>
+			<image class="student-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
 			<view>
 				<view>
 					<text class="student-head-name">{{userInfo.name || '微信昵称'}}</text>
@@ -21,7 +21,7 @@
 				<view class="pt16">出生日期：{{item.birthday}}</view>
 			</view>
 			<view class="student-status" @click="handleDel(item)">
-				<image class="student-head-del" src="/static/del.png" mode="aspectFit"></image>
+				<image class="student-head-del" src="/static/del.png" mode="aspectFill"></image>
 			</view>
 		</view>
 		<view :style="{ height: `calc(${safeAreaHeight}px + 168rpx)` }"></view>

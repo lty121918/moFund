@@ -5,7 +5,7 @@
 				<!-- 当前商品信息 -->
 				<view class=" flex-bc">
 					<view class="popup-nearby-content popup-content2">
-						<image class="popup-nearby-content-img" :src="coverImage" mode="aspectFit"></image>
+						<image class="popup-nearby-content-img" :src="coverImage" mode="aspectFill"></image>
 						<view class="">
 							<view class="">
 								<text class="color fz24">￥</text>
@@ -141,26 +141,29 @@
 				this.$refs.popup.close('bottom')
 			},
 			// 查看周期
-			check() {
+			async check() {
 				// uni.showToast({
 				// 	title: "查看周期"
 				// })
-				let ls = []
-				if (this.data.courseType == 2) {
-					ls = this.$utils.dateTime.getRangeDay([
-						this.data.startDate, //	上课开始日期(周期)
-						this.data.endDate, //上课结束日期(周期)
-					], 1000)
-				} else {
-					ls = this.$utils.dateTime.getRangeDay([
-						this.data.startDate, //	上课开始日期(周期)
-						this.data.endDate, //上课结束日期(周期)
-					],1000, this.data.weekCode,'week')
-					console.log(ls);
+				const res = await this.$http['classes'].indexCourseDate({scheduleId:this.data.scheduleId})
+				if(res.code==200){
+					const ls = res.data.map(item=>item.courseDate)
+					this.$emit('check', ls)
 				}
+				// if (this.data.courseType == 2) {
+				// 	ls = this.$utils.dateTime.getRangeDay([
+				// 		this.data.startDate, //	上课开始日期(周期)
+				// 		this.data.endDate, //上课结束日期(周期)
+				// 	], 1000)
+				// } else {
+				// 	ls = this.$utils.dateTime.getRangeDay([
+				// 		this.data.startDate, //	上课开始日期(周期)
+				// 		this.data.endDate, //上课结束日期(周期)
+				// 	],1000, this.data.weekCode,'week')
+				// 	console.log(ls);
+				// }
 
-				console.log(ls);
-				this.$emit('check', ls)
+				
 			},
 			// 选择拼班方式
 			handleSpellType(item) {

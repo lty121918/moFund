@@ -12,7 +12,7 @@
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32 flex0">评价</view>
 						<view class="popup-content-textarea">
-							<uni-easyinput :disabled="isCheck" type="textarea" v-model="value" placeholder="请输入内容">
+							<uni-easyinput :disabled="isCheck" type="textarea" v-model="value" :placeholder="isCheck?'':'请输入内容'">
 							</uni-easyinput>
 						</view>
 					</view>

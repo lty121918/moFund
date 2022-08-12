@@ -19,7 +19,7 @@
 					<cover-view class="popup-content" @click.stop>
 						<cover-view class="home-title">
 							<cover-view class="home-title-item">
-								<cover-image class="home-title-img" src="/static/home/icon.png" mode="aspectFit">
+								<cover-image class="home-title-img" src="/static/home/icon.png" mode="aspectFill">
 								</cover-image>
 								<cover-view>{{campusName}}</cover-view>
 							</cover-view>
@@ -28,7 +28,7 @@
 						<cover-view class="course">
 							<cover-view class="course-list-item" v-for="item in data" :key="item"
 								@click="$utils.router.navTo($page.CourseDetail,item)">
-								<cover-image class="course-list-item-img" :src="item.coverImage" mode="aspectFit">
+								<cover-image class="course-list-item-img" :src="item.coverImage" mode="aspectFill">
 								</cover-image>
 								<cover-view class="">
 									<cover-view class="course-list-item-title t-over">{{item.productName}}</cover-view>
