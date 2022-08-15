@@ -9,7 +9,7 @@
 						{{title}}
 					</view>
 					<view class="popup-content-center flex-cc">
-						<image class="popup-content-img" :src="coverImage" mode="widthFix"></image>
+						<image class="popup-content-img" :src="coverImage" mode="aspectFill"></image>
 					</view>
 					<view class="popup-content-bottom flex-bc fz24 text-c colorw">
 						<button class="is-view flex-fc flex-cc" open-type="share">
@@ -79,7 +79,7 @@
 							duration: 2000,
 							icon: 'none'
 						});
-						this.$refs.popup.close('center')
+						// self.$refs.popup.close('center')
 					},
 					fail: function(err) {
 						uni.showToast({
@@ -151,7 +151,7 @@
 
 			&-img {
 				width: 586rpx;
-				max-height: 664rpx;
+				height: 664rpx;
 				border-radius: 12rpx;
 			}
 

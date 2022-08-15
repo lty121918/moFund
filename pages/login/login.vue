@@ -2,7 +2,7 @@
 <template>
 	<view class="login">
 		<view class="login-content">
-			<image class="login-content-img" src="/static/login/logo.png" mode="widthFix"></image>
+			<image class="login-content-img" src="/static/login/logo2.png" mode="widthFix"></image>
 			<view class="fz40">极光体育申请获得以下权限</view>
 			<view class="color666 mt32">(获得您的手机号)</view>
 			<button class="login-button" type="primary" open-type="getPhoneNumber" @getphonenumber="getphonenumber"
@@ -27,11 +27,15 @@
 	} from 'vuex'
 	import mixin from '@/mixin.js'
 	import Protocol from './components/Protocol/Protocol.vue'
-	import {protocolData} from './login.js'
+	import {
+		protocolData
+	} from './login.js'
 	export default {
 		name: "login",
 		mixins: [mixin],
-		components: {Protocol},
+		components: {
+			Protocol
+		},
 		data() {
 			return {
 				protocolData
@@ -89,7 +93,9 @@
 					}
 
 				} else {
-					this.$utils.router.swtTo(this.$page.Home,{type:'1'})
+					this.$utils.router.swtTo(this.$page.Home, {
+						type: '1'
+					})
 				}
 
 
@@ -147,10 +153,15 @@
 			text-align: center;
 
 			&-img {
-				margin-top: 42rpx;
-				margin-bottom: 136rpx;
-				width: 314rpx;
-				height: 248rpx;
+
+				margin-top: 168rpx;
+				margin-bottom: 194rpx;
+				width: 538rpx;
+				height: 96rpx;
+				// margin-top: 42rpx;
+				// margin-bottom: 136rpx;
+				// width: 314rpx;
+				// height: 248rpx;
 			}
 		}
 

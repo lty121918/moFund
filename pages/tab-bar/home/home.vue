@@ -1,3 +1,4 @@
+
 <template>
 	<view>
 		<index ref="homeIndex" v-if="isTeach==2" />
@@ -34,6 +35,7 @@
 			}
 		},
 		methods: {
+			
 			Ginit() {
 				console.log('2deeeeeeeeeeeeeeeeeeeeeeeeee');
 				this.$nextTick(()=>{
