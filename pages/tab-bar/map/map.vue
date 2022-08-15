@@ -85,19 +85,24 @@
 		onShow() {
 			const self = this
 			// self.getData()
-			uni.getLocation({
-				type: 'gcj02',
-				success: function(res) {
-					self.latitude = res.latitude
-					self.longitude = res.longitude
-					console.log('当前位置的经度：' + res.longitude);
-					console.log('当前位置的纬度：' + res.latitude);
-					self.getData()
-				},
-				fail: function(e) {
-					console.log(e);
-				}
-			});
+			self.getLocation(false).then(async (res) => {
+				self.latitude = res.latitude
+				self.longitude = res.longitude
+				self.getData()
+			})
+			// uni.getLocation({
+			// 	type: 'gcj02',
+			// 	success: function(res) {
+			// 		self.latitude = res.latitude
+			// 		self.longitude = res.longitude
+			// 		console.log('当前位置的经度：' + res.longitude);
+			// 		console.log('当前位置的纬度：' + res.latitude);
+			// 		self.getData()
+			// 	},
+			// 	fail: function(e) {
+			// 		console.log(e);
+			// 	}
+			// });
 
 		},
 		created() {

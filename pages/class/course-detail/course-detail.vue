@@ -239,7 +239,7 @@
 					productId: this.productId
 				})
 				if (res2.code == 200) {
-					res2.data = res2.data.replace('<img ',
+					res2.data = res2.data.replace(/<img /g,
 						'<img style="max-width:100%;height:auto;display:block;margin:10rpx 0;"')
 					this.productDetail = res2.data
 				}

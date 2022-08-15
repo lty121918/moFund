@@ -65,6 +65,11 @@
 					if (res.code == 200) {
 						data = res.data
 						data.forEach(item => {
+							if(item.spellingClassNumber<100){
+								item.spellingClassNumber = `${item.spellingClassNumber}个`
+							} else{
+								item.spellingClassNumber = '100+'
+							}
 							item.coverImage = this.$url + item.coverImage
 						})
 

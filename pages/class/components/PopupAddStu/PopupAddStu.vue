@@ -166,6 +166,7 @@
 				this.list = data
 				const res = await this.$http['mine'].getStudent()
 				if (res.code == 200) {
+					res.data = res.data || []
 					res.data.forEach(item=>{
 						item.birthday = this.$utils.dateTime.getLocalTime(item.birthday ||'')
 					})

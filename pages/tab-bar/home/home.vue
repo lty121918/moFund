@@ -2,6 +2,9 @@
 	<view>
 		<index ref="homeIndex" v-if="isTeach==2" />
 		<class ref="calsses" v-if="isTeach==1" />
+		<view class="home-official" :style="{'bottom':isIphoneX?`calc(50px + ${safeAreaHeight}px)`:'50px' }">
+			<official-account></official-account>
+		</view>
 	</view>
 </template>
 
@@ -27,7 +30,7 @@
 			// 初次进入获取地理位置 增加判断如果没有Authorization 不去执行 
 			const Authorization = this.$utils.util.getCache('Authorization');
 			if (Authorization) {
-				this.getLocation()
+				this.getLocation(false)
 			}
 		},
 		methods: {
@@ -46,3 +49,11 @@
 		}
 	}
 </script>
+<style scoped lang="scss">
+	.home-official{
+		position: fixed;
+		z-index: 999;
+		left: 0;
+		width: 100%;
+	}
+</style>

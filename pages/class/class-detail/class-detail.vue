@@ -224,6 +224,7 @@
 					// 家长
 					getData = getClassDetail
 				}
+				this.stuActive = []
 				getData({
 					classId: this.classId
 				}).then(res => {

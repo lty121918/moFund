@@ -120,8 +120,7 @@
 					if (res.code == 200) {
 						let list = res.data
 						// 如果之前缓存的社区已经被删除 则重新选取
-						const ls = list.filter(item => item.campusId == this.listData.campusId || item.campusName ==
-							this.listData.campusName)[0] || null
+						const ls = list.filter(item => item.campusId == this.listData.campusId)[0] || null
 						if (ls) {
 							this.$utils.router.navTo(this.$page.CourseDetail, {
 								productId: this.listData.productId,

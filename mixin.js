@@ -30,7 +30,7 @@ const minxin = {
 		}
 	},
 	computed: {
-		...mapGetters(['campus', 'location', 'city', 'userInfo','classStatus','avatar','shareInfo']),
+		...mapGetters(['campus', 'location', 'city', 'userInfo', 'classStatus', 'avatar', 'shareInfo']),
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
@@ -67,7 +67,7 @@ const minxin = {
 		}
 	},
 	methods: {
-		Ginit(){
+		Ginit() {
 			// 空壳
 		},
 		...mapMutations(['SET_TEACH', 'SET_STORAGE']),
@@ -89,13 +89,16 @@ const minxin = {
 				this.isTeach = this.$utils.util.setCache('role', isTeach)
 				this.isTeach = isTeach
 				this.SET_TEACH(isTeach)
-				this.SET_STORAGE({str:'Authorization',data:res.data.accessToken})
-				if(isTeach==2){
+				this.SET_STORAGE({
+					str: 'Authorization',
+					data: res.data.accessToken
+				})
+				if (isTeach == 2) {
 					this.$utils.router.swtTo(this.$page.Home)
-				} else{
+				} else {
 					this.$utils.router.swtTo(this.$page.Class)
 				}
-				
+
 			}
 
 		},
@@ -106,13 +109,16 @@ const minxin = {
 				this.isTeach = this.$utils.util.setCache('role', isTeach)
 				this.isTeach = isTeach
 				this.SET_TEACH(isTeach)
-				this.SET_STORAGE({str:'Authorization',data:res.data.accessToken})
-				if(isTeach==2){
+				this.SET_STORAGE({
+					str: 'Authorization',
+					data: res.data.accessToken
+				})
+				if (isTeach == 2) {
 					this.$utils.router.redTo(this.$page.OrderInfo, shareInfo)
 				}
-				
+
 			}
-		
+
 		},
 		// 社区初始化
 		getInit() {
@@ -122,7 +128,7 @@ const minxin = {
 		 * @function 微信支付
 		 */
 		wxPay(val) {
-			return new Promise(async (resolve, reject) =>{
+			return new Promise(async (resolve, reject) => {
 				console.log('val', val);
 				let orderInfo = {
 					// appid: val.appId, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
@@ -173,7 +179,7 @@ const minxin = {
 			})
 
 		},
-		getLocation() {
+		getLocation(isShow = true) {
 			const self = this
 			return new Promise((resolve, reject) => {
 				uni.getLocation({
@@ -190,7 +196,8 @@ const minxin = {
 						})
 						resolve({
 							latitude: res.latitude,
-							longitude: res.longitude
+							longitude: res.longitude,
+							type: 'success'
 						})
 					},
 					fail: function(e) {
@@ -201,43 +208,91 @@ const minxin = {
 									'undefined' && !res.authSetting[
 										'scope.userLocation']) {
 									// 用户拒绝了授权
-									uni.showModal({
-										title: '提示',
-										content: '您拒绝了定位权限，将无法使用社区定位功能',
-										success: res => {
-											if (res.confirm) {
-												// 跳转设置页面
-												uni.openSetting({
-													success: res => {
-														if (res
-															.authSetting[
-																'scope.userLocation'
-															]
-														) {
-															// 授权成功，重新定位
-															// uni.getLocation({
-															// 	success: res => {}
-															// });
-														} else {
-															// 没有允许定位权限
-															uni.showToast({
-																title: '您拒绝了定位权限，将无法使用社区定位功能',
-																icon: 'none'
-															});
+									if (isShow) {
+										uni.showModal({
+											title: '提示',
+											content: '您拒绝了定位权限，将无法使用社区定位功能',
+											success: res => {
+												if (res.confirm) {
+													// 跳转设置页面
+													uni.openSetting({
+														success: res => {
+															if (res
+																.authSetting[
+																	'scope.userLocation'
+																]
+															) {
+																// 授权成功，重新定位
+																// uni.getLocation({
+																// 	success: res => {}
+																// });
+															} else {
+																// 没有允许定位权限
+																uni.showToast({
+																	title: '您拒绝了定位权限，将无法使用社区定位功能',
+																	icon: 'none'
+																});
+															}
 														}
-													}
-												});
+
+													});
+												}
+												self.SET_STORAGE({
+													data: {
+														latitude: '30.555175310610363',
+														longitude: '114.31188993115236'
+													},
+													str: 'location'
+												})
+												resolve({
+													latitude: '30.555175310610363',
+													longitude: '114.31188993115236'
+												})
 											}
-										}
-									});
+										});
+									} else {
+										self.SET_STORAGE({
+											data: {
+												latitude: '30.555175310610363',
+												longitude: '114.31188993115236'
+											},
+											str: 'location'
+										})
+										resolve({
+											latitude: '30.555175310610363',
+											longitude: '114.31188993115236'
+										})
+									}
+
 								}
 							}
 						});
-						reject(e)
+
+						// reject(e)
+					}
+				});
+			})
+		},
+		getSettingLocal() {
+			const self = this
+			return new Promise((resolve, reject) => {
+				uni.getSetting({
+					success: res => {
+						if (typeof(res.authSetting['scope.userLocation']) !=
+							'undefined' && !res.authSetting[
+								'scope.userLocation']) {
+							// 用户拒绝了授权
+							resolve(1)
+							
+
+						} else {
+							resolve(3)
+						}
 					}
 				});
 			})
 		}
+
 	},
 }
 

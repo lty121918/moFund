@@ -2,7 +2,7 @@
 	<view class="home">
 		<view class="home-head2"></view>
 		<view class="home-head">
-			<view class="home-head-address" @click="$utils.router.navTo($page.Search)">
+			<view class="home-head-address" @click="handleNavTo">
 				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFill"></image>
 				<text> {{campus.campusName ||''}}</text>
 				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFill"></image>
@@ -90,14 +90,12 @@
 
 <script>
 	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
-	import {
 		debounce
 	} from "@/utils/lodash.js";
 	import bus from '@/utils/bus.js'
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
 			return {
 				banner: [], // 轮播图
@@ -107,7 +105,6 @@
 			}
 		},
 		computed: {
-			...mapGetters(['location', 'campus','avatar']),
 			url() {
 				return this.$url
 			}
@@ -123,6 +120,46 @@
 			
 		},
 		methods: {
+			handleNavTo(){
+				this.getSettingLocal().then(res=>{
+					if(res==3) {
+						this.$utils.router.navTo(this.$page.Search)
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '您拒绝了定位权限，将无法使用社区定位功能',
+							success: res => {
+								if (res.confirm) {
+									// 跳转设置页面
+									uni.openSetting({
+										success: res => {
+											if (res
+												.authSetting[
+													'scope.userLocation'
+												]
+											) {
+												self.getLocation()
+											} else {
+												uni.showToast({
+													title: '您拒绝了定位权限，将无法使用社区定位功能',
+													icon: 'none'
+												});
+												// 没有允许定位权限
+											}
+										}
+						
+									});
+								} else {
+									this.$utils.router.navTo(this.$page.Search)
+								}
+							}
+						});
+					}
+					
+				})
+				
+				
+			},
 			// home 页面调用
 			getMounted: debounce(function(e) {
 				uni.setNavigationBarTitle({
@@ -130,7 +167,6 @@
 				})
 				this.getData()
 			}),
-			...mapMutations(['SET_STORAGE']),
 			// 请求数据
 			async getData() {
 				console.log('数据请求home');

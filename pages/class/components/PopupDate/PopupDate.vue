@@ -61,13 +61,13 @@
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
 			async change2(e = {}) {
-				const date = this.$utils.dateTime.ltgtDate2(e.fulldate)
-				console.log(date);
+				// const date = this.$utils.dateTime.ltgtDate2(e.fulldate)
+				// console.log(date);
 				if (this.dotLists.indexOf(e.fulldate) > -1 ) {
 					// 历史记录的是显示
 					const dataObj = this.data.find(item => item.courseDate == e.fulldate)
 					console.log(dataObj);
-					if ((date == 1 || !this.isAttendance) && !this.isShow) {
+					if ((!this.isAttendance) && !this.isShow) {
 						const {
 							coachScheduleStuInfo,
 							vipScheduleStuInfo

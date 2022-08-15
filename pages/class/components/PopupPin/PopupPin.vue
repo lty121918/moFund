@@ -11,7 +11,7 @@
 								<text class="color fz24">￥</text>
 								<text class="color fz32">{{data.price}}</text>
 								<text class="fz24">/节</text>
-								<text class="popup-content-jie">{{data.totalNum}}节课</text>
+								<text class="popup-content-jie">{{data.totalNum || 0}}节课</text>
 							</view>
 							<!-- 上课周期 -->
 							<view class="popup-nearby-content-cycle">
@@ -116,6 +116,7 @@
 				spellTypeList: [],
 				myCourseScheduleList: [],
 				periodList: [],
+				courseDateList:[]
 			}
 		},
 		methods: {
@@ -140,16 +141,25 @@
 			handleOther() {
 				this.$refs.popup.close('bottom')
 			},
+			async getDate(data){
+				const res = await this.$http['classes'].indexCourseDate(data)
+				if(res.code==200){
+					this.data.totalNum = res.data.number
+					res.data.courseDateList = res.data.courseDateList || []
+					this.courseDateList = res.data.courseDateList.map(item=>item.courseDate)
+				}
+			},
 			// 查看周期
-			async check() {
+			check() {
 				// uni.showToast({
 				// 	title: "查看周期"
 				// })
-				const res = await this.$http['classes'].indexCourseDate({scheduleId:this.data.scheduleId})
-				if(res.code==200){
-					const ls = res.data.map(item=>item.courseDate)
-					this.$emit('check', ls)
-				}
+					this.$emit('check', this.courseDateList|| [])
+				// const res = await this.$http['classes'].indexCourseDate({scheduleId:this.data.scheduleId})
+				// if(res.code==200){
+				// 	const ls = res.data.map(item=>item.courseDate)
+				// 	this.$emit('check', ls)
+				// }
 				// if (this.data.courseType == 2) {
 				// 	ls = this.$utils.dateTime.getRangeDay([
 				// 		this.data.startDate, //	上课开始日期(周期)
@@ -175,7 +185,8 @@
 			},
 			// 选择时段
 			handlePeriod(item) {
-				console.log(item.status, this.data.periodId, item.id);
+				console.log(item, this.data.periodId, item.id);
+				item.id = `${item.startTime}-${item.endTime}`
 				if (item.id == this.data.periodId || item.status == 5) {
 					return false
 				}
@@ -184,6 +195,9 @@
 					endPeriod: item.endTime, // 上课结束时段
 					periodId: item.id,
 				})
+				// 
+				console.log('调取');
+			
 				this.$forceUpdate()
 			},
 			//  选择周期
@@ -191,6 +205,7 @@
 				if (item.scheduleId == this.data.scheduleId || !item.status) {
 					return false
 				}
+				
 				console.log(item);
 				Object.assign(this.data, {
 					scheduleId: item.scheduleId, // 	排课表主键Id
@@ -205,13 +220,20 @@
 				// 上课时段
 				this.periodList = item.periodList || []
 				let periodList ={}
+				console.log('this.periodList',this.periodList);
 				for(let i =0 ;i<this.periodList.length;i++){
 					if(this.periodList[i].status!=5){
 						periodList = this.periodList[i]
 						break;
 					}
 				}
+				
 				this.handlePeriod(periodList)
+				this.getDate( {
+					startTime: periodList.startTime, //	上课开始时段
+					endTime: periodList.endTime, // 上课结束时段
+					scheduleId: this.data.scheduleId,
+				})
 			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);

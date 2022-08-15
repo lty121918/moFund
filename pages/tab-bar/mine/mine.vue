@@ -3,6 +3,9 @@
 
 		<view class="mine-head">
 			<view class="mine-head-flex">
+				<!-- <view class="mine-head-img2" v-if="isTeach==1">
+					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
+				</view> -->
 				<button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
 					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
 				</button>

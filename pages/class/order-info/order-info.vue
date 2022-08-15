@@ -144,7 +144,7 @@
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
 						res.data.weChatUserList = res.data.weChatUserList || []
 						res.data.weChatUserList.forEach(item => {
-							if (item.avatar.indexOf('http') == -1) {
+							if (item.avatar&&item.avatar.indexOf('http') == -1) {
 								item.avatar = this.$url + item.avatar
 							}
 							if (!item.avatar) {

@@ -4,7 +4,7 @@
 		<view class="login-content">
 			<image class="login-content-img" src="/static/login/logo.png" mode="widthFix"></image>
 			<view class="fz40">极光体育申请获得以下权限</view>
-			<view class="color666 mt32">获得你的公开信息（昵称、头像等）</view>
+			<view class="color666 mt32">(获得您的手机号)</view>
 			<button class="login-button" type="primary" open-type="getPhoneNumber" @getphonenumber="getphonenumber"
 				size="mini">授 权</button>
 			<view class="tip-box flex" v-if="protocolData.length > 0">
@@ -89,7 +89,7 @@
 					}
 
 				} else {
-					this.$utils.router.swtTo(this.$page.Home)
+					this.$utils.router.swtTo(this.$page.Home,{type:'1'})
 				}
 
 
