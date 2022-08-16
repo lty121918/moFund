@@ -169,29 +169,49 @@
 				return this.$url
 			}
 		},
-		async onLoad(e) {
-			console.log('商品id', e);
-			this.SET_STORAGE({
-				str: 'campus'
-			})
-			this.productId = e.productId
-			if (e.lat && e.lng) {
-				let res = await  this.$http['map'].getSearchList({
-					lat: e.lat,
-					lng: e.lng,
-					productId:e.productId
+		 onLoad(e) {
+			this.onLaunch().then(async res => {
+				console.log('商品id', e);
+				this.SET_STORAGE({
+					str: 'campus'
 				})
-				if (res.code == 200) {
-					let list = res.data
-					// 如果之前缓存的社区已经被删除 则重新选取
-					const ls = list.filter(item => item.campusId = e.campusId)[0] || null
-					console.log(ls);
-					this.campusOther =  ls || this.campus
+				this.productId = e.productId
+				if (e.lat && e.lng) {
+					let res = await  this.$http['map'].getSearchList({
+						lat: e.lat,
+						lng: e.lng,
+						productId:e.productId
+					})
+					if (res.code == 200) {
+						let list = res.data
+						// 如果之前缓存的社区已经被删除 则重新选取
+						const ls = list.filter(item => item.campusId = e.campusId)[0] || null
+						console.log(ls);
+						this.campusOther =  ls || this.campus
+					}
+				}else {
+					this.campusOther = this.campus
 				}
-			}else {
-				this.campusOther = this.campus
-			}
+				console.log(this.campusOther );
+			})
+			
 
+		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title: this.productInfo.productName,
+				path: `${this.$page.CourseDetail}?productId=${this.productId}&lat=${this.campusOther.lat}&lng=${this.campusOther.lng}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: this.productInfo.productName,
+				path: `${this.$page.CourseDetail}?productId=${this.productId}&lat=${this.campusOther.lat}&lng=${this.campusOther.lng}`
+			}
 		},
 		methods: {
 			/**

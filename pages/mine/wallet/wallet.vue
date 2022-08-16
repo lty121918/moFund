@@ -65,9 +65,12 @@
 			}
 		},
 		onLoad() {
-			this.getData()
+			this.onLaunch().then(res => {
+				this.getData()
+			})
 		},
 		methods: {
+
 			getData() {
 				console.log('获取我的数据');
 				this.$http['mine'].getUserInfo().then(res => {
@@ -76,9 +79,9 @@
 						const result = {
 							...this.userInfo,
 							avatar: res.data.avatar,
-							name:  res.data.name,
-							remainingSum:  res.data.remainingSum,
-							roleName:  res.data.roleName,
+							name: res.data.name,
+							remainingSum: res.data.remainingSum,
+							roleName: res.data.roleName,
 						}
 						this.SET_STORAGE({
 							str: 'userInfo',

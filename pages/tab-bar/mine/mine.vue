@@ -119,13 +119,29 @@
 			}
 		},
 		computed: {},
-		onShow() {
+		onShow(e) {
 			this.getData()
 		},
 		created() {
 			// console.log('身份验证',this.$utils.validate.validateIdNum('350623199611085735'));
 			// 获取数据
 
+		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title:'我的',
+				path: `${this.$page.Mine}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: '我的',
+				path: `${this.$page.Mine}` //分享默认打开是小程序首页
+			}
 		},
 		methods: {
 			setCopy() {
@@ -139,7 +155,6 @@
 				// } else {
 				// 	this.num++
 				// }
-
 			},
 			bindchooseavatar(e) {
 				const self = this

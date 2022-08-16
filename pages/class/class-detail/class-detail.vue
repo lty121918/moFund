@@ -141,7 +141,7 @@
 		<!-- 课表弹窗 -->
 		<popup-date ref="popupDate" @attendance="getAttendance"></popup-date>
 		<!-- 教练评论弹窗 -->
-		<popup-eval ref="popupEval" @change="getClassDetail"/>
+		<popup-eval ref="popupEval" @change="getClassDetail" />
 		<!-- 会员查看评论弹窗 -->
 		<popup-eval2 ref="popupEval2" />
 	</view>
@@ -204,10 +204,12 @@
 
 			}
 		},
-		async onLoad(e) {
-			this.getTeach()
-			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
-			this.getClassDetail()
+		onLoad(e) {
+			this.onLaunch().then(async res => {
+				this.getTeach()
+				this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
+				this.getClassDetail()
+			})
 		},
 		methods: {
 			getClassDetail() {
@@ -238,10 +240,10 @@
 							5 || res.data.classStatus == 6) {
 							res.data.nextCLassTime = -1
 						}
-						if (res.data.coverImage.indexOf('http') == -1) {
+						if (res.data.coverImage && res.data.coverImage.indexOf('http') == -1) {
 							res.data.coverImage = this.$url + res.data.coverImage
 						}
-						if (res.data.avatar.indexOf('http') == -1) {
+						if (res.data.avatar && res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
 						if (!res.data.avatar) {
@@ -282,7 +284,7 @@
 				if (this.isTeach == 1) {
 					// 教练评价
 					let isCheck = false
-					if(item.isEvaluate){
+					if (item.isEvaluate) {
 						isCheck = true
 					}
 					this.$refs.popupEval.handleShow({

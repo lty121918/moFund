@@ -107,6 +107,7 @@
 		},
 		onReady() {
 			// 设置自定义表单校验规则，必须在节点渲染完毕后执行
+			this.onLaunch()
 			this.$refs.customForm.setRules(this.customRules)
 			this.endTime = this.$utils.dateTime.getLocalTime()
 		},

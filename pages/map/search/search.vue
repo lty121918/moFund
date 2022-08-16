@@ -47,6 +47,9 @@
 		},
 		created() {},
 		methods: {
+			Ginit(){
+				uni.hideShareMenu()
+			},
 		   async search() {
 				// 获取社区
 				this.SET_STORAGE({

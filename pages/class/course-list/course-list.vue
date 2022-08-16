@@ -40,6 +40,9 @@
 
 <script>
 	import mixin from '@/mixin.js'
+	import {
+		debounce
+	} from "@/utils/lodash.js";
 	export default {
 		mixins: [mixin],
 		data() {
@@ -48,13 +51,15 @@
 			}
 		},
 		mounted() {
-			this.getInit()
+			this.onLaunch().then(res => {
+				this.getInit()
+			})
 		},
 		methods: {
 			getInit() {
 				this.search()
 			},
-			async search() {
+			 search:debounce(async function()  {
 				const self = this
 					// 获取课程
 					let res = await self.$http['classes'].getCourseList({
@@ -75,7 +80,7 @@
 
 					}
 					this.data =data 
-			}
+			})
 		}
 	}
 </script>

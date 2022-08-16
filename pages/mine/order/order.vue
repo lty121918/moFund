@@ -20,12 +20,14 @@
 
 <script>
 	import OrderItem from './order-item.vue'
+	import mixin from '@/mixin.js'
 	import PopupEval from '../components/PopupEval/PopupEval.vue'
 	export default {
 		components: {
 			OrderItem,
 			PopupEval
 		},
+		mixins: [mixin],
 		data() {
 			return {
 				active: 1,
@@ -37,8 +39,12 @@
 
 		},
 		mounted() {
-			this.search()
+			this.onLaunch().then(res=>{
+				this.search()
+			})
+			
 		},
+		
 		methods: {
 			/**
 			 * @function Tab切换方法

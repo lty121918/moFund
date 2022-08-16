@@ -108,7 +108,10 @@
             }
         },
         "lazyCodeLoading" : "requiredComponents",
-        "requiredPrivateInfos" : [ "getLocation" ]
+        "requiredPrivateInfos" : [ "getLocation" ],
+        "unipush" : {
+            "enable" : false
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

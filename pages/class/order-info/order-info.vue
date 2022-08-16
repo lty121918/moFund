@@ -93,18 +93,17 @@
 			}
 		},
 		onLoad(e) {
-			console.log('返回的数据', e);
-			this.classId = e.classId
-			this.wxUserId = e.wxUserId
-			this.SET_STORAGE({
-				str: 'shareInfo',
-				data: e
+			this.onLaunch().then(res => {
+				console.log('返回的数据', e);
+				this.classId = e.classId
+				this.wxUserId = e.wxUserId
+				this.SET_STORAGE({
+					str: 'shareInfo',
+					data: e
+				})
+				this.getMineSpellClass()
 			})
-			wx.showShareMenu({
-				withShareTicket: true,
-				menus: ["shareAppMessage"]
-			})
-			this.getMineSpellClass()
+			
 		},
 		// 分享给朋友
 		onShareAppMessage(res) {
@@ -113,8 +112,13 @@
 			}
 			return {
 				title: this.data.productName,
-				desc: '',
-				path: `/pages/class/order-info/order-info?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
+				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: this.share.title,
+				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}` //分享默认打开是小程序首页
 			}
 		},
 		onUnload: function() {
@@ -144,7 +148,7 @@
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
 						res.data.weChatUserList = res.data.weChatUserList || []
 						res.data.weChatUserList.forEach(item => {
-							if (item.avatar&&item.avatar.indexOf('http') == -1) {
+							if (item.avatar && item.avatar.indexOf('http') == -1) {
 								item.avatar = this.$url + item.avatar
 							}
 							if (!item.avatar) {

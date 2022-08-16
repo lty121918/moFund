@@ -84,12 +84,15 @@
 		computed: {},
 		onShow() {
 			const self = this
-			// self.getData()
-			self.getLocation(false).then(async (res) => {
-				self.latitude = res.latitude
-				self.longitude = res.longitude
-				self.getData()
+			this.onLaunch().then(res=>{
+				self.getLocation(false).then(async (res) => {
+					self.latitude = res.latitude
+					self.longitude = res.longitude
+					self.getData()
+				})
 			})
+			// self.getData()
+			
 			// uni.getLocation({
 			// 	type: 'gcj02',
 			// 	success: function(res) {
@@ -107,6 +110,22 @@
 		},
 		created() {
 
+		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title:'地图',
+				path: `${this.$page.Map}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: '地图',
+				path: `${this.$page.Map}` //分享默认打开是小程序首页
+			}
 		},
 		methods: {
 			/**

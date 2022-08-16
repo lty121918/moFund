@@ -25,7 +25,9 @@
 
 		},
 		mounted() {
-			this.search()
+			this.onLaunch().then(res => {
+				this.getData()
+			})
 		},
 		methods: {
 			// 模拟请求数据

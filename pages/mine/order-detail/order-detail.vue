@@ -107,6 +107,9 @@
 			this.getData()
 		},
 		methods: {
+			Ginit(){
+				uni.hideShareMenu()
+			},
 			async handleNavTo() {
 				if (this.listData.productId) {
 					this.SET_STORAGE({

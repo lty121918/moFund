@@ -26,7 +26,9 @@
 		},
 		computed: {},
 		onShow() {
-			this.getMounted()
+			this.onLaunch().then(res => {
+				this.getMounted()
+			})
 		},
 		created() {
 
