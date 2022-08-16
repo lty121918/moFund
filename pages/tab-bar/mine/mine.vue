@@ -129,16 +129,16 @@
 		},
 		methods: {
 			setCopy() {
-				if (this.num == 3) {
-					const Authorization = this.$utils.util.getCache('Authorization');
-					uni.setClipboardData({
-						data: 'Bearer ' + Authorization,
-						success: function() {},
-					});
-					this.num = 0
-				} else {
-					this.num++
-				}
+				// if (this.num == 3) {
+				// 	const Authorization = this.$utils.util.getCache('Authorization');
+				// 	uni.setClipboardData({
+				// 		data: 'Bearer ' + Authorization,
+				// 		success: function() {},
+				// 	});
+				// 	this.num = 0
+				// } else {
+				// 	this.num++
+				// }
 
 			},
 			bindchooseavatar(e) {
@@ -170,14 +170,9 @@
 							avatar: url,
 							nickname: this.userInfo.name
 						}).then(res => {
-							const result = {
-								...this.userInfo,
-								avatar: self.$url + url
+							if(res.code==200){
+								this.getData()
 							}
-							this.SET_STORAGE({
-								str: 'userInfo',
-								data: result
-							})
 						})
 
 					},
@@ -191,19 +186,15 @@
 				console.log(this.name);
 				const url = this.userInfo.avatar.replace(this.$url, '')
 				this.$http['mine'].centerUpdate({
-					avatar: url,
+					avatar: url==this.avatar?'':url,
 					nickname: this.name
 				}).then(res => {
 					if (res.code == 200) {
 						this.showName = false
-						const result = {
-							...this.userInfo,
-							name: this.name
-						}
-						this.SET_STORAGE({
-							str: 'userInfo',
-							data: result
-						})
+						this.getData()
+					} else{
+						this.name = '',
+						this.showName = false
 					}
 				})
 
@@ -220,7 +211,7 @@
 						const result = {
 							...this.userInfo,
 							avatar: res.data.avatar || this.avatar,
-							name: res.data.name || '微信昵称',
+							name: res.data.name,
 							remainingSum: res.data.remainingSum,
 							roleName: res.data.roleName,
 						}

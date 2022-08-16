@@ -5,13 +5,14 @@
 			<image class="login-content-img" src="/static/login/logo2.png" mode="widthFix"></image>
 			<view class="fz40">极光体育申请获得以下权限</view>
 			<view class="color666 mt32">(获得您的手机号)</view>
-			<button class="login-button" type="primary" open-type="getPhoneNumber" @getphonenumber="getphonenumber"
-				size="mini">授 权</button>
+			<button v-if="isSubmit.indexOf(1)>-1&& isSubmit.indexOf(2)>-1" class="login-button" type="primary"
+				open-type="getPhoneNumber" @getphonenumber="getphonenumber" size="mini">授 权</button>
+			<button v-else class="login-button" type="primary" @click="getphonenumber2" size="mini">授 权</button>
 			<view class="tip-box flex" v-if="protocolData.length > 0">
 				<view>登录即视为您同意</view>
-				<view class="blue" @click.stop="showModal(protocolData[0])">《{{protocolData[0].protocolTitle}}》</view>
+				<view class="blue" @click.stop="showModal(protocolData[0],1)">《{{protocolData[0].protocolTitle}}》</view>
 				<view v-if="protocolData[1]">及</view>
-				<view class="blue" @click.stop="showModal(protocolData[1])" v-if="protocolData[1]">
+				<view class="blue" @click.stop="showModal(protocolData[1],2)" v-if="protocolData[1]">
 					《{{protocolData[1].protocolTitle}}》</view>
 			</view>
 		</view>
@@ -38,7 +39,8 @@
 		},
 		data() {
 			return {
-				protocolData
+				protocolData,
+				isSubmit: []
 			};
 		},
 		onLoad() {
@@ -50,7 +52,8 @@
 		methods: {
 			...mapMutations(['SET_STORAGE']),
 			// 协议展示
-			showModal(protocol) {
+			showModal(protocol, val) {
+				this.isSubmit.push(val)
 				this.$refs.protocol.toggle(protocol)
 			},
 			//当前登录按钮操作
@@ -101,8 +104,23 @@
 
 
 			},
+			getphonenumber2: debounce(function(e) {
+				const self = this
+				const o = self.isSubmit.indexOf(1)
+				const t = self.isSubmit.indexOf(2)
+				if (o == -1 || t == -1) {
+					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
+					return false
+				}
+			}),
 			getphonenumber: debounce(function(e) {
 				const self = this
+				const o = self.isSubmit.indexOf(1)
+				const t = self.isSubmit.indexOf(2)
+				if (o == -1 || t == -1) {
+					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
+					return false
+				}
 				wx.getUserInfo({
 					success: function(log) {
 						console.log(log.userInfo);
