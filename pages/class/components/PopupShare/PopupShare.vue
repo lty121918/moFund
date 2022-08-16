@@ -184,7 +184,13 @@
 		position: relative;
 		text-align: center;
 		text-decoration: none;
+		border-color: transparent !important;
+		&::after {
+			border: none;
+		}
 	}
+
+	
 
 	.popup2-content {
 		width: 686rpx;
