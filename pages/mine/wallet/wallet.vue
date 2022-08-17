@@ -65,9 +65,7 @@
 			}
 		},
 		onLoad() {
-			this.onLaunch().then(res => {
-				this.getData()
-			})
+			this.getData()
 		},
 		methods: {
 

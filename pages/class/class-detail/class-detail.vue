@@ -205,11 +205,9 @@
 			}
 		},
 		onLoad(e) {
-			this.onLaunch().then(async res => {
-				this.getTeach()
-				this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
-				this.getClassDetail()
-			})
+			this.getTeach()
+			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
+			this.getClassDetail()
 		},
 		methods: {
 			getClassDetail() {

@@ -34,7 +34,7 @@
 									<cover-view class="course-list-item-title t-over">{{item.productName}}</cover-view>
 									<cover-view class="course-list-item-price">
 										<cover-view class="color fz24">￥</cover-view>
-										<cover-view class="color fz32">{{item.price}}
+										<cover-view class="color fz32">{{item.price || 0}}
 											<cover-view class="kong"></cover-view>
 										</cover-view>
 										<cover-view class="fz24">/节</cover-view>
@@ -43,7 +43,7 @@
 									</cover-view>
 									<cover-view class="course-list-item-info">
 										<cover-view class="course-list-item-apply">
-											{{item.minAge}}-{{item.maxAge}}岁适用
+											{{item.minAge||0}}-{{item.maxAge||0}}岁适用
 										</cover-view>
 										<cover-view class="course-list-item-pin">
 											{{item.spellingClassNumber}}拼班

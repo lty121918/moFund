@@ -124,7 +124,8 @@
 			submit() {
 				if (!this.data.periodId) {
 					uni.showToast({
-						title: "请选择时段"
+						icon:'none',
+						title: "请选择一个时段发起拼班"
 					})
 					return false
 				}
@@ -186,7 +187,7 @@
 			// 选择时段
 			handlePeriod(item) {
 				console.log(item, this.data.periodId, item.id);
-				item.id = `${item.startTime}-${item.endTime}`
+				
 				if (item.id == this.data.periodId || item.status == 5) {
 					return false
 				}
@@ -218,6 +219,9 @@
 					endDate: item.endDate, //上课结束日期(周期)
 				})
 				// 上课时段
+				item.periodList.forEach(row=>{
+					row.id = `${row.startTime}-${row.endTime}`
+				})
 				this.periodList = item.periodList || []
 				let periodList ={}
 				console.log('this.periodList',this.periodList);

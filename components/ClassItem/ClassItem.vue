@@ -91,8 +91,10 @@
 			margin:0 32rpx 32rpx  32rpx;
 			padding: 0 32rpx 32rpx 32rpx;
 			// min-height: 344rpx;
-			background: #FFFFFF;
+			// background: #FFFFFF;
 			border-radius: 16rpx;
+			background-image: url('~@/static/class/class-item.png');
+			background-size: 100%;
 			&-top{
 				display: flex;
 				justify-content: space-between;

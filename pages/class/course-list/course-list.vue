@@ -131,9 +131,10 @@
 				padding: 24rpx;
 				width: 686rpx;
 				box-sizing: border-box;
-				background: #FFFFFF;
+				// background: #FFFFFF;
 				border-radius: 16rpx;
-
+				background-image: url('~@/static/class/course-list.png');
+				background-size: 100%;
 				&-img {
 					flex-shrink: 0;
 					margin-right: 30rpx;

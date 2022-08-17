@@ -363,9 +363,11 @@
 				width: 686rpx;
 				box-sizing: border-box;
 				// height: 152rpx;
-				background: #FFFFFF;
+				// background: #FFFFFF;
 				border-radius: 16rpx;
 				z-index: 99;
+				background-image: url('~@/static/class/course-detail.png');
+				background-size: 100%;
 
 				&-right {
 					display: flex;
