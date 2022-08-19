@@ -1,5 +1,5 @@
 module.exports = {
-	DEFAULT_SYSTEM_TITLE: `极光体培`, // 系统默认的标题，如果到时候改从后端获取配置，会覆盖掉这个参数
+	DEFAULT_SYSTEM_TITLE: `向日葵体培`, // 系统默认的标题，如果到时候改从后端获取配置，会覆盖掉这个参数
 	CACHE_PREFIX: "DONGAO_", //本地缓存前缀
 	// DOC_URL: 'http://172.20.1.25:8202/polar', // 接口文档地址
 	DOC_URL: 'http://172.20.3.47:8302/polar',

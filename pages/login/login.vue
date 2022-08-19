@@ -5,10 +5,14 @@
 			<image class="login-content-img" src="/static/login/logo2.png" mode="widthFix"></image>
 			<view class="fz40">极光体育申请获得以下权限</view>
 			<view class="color666 mt32">(获得您的手机号)</view>
-			<button v-if="isSubmit.indexOf(1)>-1&& isSubmit.indexOf(2)>-1" class="login-button" type="primary"
+			<button v-if="isSubmit" class="login-button" type="primary"
 				open-type="getPhoneNumber" @getphonenumber="getphonenumber" size="mini">授 权</button>
 			<button v-else class="login-button" type="primary" @click="getphonenumber2" size="mini">授 权</button>
-			<view class="tip-box flex" v-if="protocolData.length > 0">
+			<view class="tip-box flex" v-if="protocolData.length > 0" @click="changeBox">
+				<view v-if="!isSubmit" class="attendance-check">
+				</view>
+				<image v-if="isSubmit" class="attendance-check" src="/static/checkbox.png" mode="widthFix">
+				</image>
 				<view>登录即视为您同意</view>
 				<view class="blue" @click.stop="showModal(protocolData[0],1)">《{{protocolData[0].protocolTitle}}》</view>
 				<view v-if="protocolData[1]">及</view>
@@ -40,7 +44,7 @@
 		data() {
 			return {
 				protocolData,
-				isSubmit: []
+				isSubmit: true
 			};
 		},
 		onLoad() {
@@ -51,9 +55,11 @@
 		onReady() {},
 		methods: {
 			...mapMutations(['SET_STORAGE']),
+			changeBox(){
+				this.isSubmit = !this.isSubmit
+			},
 			// 协议展示
 			showModal(protocol, val) {
-				this.isSubmit.push(val)
 				this.$refs.protocol.toggle(protocol)
 			},
 			//当前登录按钮操作
@@ -106,18 +112,14 @@
 			},
 			getphonenumber2: debounce(function(e) {
 				const self = this
-				const o = self.isSubmit.indexOf(1)
-				const t = self.isSubmit.indexOf(2)
-				if (o == -1 || t == -1) {
+				if (!self.isSubmit) {
 					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
 					return false
 				}
 			}),
 			getphonenumber: debounce(function(e) {
 				const self = this
-				const o = self.isSubmit.indexOf(1)
-				const t = self.isSubmit.indexOf(2)
-				if (o == -1 || t == -1) {
+				if (!self.isSubmit) {
 					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
 					return false
 				}
@@ -204,14 +206,26 @@
 	.tip-box {
 		margin-top: 32rpx;
 		width: 100%;
-		height: 60rpx;
+		// height: 60rpx;
+		align-items: center;
 		justify-content: center;
 		z-index: 100;
 		flex-wrap: wrap;
-		line-height: 26rpx;
+		// line-height: 30rpx;
 	}
 
 	.blue {
 		color: #3B94FF;
+	}
+	.attendance {
+		&-check {
+			margin-right: 24rpx;
+			flex-shrink: 0;
+			width: 36rpx;
+			height: 36rpx;
+			background: #FFFFFF;
+			border-radius: 8rpx;
+			border: 2rpx solid #E7E8EB;
+		}
 	}
 </style>
