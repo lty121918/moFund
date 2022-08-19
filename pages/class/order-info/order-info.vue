@@ -125,7 +125,14 @@
 			// wx.reLaunch({
 			// 	url: this.$page.Home
 			// })
-			this.$utils.router.navBack(3)
+			let pages = getCurrentPages(); //页面对象
+			let prevpage = pages[pages.length - 2]; //上一个页面对象
+			let path = prevpage.route;
+			if(path == 'pages/class/course-detail/course-detail'){
+				this.$utils.router.navBack(2)
+			} else {
+			}
+			
 		},
 		methods: {
 			getMineSpellClass() {
