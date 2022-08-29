@@ -11,7 +11,7 @@
 				</view>
 				<view class="color">
 					<text class="fz24">￥</text>
-					<text class="fz32">{{listData.actuallyAmount || 0}}</text>
+					<text class="fz32">{{listData.orderAmount || 0}}</text>
 					<text class="color3 fz24">/节</text>
 				</view>
 				<view class="order-detail-status">{{orderStatus[listData.orderStatus]}}</view>
@@ -40,7 +40,7 @@
 			</view>
 			<view class="order-detail-center-item">
 				<text>实付金额:</text>
-				<text class="ml12">{{listData.actuallyAmount ||listData.amount}}元</text>
+				<text class="ml12">{{actuallyAmount}}元</text>
 			</view>
 		</view>
 
@@ -98,6 +98,17 @@
 					3: '退款中',
 					4: "已退款",
 					5: '已取消'
+				}
+			}
+		},
+		computed: {
+			actuallyAmount() {
+				if (this.listData.actuallyAmount !== undefined) {
+					return this.listData.actuallyAmount
+				} else if (this.listData.amount !== undefined) {
+					return this.listData.amount
+				} else {
+					return 0
 				}
 			}
 		},

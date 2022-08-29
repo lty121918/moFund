@@ -228,6 +228,8 @@
 							avatar: res.data.avatar || this.avatar,
 							name: res.data.name,
 							remainingSum: res.data.remainingSum,
+							overallSum: res.data.overallSum,
+							noRemainingSum: res.data.noRemainingSum,
 							roleName: res.data.roleName,
 						}
 						this.SET_STORAGE({

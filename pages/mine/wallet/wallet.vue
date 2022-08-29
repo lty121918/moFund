@@ -6,6 +6,18 @@
 				<text class="fz44">￥</text>
 				<text class="fz76 fwb">{{userInfo.remainingSum}}</text>
 			</view>
+			<view class="wallet-mony-detail">
+				<view class="wallet-mony-detail-item">
+					<text>可提现:</text>
+					<text>￥</text>
+					<text>{{userInfo.overallSum}}</text>
+				</view>
+				<view class="wallet-mony-detail-item">
+					<text>不可提现:</text>
+					<text>￥</text>
+					<text>{{userInfo.noRemainingSum}}</text>
+				</view>
+			</view>
 			<view class="mt28 flex-cc" v-if="isTeach==2">
 				<view class="wallet-mony-button" @click="handleWithdrawal">
 					提现
@@ -125,7 +137,7 @@
 </script>
 <style>
 	.wallet-scroll {
-		height: calc(100vh - 60px - 350rpx);
+		height: calc(100vh - 60px - 400rpx);
 	}
 </style>
 <style lang="scss" scoped>
@@ -139,7 +151,7 @@
 
 		// background-position: 0 -170rpx;
 		&-mony {
-			height: 350rpx;
+			height: 400rpx;
 			color: #FFFFFF;
 
 			&-text {
@@ -172,6 +184,16 @@
 				width: 348rpx;
 				background-color: white;
 				color: #DE501F;
+			}
+		}
+
+		&-mony-detail {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			
+			&-item {
+				margin: 0 12px;
 			}
 		}
 
