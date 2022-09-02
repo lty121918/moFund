@@ -17,6 +17,11 @@
 					<text>￥</text>
 					<text>{{userInfo.noRemainingSum}}</text>
 				</view>
+				<view class="wallet-mony-detail-item">
+					<text>冻结金额:</text>
+					<text>￥</text>
+					<text>{{userInfo.noRemainingSum}}</text>
+				</view>
 			</view>
 			<view class="mt28 flex-cc" v-if="isTeach==2">
 				<view class="wallet-mony-button" @click="handleWithdrawal">
@@ -151,7 +156,9 @@
 
 		// background-position: 0 -170rpx;
 		&-mony {
-			height: 400rpx;
+			min-height: 400rpx;
+			padding-bottom: 32rpx;
+			box-sizing: border-box;
 			color: #FFFFFF;
 
 			&-text {

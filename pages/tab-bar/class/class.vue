@@ -159,8 +159,7 @@
 					`2022-01-01 ${item.endPeriod}`,
 					'hh:mm')
 				item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
-				if (item.classStatus == 2 || item.classStatus == 4 || item.classStatus ==
-					5 || item.classStatus == 6) {
+				if (item.classStatus != 0 && item.classStatus != 1 && item.classStatus !=3) {
 					item.nextCLassTime = -1
 				}
 				if (item.nextCLassTime && item.nextCLassTime != -1) {

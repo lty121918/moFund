@@ -43,16 +43,17 @@
 				<text>添加学员</text>
 			</view>
 		</view>
-		<!-- 	<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+		<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<view>
+			<view class="order-info-footer-button order-info-footer-button2">
+				取消拼班
 			</view>
-			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
+			<!-- <view class="order-info-footer-button order-info-footer-button2" @click="submit">
 				确定
-			</view>
+			</view> -->
 		</view>
 		<view style="height: 180rpx"></view>
-		<view v-if="!isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
+		<!-- 	<view v-if="!isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
 			<view>
 			</view>
 			<view class="order-info-footer-button order-info-footer-button2" @click="submit">
