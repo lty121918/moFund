@@ -176,7 +176,7 @@
 					str: 'campus'
 				})
 				this.productId = e.productId
-				if (e.lat && e.lng) {
+				if (e.lat && e.lng || e.campusId) {
 					let res = await  this.$http['map'].getSearchList({
 						lat: e.lat,
 						lng: e.lng,
@@ -185,8 +185,8 @@
 					if (res.code == 200) {
 						let list = res.data
 						// 如果之前缓存的社区已经被删除 则重新选取
-						const ls = list.filter(item => item.campusId = e.campusId)[0] || null
-						console.log(ls);
+						const ls = list.filter(item => item.campusId == e.campusId)[0] || null
+						console.log('当前校区',ls);
 						this.campusOther =  ls || this.campus
 					}
 				}else {

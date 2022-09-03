@@ -27,6 +27,10 @@
 		computed: {},
 		onShow() {
 			this.onLaunch().then(res => {
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					return false
+				}
 				this.getMounted()
 			})
 		},

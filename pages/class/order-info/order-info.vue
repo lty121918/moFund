@@ -111,7 +111,7 @@
 				console.log(res.target)
 			}
 			return {
-				title: this.data.productName,
+				title: '快来和我一起运动吧!',// this.data.productName,
 				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
@@ -127,9 +127,15 @@
 			// })
 			let pages = getCurrentPages(); //页面对象
 			let prevpage = pages[pages.length - 2]; //上一个页面对象
+			let prevpage2 = pages[pages.length - 3]; //上一个页面对象
 			let path = prevpage.route;
-			if(path == 'pages/class/course-detail/course-detail'){
+			let path2 =prevpage2 == 'undefined'? null : prevpage2.route;
+			console.log('上个页面','path:',path,prevpage2);
+			if(path == 'pages/class/course-detail/course-detail' && path2 && path2 !='pages/class/order-info/order-info'){
 				this.$utils.router.navBack(2)
+				
+			} else if(path2 && path2 =='pages/class/order-info/order-info'){
+				this.$utils.router.swtTo(this.$page.Home)
 			} else {
 			}
 			
@@ -180,11 +186,21 @@
 			},
 			// 联系团长
 			handlePhone(phone) {
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				wx.makePhoneCall({
 					phoneNumber: phone //仅为示例，并非真实的电话号码
 				})
 			},
 			handleAdd() {
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				this.data.weChatUserList = this.data.weChatUserList || []
 				const ls = this.data.weChatUserList.map(item => item.studentId)
 				this.$refs.popupAddStu.handleShow(this.classId, ls, this.data)
@@ -219,6 +235,11 @@
 			// 删除学员
 			handleDel(val) {
 				const self = this
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				self.$utils.model.showMsgModal({
 					content: '确定要删除该团员',
 					showCancel: true,

@@ -7,7 +7,10 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   console.log('生产环境')
 }
-
+const {Login,Home,Map,Search,Course,CourseDetail,Evaluate,PieceList,OrderInfo} = DEV_CONFIG.ROUTER_LIST
+const currentList = [
+	Login,Home,Map,Course,CourseDetail,Evaluate,PieceList,Search,OrderInfo
+]
 let requestingList = []
 const requestBefore = (config) => {
 	
@@ -71,7 +74,8 @@ const requestBefore = (config) => {
 	let routes = getCurrentPages() //获取当前页面栈
 	let curRoute = routes[routes.length - 1].route //获取当前页面的路由
 	console.log(curRoute);
-	let isLogin = curRoute !== 'pages/login/login'
+	let isLogin = currentList.indexOf(`/${curRoute}`)==-1
+	console.log(isLogin,'sisLogin');
 	if (!config.header['Authorization'] && isLogin && DEV_CONFIG.IS_VERIFICATION) {
 		utils.userInfo.login()
 		return false

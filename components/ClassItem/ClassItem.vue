@@ -78,7 +78,7 @@
 						this.$utils.router.navTo(this.$page.ClassDetail,{classId: this.data.classId})
 					}
 				} else if(this.type==3){
-					this.$utils.router.navTo(this.$page.CourseDetail,{productId: this.data.productId})
+					this.$utils.router.navTo(this.$page.CourseDetail,{productId: this.data.productId,campusId: this.data.campusId})
 				}
 			}
 		}
