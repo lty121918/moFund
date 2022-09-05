@@ -96,6 +96,11 @@
 		methods: {
 			submit(ref) {
 				const self = this
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				this.$refs[ref].validate().then(res => {
 					console.log('success', res);
 					self.property = false

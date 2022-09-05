@@ -92,6 +92,11 @@
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					// this.$utils.userInfo.login('this')
+					return false
+				}
 				this.search({
 					isTeach: this.isTeach
 				})

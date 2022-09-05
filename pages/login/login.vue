@@ -44,10 +44,12 @@
 		data() {
 			return {
 				protocolData,
-				isSubmit: false
+				isSubmit: false,
+				type: null
 			};
 		},
-		onLoad() {
+		onLoad(e) {
+			this.type = e.type
 			this.SET_STORAGE({
 				str: 'shareInfo'
 			})
@@ -92,9 +94,15 @@
 				})
 				// console.log('1是2否教练', isTeach);
 				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)
-
+				if(this.type=='this'){
+					if (data.isCoach) {
+						this.setTeachApp()
+					}
+					this.$utils.router.navBack()
+					return false
+				}
 				if (this.shareInfo.classId) {
-					if (data.isCoach == 1) {
+					if (data.isCoach) {
 						this.setTeachLogin(this.shareInfo)
 						// this.$utils.router.redTo(this.$page.ClassDetail, this.shareInfo)
 					} else {
@@ -102,9 +110,15 @@
 					}
 
 				} else {
-					this.$utils.router.swtTo(this.$page.Home, {
-						type: '1'
-					})
+					
+					if (!data.isCoach) {
+						this.$utils.router.swtTo(this.$page.Home, {
+							type: '1'
+						})
+					} else {
+						this.$utils.router.swtTo(this.$page.Class)
+					}
+					
 				}
 
 

@@ -207,6 +207,7 @@
 			}
 		},
 		onLoad(e) {
+			console.log('接收数据',e);
 			this.getTeach()
 			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
 			this.getClassDetail()
@@ -231,6 +232,16 @@
 					classId: this.classId
 				}).then(res => {
 					if (res.code == 200) {
+						if(!res.data){
+							if (this.isTeach == 1) {
+								// 教练
+								this.$utils.router.swtTo(this.$page.Class)
+							} else {
+								// 家长
+								this.$utils.router.swtTo(this.$page.Home)
+							}
+							return false
+						}
 						this.isHead = res.data.isBoss
 						res.data.startPeriod = this.$utils.dateTime.getLocalTime(
 							`2022-01-01 ${res.data.startPeriod}`, 'hh:mm')

@@ -129,6 +129,11 @@
 					})
 					return false
 				}
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				console.log('aa',JSON.stringify(this.data));
 				// return false
 				this.$http['classes'].getInitiateSpellClass(this.data).then(res => {

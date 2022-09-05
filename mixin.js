@@ -13,6 +13,7 @@ const minxin = {
 			isIphoneX: false,
 			safeAreaInsetBottom: true, //底部高度
 			isTeach: '', // 是否教练 1是2不是
+			authorization: null
 		}
 	},
 	watch: {
@@ -39,6 +40,7 @@ const minxin = {
 		},
 	},
 	onShow() {
+		this.authorization = utils.util.getCache('Authorization');
 		this.SET_STORAGE({
 			str: 'campus'
 		})
@@ -53,7 +55,6 @@ const minxin = {
 		})
 		this.getTeach()
 		this.Ginit()
-
 	},
 	onload(e) {
 		console.log('1222', e)
@@ -61,7 +62,7 @@ const minxin = {
 	},
 	created() {
 		wx.showShareMenu({
-			withShareTicket: true,
+			// withShareTicket: true,
 			menus: ["shareAppMessage", 'shareTimeline']
 		})
 		const res = uni.getSystemInfoSync()
@@ -326,8 +327,28 @@ const minxin = {
 
 		onLaunch(val) {
 			return new Promise(async (resolve) => {
+				const {
+					Login,
+					Home,
+					Map,
+					Course,
+					CourseDetail,
+					Evaluate,
+					PieceList,
+					Search,
+					OrderInfo,
+					Mine
+				} = this.$config.ROUTER_LIST
+				const currentList = [
+					Mine,Login, Home, Map, Course, 
+					CourseDetail, Evaluate, PieceList, Search, OrderInfo,
+				]
+				let routes = getCurrentPages() //获取当前页面栈
+				let curRoute = routes[routes.length - 1].route //获取当前页面的路由
+				let isLogin = currentList.indexOf(`/${curRoute}`) > -1
+				console.log(isLogin, 'isLogin');
 				const Authorization = utils.util.getCache('Authorization');
-				if (Authorization) {
+				if (Authorization || isLogin) {
 					let isTeach = utils.util.getCache('role')
 					if (isTeach == 1) {
 						await this.setTeachApp()

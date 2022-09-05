@@ -28,9 +28,12 @@ class UserInfo {
 	/**
 	 * 重新登录
 	 */
-	login(msg = '重新登录') {
-		uni.redirectTo({
-			url: '/pages/login/login'
+	login(value = null,msg = '重新登录') {
+		// uni.redirectTo({
+		// 	url: '/pages/login/login'
+		// });
+		uni.navigateTo({
+			url: '/pages/login/login?type='+ value
 		});
 		this.setCache('Authorization', '');
 		this.setCache('login', false);

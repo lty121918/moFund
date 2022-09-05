@@ -180,6 +180,16 @@
 						title: '首页'
 					})
 				})
+				if(!this.location.latitude){
+					this.SET_STORAGE({
+						data: {
+							latitude: '30.555175310610363',
+							longitude: '114.31188993115236'
+						},
+						str: 'location'
+					})
+				}
+				
 				this.getData()
 
 			}),
