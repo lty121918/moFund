@@ -3,13 +3,13 @@
 	"name": "teacher-side",
 	"displayName": "teacher-side",
 	"version": "3.2.10",
-	"description": "极光体培",
+	"description": "向日葵体培",
 	"scripts": {
 		"api": "node config/api.js"
 	},
 	"repository": "https://github.com/dcloudio/hello-uniapp.git",
 	"keywords": [
-		"极光体培"
+		"向日葵体培"
 	],
 	"author": "",
 	"license": "MIT",
@@ -24,7 +24,7 @@
 	},
 	"dcloudext": {
 		"category": [
-			"极光体培"
+			"向日葵体培"
 		],
 		"sale": {
 			"regular": {

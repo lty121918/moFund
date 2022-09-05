@@ -6,14 +6,20 @@
 				<!-- <view class="mine-head-img2" v-if="isTeach==1">
 					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
 				</view> -->
-				<button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
-					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
+				<button v-if="authorization" class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
+					<image class="mine-head-img" :src="userInfo.avatar || avatar" mode="aspectFill"></image>
+				</button>
+				<button v-if="!authorization" class="mine-head-img2" @click="handleRouter">
+					<image class="mine-head-img" :src="avatar" mode="aspectFill"></image>
 				</button>
 				<!-- <image class="mine-head-img2" :src="userInfo.avatar" mode="aspectFill"></image> -->
 				<view>
 					<view class="flex-sc">
-						<text class="mine-head-name" v-show="!showName" @click="showName=true,name=''">
+						<text class="mine-head-name" v-show="!showName && authorization" @click="showName=true,name=''">
 							{{userInfo.name|| '授权您的微信头像及昵称'}}
+						</text>
+						<text class="mine-head-name" v-show="!authorization" @click="handleRouter">
+							授权您的微信头像及昵称
 						</text>
 						<input :focus='true' type="nickname" ref="input" @blur="handleBlur"
 							v-if="showName" placeholder-style="font-size:30rpx;color:#cecece" maxlength="25"
@@ -23,34 +29,34 @@
 					</view>
 					<view class="mine-head-balance">
 						<image class="mine-head-balance-img" src="/static/mine/balance.png" mode="aspectFill"></image>
-						<text @click="setCopy">账户余额：￥{{userInfo.remainingSum}}</text>
+						<text @click="setCopy">账户余额：￥{{userInfo.remainingSum || 0}}</text>
 					</view>
 				</view>
 			</view>
-			<view class="mine-head-switch" @click="setTeach">
+			<view class="mine-head-switch" @click="handleRole">
 				<image class="mine-head-switch-img" src="/static/mine/switch.png" mode="aspectFill"></image>
 				<text>切换身份</text>
 			</view>
 			<view class="mine-nav" v-if="isTeach==2">
-				<view class="mine-nav-item" @click="$utils.router.navTo($page.Order)">
+				<view class="mine-nav-item" @click="handleRouterTo($page.Order)">
 					<image class="mine-nav-img1" src="/static/mine/order.png" mode="aspectFill"></image>
 					<view>我的订单</view>
 				</view>
-				<view class="mine-nav-item" @click="$utils.router.navTo($page.MyClass)">
+				<view class="mine-nav-item" @click="handleRouterTo($page.MyClass)">
 					<image class="mine-nav-img2" src="/static/mine/competition.png" mode="aspectFill"></image>
 					<view>我的拼班</view>
 				</view>
-				<view class="mine-nav-item" @click="$utils.router.navTo($page.Student)">
+				<view class="mine-nav-item" @click="handleRouterTo($page.Student)">
 					<image class="mine-nav-img3" src="/static/mine/student.png" mode="aspectFill"></image>
 					<view>我的学员</view>
 				</view>
-				<view class="mine-nav-item" @click="$utils.router.navTo($page.Wallet)">
+				<view class="mine-nav-item" @click="handleRouterTo($page.Wallet)">
 					<image class="mine-nav-img4" src="/static/mine/wallet.png" mode="aspectFill"></image>
 					<view>我的钱包</view>
 				</view>
 			</view>
 			<view class="mine-operation mine-operation2" v-if="isTeach==1">
-				<view class="mine-operation-item mine-operation-item2" @click="$utils.router.navTo($page.Wallet)">
+				<view class="mine-operation-item mine-operation-item2" @click="handleRouterTo($page.Wallet)">
 					<view class="mine-operation-item-left">
 						<image class="mine-operation-item-img" src="/static/mine/balance2.png" mode="aspectFill"></image>
 						<text>我的钱包</text>
@@ -68,7 +74,7 @@
 		</view>
 
 		<view class="mine-operation" v-if="isTeach==2">
-			<view class="mine-operation-item" @click="$utils.router.navTo($page.Declare)">
+			<view class="mine-operation-item" @click="handleRouterTo($page.Declare)">
 				<view class="mine-operation-item-left">
 					<image class="mine-operation-item-img" src="/static/mine/declare.png" mode="aspectFill"></image>
 					<text>我的申报</text>
@@ -92,7 +98,7 @@
 		</view>
 
 		<view v-if="isTeach==2" class="mine-operation">
-			<view class="mine-operation-item mine-operation-item2" @click="$utils.router.navTo($page.Coach)">
+			<view class="mine-operation-item mine-operation-item2" @click="handleRouterTo($page.Coach)">
 				<view class="mine-operation-item-left">
 					<image class="mine-operation-item-img" src="/static/mine/apply.png" mode="aspectFill"></image>
 					<text>成为教练</text>
@@ -119,7 +125,12 @@
 			}
 		},
 		computed: {},
-		onShow() {
+		onShow(e) {
+			const authorization = this.$utils.util.getCache('Authorization');
+			this.authorization = authorization
+			if(!authorization){
+				return false
+			}
 			this.getData()
 		},
 		created() {
@@ -127,7 +138,42 @@
 			// 获取数据
 
 		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title:'我的',
+				path: `${this.$page.Mine}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: '我的',
+				path: `${this.$page.Mine}` //分享默认打开是小程序首页
+			}
+		},
 		methods: {
+			handleRouterTo(page){
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
+				this.$utils.router.navTo(page)
+			},
+			handleRole(){
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login()
+					return false
+				}
+				this.setTeach()
+			},
+			handleRouter(){
+				this.$utils.userInfo.login('this')
+			},
 			setCopy() {
 				// if (this.num == 3) {
 				// 	const Authorization = this.$utils.util.getCache('Authorization');
@@ -139,7 +185,6 @@
 				// } else {
 				// 	this.num++
 				// }
-
 			},
 			bindchooseavatar(e) {
 				const self = this
@@ -213,6 +258,8 @@
 							avatar: res.data.avatar || this.avatar,
 							name: res.data.name,
 							remainingSum: res.data.remainingSum,
+							overallSum: res.data.overallSum,
+							noRemainingSum: res.data.noRemainingSum,
 							roleName: res.data.roleName,
 						}
 						this.SET_STORAGE({

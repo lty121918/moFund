@@ -37,14 +37,22 @@
 					})
 					let isTeach = this.teach
 					if(list.length>0){
-						if (isTeach == 1 && list[0].name=='home') {
-							this.active = 'class'
-						} else {
-							this.active = list[0].name
-						}
+						this.active = list[0].name
+						// if (isTeach == 1 && list[0].name=='home') {
+						// 	this.active = 'class'
+						// } else {
+						// 	this.active = list[0].name
+						// }
 					}
 				}
-			}
+			},
+			// teach(newVal){
+			// 	if (newVal == 1) {
+			// 		this.active = 'class'
+			// 	} else {
+			// 		this.active = 'home'
+			// 	}
+			// },
 		},
 		computed: {
 			...mapGetters([ 'animate', 'teach']),
@@ -64,6 +72,7 @@
 				}
 			}
 		},
+	
 		created() {
 			this.SET_STORAGE({
 				str: 'active',

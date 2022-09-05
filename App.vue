@@ -1,18 +1,24 @@
 <script>
+	// import mixin from '@/mixin.js'
 	const _locationChangeFn = function(res) {
 		console.log('location change', res)
 	}
 	export default {
-		onLaunch: function() {
-			// wx.onLocationChange(_locationChangeFn)
+		// mixins: [mixin],
+		onShow: function(options) {
+		
+		},
+		onLaunch: function(options) {
+			// this.onLaunch(options)
 
 		},
-		onShow: function() {
-			console.log('App Show')
-		},
+		
 		onHide: function() {
 			// wx.offLocationChange(_locationChangeFn)
 			console.log('App Hide')
+		},
+		methods: {
+			
 		}
 	}
 </script>

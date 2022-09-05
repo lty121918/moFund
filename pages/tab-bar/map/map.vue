@@ -34,7 +34,7 @@
 									<cover-view class="course-list-item-title t-over">{{item.productName}}</cover-view>
 									<cover-view class="course-list-item-price">
 										<cover-view class="color fz24">￥</cover-view>
-										<cover-view class="color fz32">{{item.price}}
+										<cover-view class="color fz32">{{item.price || 0}}
 											<cover-view class="kong"></cover-view>
 										</cover-view>
 										<cover-view class="fz24">/节</cover-view>
@@ -43,7 +43,7 @@
 									</cover-view>
 									<cover-view class="course-list-item-info">
 										<cover-view class="course-list-item-apply">
-											{{item.minAge}}-{{item.maxAge}}岁适用
+											{{item.minAge||0}}-{{item.maxAge||0}}岁适用
 										</cover-view>
 										<cover-view class="course-list-item-pin">
 											{{item.spellingClassNumber}}拼班
@@ -84,12 +84,15 @@
 		computed: {},
 		onShow() {
 			const self = this
-			// self.getData()
-			self.getLocation(false).then(async (res) => {
-				self.latitude = res.latitude
-				self.longitude = res.longitude
-				self.getData()
+			this.onLaunch().then(res=>{
+				self.getLocation(false).then(async (res) => {
+					self.latitude = res.latitude
+					self.longitude = res.longitude
+					self.getData()
+				})
 			})
+			// self.getData()
+			
 			// uni.getLocation({
 			// 	type: 'gcj02',
 			// 	success: function(res) {
@@ -107,6 +110,22 @@
 		},
 		created() {
 
+		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title:'地图',
+				path: `${this.$page.Map}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: '地图',
+				path: `${this.$page.Map}` //分享默认打开是小程序首页
+			}
 		},
 		methods: {
 			/**
