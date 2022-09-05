@@ -212,6 +212,22 @@
 			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
 			this.getClassDetail()
 		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title: this.data.className,// this.data.productName,
+				path: `${this.$page.ClassDetail}?classId=${this.classId}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: this.data.className,//this.share.title,
+				path: `${this.$page.ClassDetail}?classId=${this.classId}` //分享默认打开是小程序首页
+			}
+		},
 		methods: {
 			getClassDetail() {
 				const {

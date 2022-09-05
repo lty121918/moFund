@@ -1,5 +1,5 @@
 <template>
-	<view class="home">
+	<view class="home" v-if="isTeach==2">
 		<drag-button :isDock="true" :existTabBar="true" @btnClick="btnClick"/>
 		<view class="home-head2"></view>
 		<view class="home-head">
@@ -117,18 +117,16 @@
 				return this.$url
 			}
 		},
-		created() {
-
-			// bus.$on('getMounted', () => {
-			// 	console.log('执行');
-			// 	this.getMounted()
-			// })
-		},
+		created() {},
 		onShow() {
-			this.onLaunch().then(res => {
-				this.getMounted()
-			})
+			this.getTeach()
+			if (this.isTeach == 1) {
+				this.$utils.router.swtTo(this.$page.Class)
+				return false
+			}
+			this.getMounted()
 		},
+	
 		mounted() {
 
 		},
@@ -189,7 +187,7 @@
 						str: 'location'
 					})
 				}
-				
+
 				this.getData()
 
 			}),
