@@ -57,8 +57,7 @@
 						data = res.data || []
 
 						data.forEach(item => {
-							if (item.classStatus == 2 || item.classStatus == 4 || item.classStatus ==
-								5 || item.classStatus == 6) {
+							if (item.classStatus != 0 && item.classStatus != 1 && item.classStatus !=3) {
 									item.nextCLassTime = -1
 							}
 							if (item.coverImage.indexOf('http') == -1) {

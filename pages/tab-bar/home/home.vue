@@ -1,5 +1,6 @@
 <template>
 	<view class="home" v-if="isTeach==2">
+		<drag-button :isDock="true" :existTabBar="true" @btnClick="btnClick"/>
 		<view class="home-head2"></view>
 		<view class="home-head">
 			<view class="home-head-address" @click="handleNavTo">
@@ -97,6 +98,7 @@
 	} from "@/utils/lodash.js";
 	import bus from '@/utils/bus.js'
 	import mixin from '@/mixin.js'
+	import DragButton from "@/components/DragButton/DragButton.vue";
 	export default {
 		mixins: [mixin],
 		data() {
@@ -106,6 +108,9 @@
 				spellClassList: [], // 附件拼班
 				campusName: ''
 			}
+		},
+		components: {
+			DragButton
 		},
 		computed: {
 			url() {
@@ -121,8 +126,9 @@
 			}
 			this.getMounted()
 		},
+	
 		mounted() {
-			
+
 		},
 		methods: {
 			handleNavTo() {
@@ -185,6 +191,7 @@
 				this.getData()
 
 			}),
+			btnClick(){},
 			// 请求数据
 			async getData() {
 				console.log('数据请求home');
