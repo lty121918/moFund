@@ -62,7 +62,7 @@ const minxin = {
 	},
 	created() {
 		wx.showShareMenu({
-			withShareTicket: true,
+			// withShareTicket: true,
 			menus: ["shareAppMessage", 'shareTimeline']
 		})
 		const res = uni.getSystemInfoSync()
