@@ -107,7 +107,6 @@ const mutations = {
 		state.tabbars = data
 	},
 	SET_TEACH(state, data) {
-		console.log(data, 'data');
 		state.teach = data
 	},
 }

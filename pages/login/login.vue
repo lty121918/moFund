@@ -92,7 +92,6 @@
 					str: 'userInfo',
 					data
 				})
-				// console.log('1是2否教练', isTeach);
 				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)
 				if(this.type=='this'){
 					if (data.isCoach) {

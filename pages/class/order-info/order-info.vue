@@ -112,6 +112,7 @@
 			}
 			return {
 				title: '快来和我一起运动吧!',// this.data.productName,
+				imageUrl: this.data.coverImage,  
 				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
