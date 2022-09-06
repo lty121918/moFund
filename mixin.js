@@ -97,12 +97,12 @@ const minxin = {
 	methods: {
 		Ginit() {
 			// 空壳
-			console.log('路由', uni.getLaunchOptionsSync());
+			// console.log('路由', uni.getLaunchOptionsSync());
 		},
 		...mapMutations(['SET_TEACH', 'SET_STORAGE']),
 		getTeach() {
 			let isTeach = this.$utils.util.getCache('role')
-			console.log('1是2否教练', isTeach);
+			console.log('Mixin->1是2否教练', isTeach);
 			if (isTeach == null || isTeach == '') {
 				this.isTeach = 2
 				this.$utils.util.setCache('role', this.isTeach)
@@ -231,7 +231,7 @@ const minxin = {
 						})
 					},
 					fail: function(e) {
-						console.log(e);
+						console.log('报错信息',e);
 						uni.getSetting({
 							success: res => {
 								if (typeof(res.authSetting['scope.userLocation']) !=
@@ -281,6 +281,7 @@ const minxin = {
 											}
 										});
 									} else {
+										
 										self.SET_STORAGE({
 											data: {
 												latitude: '30.555175310610363',
@@ -293,7 +294,27 @@ const minxin = {
 											longitude: '114.31188993115236'
 										})
 									}
-
+								} else {
+									const LOCATiION = self.SET_STORAGE({
+										str: 'location'
+									})
+									if(LOCATiION&&LOCATiION.latitude){
+										resolve(LOCATiION)
+									} else {
+										self.SET_STORAGE({
+											data: {
+												latitude: '30.555175310610363',
+												longitude: '114.31188993115236'
+											},
+											str: 'location'
+										})
+										resolve({
+											latitude: '30.555175310610363',
+											longitude: '114.31188993115236'
+										})
+									}
+									
+									
 								}
 							}
 						});
