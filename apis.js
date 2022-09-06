@@ -41,6 +41,7 @@ const APIS_LIST = {
   "_operation_banner_del": '/operation/banner/del', // 删除轮播图
   "_operation_banner_page": '/operation/banner/page', // 查询轮播图列表
   "_operation_banner_upd": '/operation/banner/upd', // 修改轮播图
+  "_operation_pay_export": '/operation/pay/export', // 导出
   "_operation_pay_payNotify": '/operation/pay/payNotify', // 支付回调接口
   "_operation_sys_dict_add": '/operation/sys-dict/add', // 添加字典信息
   "_operation_sys_dict_delete": '/operation/sys-dict/delete', // 删除字典信息
@@ -70,8 +71,8 @@ const APIS_LIST = {
   "_wx_user_center_get_apply": '/wx/user/center/get-apply', // 我的申报
   "_wx_user_center_role_switching": '/wx/user/center/role-switching', // 切换角色
   "_wx_user_center_update": '/wx/user/center/update', // 修改当前用户信息
+  "_wx_user_class_cancel_class": '/wx/user/class/cancel-class', // 取消拼班中的班级
   "_wx_user_class_detail": '/wx/user/class/detail', // 获取班级详情
-  "_wx_user_class_disband_class": '/wx/user/class/disband-class', // 解散拼班(团长)
   "_wx_user_class_exit": '/wx/user/class/exit', // 退出班级（家长）
   "_wx_user_class_get_evaluate": '/wx/user/class/get-evaluate', // 获取教练对学员的评价
   "_wx_user_class_mien": '/wx/user/class/mien', // 班级风采
@@ -79,9 +80,10 @@ const APIS_LIST = {
   "_wx_user_index_add_stu": '/wx/user/index/add-stu', // 拼班添加学员
   "_wx_user_index_banner": '/wx/user/index/banner', // 小程序端首页获取轮播图
   "_wx_user_index_campus_search_list": '/wx/user/index/campus-search-list', // 校区搜索列表
-  "_wx_user_index_course_date": '/wx/user/index/course-date', // 获取课程日期
+  "_wx_user_index_course_date": '/wx/user/index/course-date', // 获取课程日期和节次
   "_wx_user_index_course_details": '/wx/user/index/course-details', // 商品详情
   "_wx_user_index_disband_class": '/wx/user/index/disband-class', // 解散拼班(团长)
+  "_wx_user_index_getCustomerWx": '/wx/user/index/getCustomerWx', // 获取客服微信二维码图片
   "_wx_user_index_initiate_spell_class": '/wx/user/index/initiate-spell-class', // 发起拼班
   "_wx_user_index_mine_spell_class": '/wx/user/index/mine-spell-class', // 我的拼班
   "_wx_user_index_my_spell_class_list": '/wx/user/index/my-spell-class-list', // 我要拼班

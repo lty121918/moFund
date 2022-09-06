@@ -128,7 +128,7 @@
 		},
 	
 		mounted() {
-
+			
 		},
 		methods: {
 			handleNavTo() {

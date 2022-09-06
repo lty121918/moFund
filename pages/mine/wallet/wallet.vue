@@ -20,7 +20,7 @@
 				<view class="wallet-mony-detail-item">
 					<text>冻结金额:</text>
 					<text>￥</text>
-					<text>{{userInfo.noRemainingSum}}</text>
+					<text>{{userInfo.frozenAmount}}</text>
 				</view>
 			</view>
 			<view class="mt28 flex-cc" v-if="isTeach==2">
@@ -96,6 +96,7 @@
 							avatar: res.data.avatar,
 							name: res.data.name,
 							remainingSum: res.data.remainingSum,
+							frozenAmount: res.data.frozenAmount,
 							roleName: res.data.roleName,
 						}
 						this.SET_STORAGE({

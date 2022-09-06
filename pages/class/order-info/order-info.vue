@@ -43,9 +43,9 @@
 				<text>添加学员</text>
 			</view>
 		</view>
-		<view v-if="isHead" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
-		<view v-if="isHead" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
-			<view class="order-info-footer-button order-info-footer-button2">
+		<view v-if="isHead &&classStatus=='0'" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+		<view v-if="isHead&&classStatus=='0'" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
+			<view class="order-info-footer-button order-info-footer-button2" @click="handleCancelClass">
 				取消拼班
 			</view>
 			<!-- <view class="order-info-footer-button order-info-footer-button2" @click="submit">
@@ -104,7 +104,7 @@
 				})
 				this.getMineSpellClass()
 			})
-			
+
 		},
 		// 分享给朋友
 		onShareAppMessage(res) {
@@ -112,14 +112,14 @@
 				console.log(res.target)
 			}
 			return {
-				title: '快来和我一起运动吧!',// this.data.productName,
-				imageUrl: this.data.coverImage,  
+				title: '快来和我一起运动吧!', // this.data.productName,
+				imageUrl: this.data.coverImage,
 				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
 		onShareTimeline(res) { //分享到朋友圈
 			return {
-				title: '快来和我一起运动吧!',//this.share.title,
+				title: '快来和我一起运动吧!', //this.share.title,
 				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}` //分享默认打开是小程序首页
 			}
 		},
@@ -131,18 +131,30 @@
 			let prevpage = pages[pages.length - 2]; //上一个页面对象
 			let prevpage2 = pages[pages.length - 3]; //上一个页面对象
 			let path = prevpage.route;
-			let path2 =prevpage2 == 'undefined'? null : prevpage2.route;
-			console.log('上个页面','path:',path,prevpage2);
-			if(path == 'pages/class/course-detail/course-detail' && path2 && path2 !='pages/class/order-info/order-info'){
+			let path2 = prevpage2 == 'undefined' ? null : prevpage2.route;
+			console.log('上个页面', 'path:', path, prevpage2);
+			if (path == 'pages/class/course-detail/course-detail' && path2 && path2 !=
+				'pages/class/order-info/order-info') {
 				this.$utils.router.navBack(2)
-				
-			} else if(path2 && path2 =='pages/class/order-info/order-info'){
+
+			} else if (path2 && path2 == 'pages/class/order-info/order-info') {
 				this.$utils.router.swtTo(this.$page.Home)
-			} else {
-			}
-			
+			} else {}
+
 		},
 		methods: {
+			// 取消拼班中的
+			handleCancelClass() {
+				this.$http['classes'].cancelClass({
+					classId: this.classId
+				}).then(res => {
+					if (res.code == 200) {
+						setTimeout(() => {
+							this.$utils.router.swtTo(this.$page.Home)
+						}, 1000)
+					}
+				})
+			},
 			getMineSpellClass() {
 				this.$http['classes'].getMineSpellClass({
 					classInfoId: this.classId
@@ -189,7 +201,7 @@
 			// 联系团长
 			handlePhone(phone) {
 				const authorization = this.$utils.util.getCache('Authorization');
-				if(!authorization){
+				if (!authorization) {
 					this.$utils.userInfo.login('this')
 					return false
 				}
@@ -199,7 +211,7 @@
 			},
 			handleAdd() {
 				const authorization = this.$utils.util.getCache('Authorization');
-				if(!authorization){
+				if (!authorization) {
 					this.$utils.userInfo.login('this')
 					return false
 				}
@@ -238,7 +250,7 @@
 			handleDel(val) {
 				const self = this
 				const authorization = this.$utils.util.getCache('Authorization');
-				if(!authorization){
+				if (!authorization) {
 					this.$utils.userInfo.login('this')
 					return false
 				}

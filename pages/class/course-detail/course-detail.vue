@@ -568,6 +568,7 @@
 				font-family: PingFangSC-Regular, PingFang SC;
 				font-weight: 400;
 				color: #333333;
+				word-break: break-all;
 			}
 
 			&-evaluate {

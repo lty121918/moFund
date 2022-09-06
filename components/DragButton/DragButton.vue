@@ -73,9 +73,9 @@
 				this.left = this.windowWidth - this.width - this.edge;
 				this.top = this.windowHeight - this.height - this.edge - 100;
 			}).exec();
-			// this.$http['common'].getQrcode().then(res => {
-			// 	this.img = this.$url + res.data.imgUrl
-			// })
+			this.$http['classes'].getCustomerWx().then(res=>{
+				this.img = this.$url + res.data
+			})
 		},
 		methods: {
 			change(e) {
