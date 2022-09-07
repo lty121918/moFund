@@ -66,6 +66,6 @@ export const shareGenerateUrlLink = params => post(apis._wx_user_share_generate_
 // 上传素材
 export const ClassStudentUploadMien = params => post(apis._wx_organization_class_student_uploadMien, params)
 // 获取客服微信二维码图片
-export const getCustomerWx = params => get(apis._wx_user_index_getCustomerWx, params)
+export const getCustomerWx = params => get(apis._wx_common_getCustomerWx, params)
 // 取消拼班中的班级
 export const cancelClass = params => post(apis._wx_user_class_cancel_class, params)

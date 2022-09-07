@@ -27,7 +27,7 @@ const APIS_LIST = {
   "_common_download": '/common/download', // 通用下载请求
   "_course": '/course', // 课程下拉
   "_course_by_campusId": '/course-by-campusId', // 校区课程下拉
-  "_error": '/error', // error
+  "_error": '/error', // errorHtml
   "_file_download": '/file/download', // 下载文件
   "_file_remove_attachment": '/file/remove-attachment', // 删除附件
   "_file_upload": '/file/upload', // 文件上传(自动获取文件名)
@@ -62,6 +62,7 @@ const APIS_LIST = {
   "_wx_coach_apply": '/wx-coach/apply', // 教练申请
   "_wx_coach_get_apply": '/wx-coach/get-apply', // 我的申请
   "_wx_agreement_select_all": '/wx/agreement/select-all', // 查询协议内容
+  "_wx_common_getCustomerWx": '/wx/common/getCustomerWx', // 获取客服微信二维码图片
   "_wx_organization_class_student_detail": '/wx/organization/class-student/detail', // 获取班级详情
   "_wx_organization_class_student_evaluation": '/wx/organization/class-student/evaluation', // 教学评价
   "_wx_organization_class_student_get_evaluate": '/wx/organization/class-student/get-evaluate', // 获取教练对学员的评价
@@ -84,7 +85,6 @@ const APIS_LIST = {
   "_wx_user_index_course_date": '/wx/user/index/course-date', // 获取课程日期和节次
   "_wx_user_index_course_details": '/wx/user/index/course-details', // 商品详情
   "_wx_user_index_disband_class": '/wx/user/index/disband-class', // 解散拼班(团长)
-  "_wx_user_index_getCustomerWx": '/wx/user/index/getCustomerWx', // 获取客服微信二维码图片
   "_wx_user_index_initiate_spell_class": '/wx/user/index/initiate-spell-class', // 发起拼班
   "_wx_user_index_mine_spell_class": '/wx/user/index/mine-spell-class', // 我的拼班
   "_wx_user_index_my_spell_class_list": '/wx/user/index/my-spell-class-list', // 我要拼班
