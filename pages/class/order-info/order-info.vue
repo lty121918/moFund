@@ -1,5 +1,6 @@
 <template>
 	<view class="order-info">
+		<share-canvas ref="shareCanvas" :data="data" @onSuccess="handleGetImg"></share-canvas>
 		<class-item :data="data" type="3" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 		<view class="order-info-user">
 			<view class="home-title">
@@ -63,6 +64,8 @@
 		<popup-add-stu ref="popupAddStu" @change="getMineSpellClass" @recharge="recharge"></popup-add-stu>
 		<!-- 充值 -->
 		<recharge ref="recharge" />
+		<!-- 画布分享 -->
+		<!-- <share-canvas></share-canvas> -->
 	</view>
 </template>
 <script>
@@ -71,12 +74,14 @@
 	import PopupShare from '../components/PopupShare/PopupShare.vue'
 	import PopupAddStu from '../components/PopupAddStu/PopupAddStu.vue'
 	import Recharge from '@/components/Recharge/Recharge.vue'
+	import ShareCanvas from '../components/ShareCanvas/ShareCanvas.vue'
 	export default {
 		components: {
 			ClassItem,
 			PopupShare,
 			PopupAddStu,
-			Recharge
+			Recharge,
+			ShareCanvas
 		},
 		mixins: [mixin],
 		data() {
@@ -84,7 +89,8 @@
 				isHead: false, //是否 是团长进入该页面
 				data: {},
 				classId: '',
-				numData: 0
+				numData: 0,
+				shareImg:null
 			}
 		},
 		onShow() {
@@ -112,7 +118,7 @@
 			}
 			return {
 				title: '快来和我一起运动吧!',// this.data.productName,
-				imageUrl: this.data.coverImage,  
+				imageUrl: this.shareImg,  
 				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
 			}
 		},
@@ -181,7 +187,7 @@
 						// if(res.data.classStatus!=0){
 						// 	this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
 						// }
-
+						this.$refs.shareCanvas.getData()
 					}
 				})
 			},
@@ -267,6 +273,9 @@
 			submit() {
 				this.$utils.router.navBackData()
 			},
+			handleGetImg(val){
+				this.shareImg = val
+			}
 		}
 	}
 </script>

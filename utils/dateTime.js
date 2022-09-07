@@ -387,8 +387,11 @@ class DateTime {
 		if (!value) {
 			return ''
 		}
-		value = value.sort((a,b)=>a-b)
 		let weekTime = ['一', '二', '三', '四', '五', '六', '日']
+		if(value.length==1){
+			return `周${weekTime[value[0] - 1]}`
+		}
+		value = value.sort((a,b)=>a-b)
 		let ncontinuity = 0 //用于连续个数的统计
 		for (let i = 1; i < value.length; i++) {
 			if (value[i] - value[i - 1] == 1 || value[i] - value[i - 1] == -1) {
