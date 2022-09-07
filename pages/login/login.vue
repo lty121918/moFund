@@ -40,7 +40,7 @@
 		},
 		data() {
 			return {
-				protocolData:[[],[]],
+				protocolData:[],
 				isSubmit: false,
 				type: null
 			};
