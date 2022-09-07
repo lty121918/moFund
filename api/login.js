@@ -8,6 +8,9 @@ export const login = params => {
 // 退出登录
 export const authLogout = params => post(apis._auth_logout, params)
 
+// 查询协议内容
+export const getSelectAll = params => get(apis._wx_agreement_select_all, params)
+
 // 首登修改密码
 export const updPwd = data => {
 	return new Promise((resolve, reject) => {

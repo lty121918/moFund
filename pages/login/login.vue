@@ -32,9 +32,6 @@
 	} from 'vuex'
 	import mixin from '@/mixin.js'
 	import Protocol from './components/Protocol/Protocol.vue'
-	import {
-		protocolData
-	} from './login.js'
 	export default {
 		name: "login",
 		mixins: [mixin],
@@ -43,7 +40,7 @@
 		},
 		data() {
 			return {
-				protocolData,
+				protocolData:[[],[]],
 				isSubmit: false,
 				type: null
 			};
@@ -52,6 +49,11 @@
 			this.type = e.type
 			this.SET_STORAGE({
 				str: 'shareInfo'
+			})
+			this.$http['login'].getSelectAll().then(res=>{
+				if(res.code==200){
+					this.protocolData = res.data
+				}
 			})
 		},
 		onReady() {},
