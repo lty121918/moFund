@@ -91,7 +91,8 @@
 				data: {},
 				classId: '',
 				numData: 0,
-				shareImg:null
+				shareImg:null,
+				campusOther:{}
 			}
 		},
 		onShow() {
@@ -191,10 +192,9 @@
 						let	courseDateList = res.data.courseDate || []
 						let CourseDateName = this.$utils.dateTime.filteDate(
 							courseDateList,
-							this.data.startDate,
-							this.data.endDate
+							res.data.startDate,
+							res.data.endDate
 						)
-						
 						this.data = res.data
 						this.data.CourseDateName = CourseDateName
 						uni.setNavigationBarTitle({

@@ -425,7 +425,7 @@ class DateTime {
 			return ''
 		}
 		if(value.length==1){
-			return this.getLocalTime(value,'MM-dd')
+			return this.getLocalTime(value[0],'MM-dd')
 		}
 		let index = value.length-1
 		value = value.sort((a,b)=>a-b)

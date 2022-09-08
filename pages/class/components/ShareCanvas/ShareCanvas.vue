@@ -31,11 +31,11 @@
 			}
 		},
 		mounted() {
-			this.$nextTick(() => {
-				setTimeout(() => {
-					this.getData()
-				}, 2000)
-			});
+			// this.$nextTick(() => {
+			// 	setTimeout(() => {
+			// 		this.getData()
+			// 	}, 2000)
+			// });
 		},
 		methods: {
 			getData() {
@@ -65,14 +65,26 @@
 				ctx.setFillStyle('#FFFFFF');
 				textPrewrap(
 					ctx,
-					data.className,
+					data.className ||'',
 					18,
 					30,
 					24,
 					320,
-					2,
-					18
+					1,
+					20
 				)
+				textPrewrap(
+					ctx,
+					data.campusName || '',
+					18,
+					54,
+					24,
+					320,
+					1,
+					20
+				)
+				// 
+				// data.campusName = '茶叶'
 				// // 第二次背景
 				roundRect(ctx, 17, 68, 340, 202, 11, {
 					fillColor: '#FFFFFF',
@@ -86,7 +98,7 @@
 				})
 				
 				const time = ` ${data.startTime}~${data.endTime}`
-				const week = data.courseType==2?'每天':(data.weekCodeName||'')
+				const week = data.courseType==2?data.CourseDateName:(data.weekCodeName||'')
 				let weekName = week
 				if(week.length>10){
 					weekName = `${week.substring(0,10)}...`

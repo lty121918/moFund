@@ -64,10 +64,12 @@
 								row.avatar = self.avatar
 							}
 						})
-						item.startPeriod = this.$utils.dateTime.getLocalTime(
-							`${item.startPeriod}`, 'hh:mm')
-						item.endPeriod = this.$utils.dateTime.getLocalTime(
-							`${item.endPeriod}`,'hh:mm')
+						if(item.startPeriod){
+							item.startPeriod = this.$utils.dateTime.getLocalTime(
+								`${item.startPeriod}`, 'hh:mm')
+							item.endPeriod = this.$utils.dateTime.getLocalTime(
+								`${item.endPeriod}`,'hh:mm')
+						}
 						item.CourseDateName = this.$utils.dateTime.filteDate(
 							item.courseDate,
 							item.startDate,

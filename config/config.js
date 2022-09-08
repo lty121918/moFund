@@ -4,18 +4,18 @@
  * @Author       : yemaozi
  * @Date         : 2022-07-05 18:02:21
  * @LastEditors  : yemaozi
- * @LastEditTime : 2022-09-08 15:41:12
+ * @LastEditTime : 2022-09-08 23:04:07
  * @FilePath     : \customer-side\config\config.js
  */
 module.exports = {
 	DEFAULT_SYSTEM_TITLE: `向日葵体培`, // 系统默认的标题，如果到时候改从后端获取配置，会覆盖掉这个参数
 	CACHE_PREFIX: "DONGAO_", //本地缓存前缀
-	DOC_URL: 'http://172.20.1.25:8302/polar', // 接口文档地址
-	// DOC_URL: 'http://172.20.3.47:8302/polar',
-	// BASE_URL_DEV: 'http://172.20.3.47:8302/polar', //本地接口
+	// DOC_URL: 'http://172.20.1.25:8202/polar', // 接口文档地址
+	DOC_URL: 'http://172.20.3.47:8302/polar',
+	BASE_URL_DEV: 'http://172.20.3.47:8302/polar', //本地接口
 	 // BASE_URL_DEV: 'http://172.20.1.25:8302/polar', //开发接口
 	// BASE_URL_DEV: 'https://polarlight.one-sports.com.cn/wx', //生产体验版接口
-	BASE_URL_DEV: 'http://172.20.14.187:8181/polar', //鹏辉本地接口
+	// BASE_URL_DEV: 'http://172.20.14.187:8181/polar', //鹏辉本地接口
 	// BASE_URL_DEV: 'http://172.20.13.149:8181/polar', //吴诗怡本地接口
 	// BASE_URL_DEV: 'http://172.20.13.171:8181/polar', //金杰本地接口
 	// BASE_URL_DEV: 'http://172.20.14.94:8181/polar', // 成霖

@@ -30,7 +30,7 @@
 								<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png"
 									mode="widthFix">
 								</image>
-								<text class="o-over" style="width:200rpx;display: inline-block;">按日期: {{data.CourseDateName}}</text>
+								<text class="o-over" style="width:330rpx;display: inline-block;">按日期: {{data.CourseDateName}}</text>
 							</view>
 							<!-- 上课时段 -->
 							<view class="popup-nearby-content-cycle" v-if="data.startPeriod&&data.endPeriod">
