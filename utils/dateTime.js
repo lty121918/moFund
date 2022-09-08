@@ -391,6 +391,9 @@ class DateTime {
 		if(value.length==1){
 			return `周${weekTime[value[0] - 1]}`
 		}
+		if(value.length==7){
+			return `每天`
+		}
 		value = value.sort((a,b)=>a-b)
 		let ncontinuity = 0 //用于连续个数的统计
 		for (let i = 1; i < value.length; i++) {
@@ -413,6 +416,31 @@ class DateTime {
 		}
 		return str
 	}
+	// 处理日期是否连贯
+	filteDate(value,startTime,endTime) {
+		if (!value) {
+			return ''
+		}
+		if (value.length==0) {
+			return ''
+		}
+		if(value.length==1){
+			return this.getLocalTime(value,'MM-dd')
+		}
+		let index = value.length-1
+		value = value.sort((a,b)=>a-b)
+		if(startTime == value[0] && endTime==value[index]){
+			return '每天'
+		} else {
+			let val = value.map(item=>{
+				let ls = this.getLocalTime(item,'MM-dd')
+				return ls
+			})
+			return val.join(',')
+		}
+		
+	}
+	
 
 	// 给时间或者星期返回时间
 	getRangeDay(data, num,week=[], type = 'date') {

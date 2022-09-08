@@ -173,6 +173,11 @@
 						item.nextCLassTime,
 						'yyyy-MM-dd hh:mm')
 				}
+				item.CourseDateName = this.$utils.dateTime.filteDate(
+					item.courseDate,
+					item.startDate,
+					item.endDate
+				)
 				return item
 			}
 

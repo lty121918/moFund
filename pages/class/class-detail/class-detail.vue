@@ -205,7 +205,7 @@
 			}
 		},
 		onLoad(e) {
-			console.log('接收数据',e);
+			console.log('接收数据', e);
 			this.getTeach()
 			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
 			this.getClassDetail()
@@ -216,13 +216,13 @@
 				console.log(res.target)
 			}
 			return {
-				title: this.data.className,// this.data.productName,
+				title: this.data.className, // this.data.productName,
 				path: `${this.$page.ClassDetail}?classId=${this.classId}`
 			}
 		},
 		onShareTimeline(res) { //分享到朋友圈
 			return {
-				title: this.data.className,//this.share.title,
+				title: this.data.className, //this.share.title,
 				path: `${this.$page.ClassDetail}?classId=${this.classId}` //分享默认打开是小程序首页
 			}
 		},
@@ -244,9 +244,9 @@
 				this.stuActive = []
 				getData({
 					classId: this.classId
-				}).then(res => {
+				}).then(async res => {
 					if (res.code == 200) {
-						if(!res.data){
+						if (!res.data) {
 							if (this.isTeach == 1) {
 								// 教练
 								this.$utils.router.swtTo(this.$page.Class)
@@ -291,7 +291,15 @@
 							}
 
 						})
+						let courseDateList = res.data.courseDate || []
+						let CourseDateName = this.$utils.dateTime.filteDate(
+							courseDateList,
+							res.data.startDate,
+							res.data.endDate
+						)
+
 						this.data = res.data
+						this.data.CourseDateName = CourseDateName
 					}
 				})
 			},

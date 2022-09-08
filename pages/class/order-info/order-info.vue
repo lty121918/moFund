@@ -151,7 +151,7 @@
 			getMineSpellClass() {
 				this.$http['classes'].getMineSpellClass({
 					classInfoId: this.classId
-				}).then(res => {
+				}).then(async res => {
 					if (res.code == 200) {
 						console.log(res.data);
 						this.isHead = res.data.regimentalCommander
@@ -175,7 +175,15 @@
 								item.avatar = this.avatar
 							}
 						})
+						let	courseDateList = res.data.courseDate || []
+						let CourseDateName = this.$utils.dateTime.filteDate(
+							courseDateList,
+							this.data.startDate,
+							this.data.endDate
+						)
+						
 						this.data = res.data
+						this.data.CourseDateName = CourseDateName
 						uni.setNavigationBarTitle({
 							title: this.isHead ? '我的拼班' : '加入拼班'
 						})
