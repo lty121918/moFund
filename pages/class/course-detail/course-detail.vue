@@ -141,7 +141,7 @@
 		mixins: [mixin],
 		components: {
 			PopupPin,
-			PopupDate
+			PopupDate,
 		},
 		data() {
 			return {
@@ -185,7 +185,7 @@
 					if (res.code == 200) {
 						let list = res.data
 						// 如果之前缓存的社区已经被删除 则重新选取
-						const ls = list.filter(item => item.campusId == e.campusId)[0] || null
+						const ls = list.filter(item => item.campusId == e.campusId || (item.lat==e.lat && item.lng==e.lng))[0] || null
 						console.log('当前校区',ls);
 						this.campusOther =  ls || this.campus
 					}
@@ -204,13 +204,13 @@
 			}
 			return {
 				title: this.productInfo.productName,
-				path: `${this.$page.CourseDetail}?productId=${this.productId}&lat=${this.campusOther.lat}&lng=${this.campusOther.lng}`
+				path: `${this.$page.CourseDetail}?productId=${this.productId}&lat=${this.campusOther.lat}&lng=${this.campusOther.lng}&campusId=${this.campusOther.campusId}`
 			}
 		},
 		onShareTimeline(res) { //分享到朋友圈
 			return {
 				title: this.productInfo.productName,
-				path: `${this.$page.CourseDetail}?productId=${this.productId}&lat=${this.campusOther.lat}&lng=${this.campusOther.lng}`
+				path: `${this.$page.CourseDetail}?productId=${this.productId}&lat=${this.campusOther.lat}&lng=${this.campusOther.lng}&campusId=${this.campusOther.campusId}`
 			}
 		},
 		methods: {
@@ -240,7 +240,7 @@
 					}
 					this.productInfo = res.data
 					res.data.productSpellClassList.forEach(item => {
-						if( item.headUrl.indexOf('http')==-1){
+						if( item.headUrl&&item.headUrl.indexOf('http')==-1){
 							item.headUrl = this.$url + item.headUrl
 						}
 						if(!item.headUrl){
