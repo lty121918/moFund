@@ -5,7 +5,7 @@
 			<image class="login-content-img" src="/static/login/logo2.png" mode="widthFix"></image>
 			<view class="fz40">向日葵体育申请获得以下权限</view>
 			<view class="color666 mt32">(获得您的手机号)</view>
-			<button v-if="isSubmit" class="login-button" type="primary"
+			<button v-if="isSubmit || protocolData.length == 0" class="login-button" type="primary"
 				open-type="getPhoneNumber" @getphonenumber="getphonenumber" size="mini">授 权</button>
 			<button v-else class="login-button" type="primary" @click="getphonenumber2" size="mini">授 权</button>
 			<view class="tip-box flex" v-if="protocolData.length > 0" @click="changeBox">
@@ -134,7 +134,7 @@
 			}),
 			getphonenumber: debounce(function(e) {
 				const self = this
-				if (!self.isSubmit) {
+				if (!self.isSubmit && this.protocolData.length > 0) {
 					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
 					return false
 				}

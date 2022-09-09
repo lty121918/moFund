@@ -412,8 +412,12 @@
 				// })
 				const self = this
 				let data = JSON.parse(JSON.stringify(self.studentVOList.data))
-				
-				if (!this.studentVOList.isSign && val != 1 && !this.studentVOList.IsStatus) {
+				//  判断isSign 如果是true就代表无法考勤
+				if (!this.studentVOList.isSign) {
+					return false
+				}
+				// 判断val 不是教练 并且
+				if(val != 1 || !this.studentVOList.IsStatus){
 					return false
 				}
 				if (self.boxActive.length == 0) {
