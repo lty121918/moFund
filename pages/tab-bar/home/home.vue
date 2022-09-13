@@ -69,6 +69,9 @@
 				<pin-item :item="item"></pin-item>
 			</view>
 		</view>
+		<view class="home-official" :style="{'bottom':isIphoneX?`calc(50px + ${safeAreaHeight}px)`:'50px' }">
+			<official-account></official-account>
+		</view>
 		<!-- Tabbar -->
 		<page-tabpars></page-tabpars>
 	</view>
@@ -452,5 +455,11 @@
 		height: 376rpx;
 		overflow: hidden;
 		border-radius: 16rpx;
+	}
+	.home-official {
+		position: fixed;
+		z-index: 999;
+		left: 0;
+		width: 100%;
 	}
 </style>
