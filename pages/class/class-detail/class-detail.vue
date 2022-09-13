@@ -382,7 +382,7 @@
 						let isSign = false
 						// isSign = res.data.some(row => row.attendanceStatus > 0)
 						isSign = dataObj.status!=3 && dataObj.status!=4
-						const status = this.studentVOList.stutas==2 ||  this.studentVOList.stutas==3 || this.studentVOList.stutas==4
+						const status = dataObj.stutas==2 ||  dataObj.stutas==3 || dataObj.stutas==4
 						const boxActive = res.data.map(item => item.id)
 						if (!isSign) {
 							this.boxActive = boxActive
