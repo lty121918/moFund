@@ -71,7 +71,9 @@
 			</view>
 		</view>
 		<view class="home-official" :style="{'bottom':isIphoneX?`calc(50px + ${safeAreaHeight}px)`:'50px' }">
-			<official-account></official-account>
+			<official-account id="official_account"></official-account>
+		</view>
+		<view v-if="officialAccount" :style="{'height':isIphoneX?`calc(84px + ${safeAreaHeight}px)`:'84px' }">
 		</view>
 		<!-- Tabbar -->
 		<page-tabpars></page-tabpars>
@@ -114,12 +116,16 @@
 				return false
 			}
 			this.getMounted()
+			setTimeout(() => {
+				this.init();
+			}, 800)
 		},
 	
 		mounted() {
 			
 		},
 		methods: {
+			
 			handleNavTo() {
 				this.getSettingLocal().then(res => {
 					if (res == 3) {
@@ -279,8 +285,8 @@
 							}
 
 						})
-						if(item.weChatUserList.length > 10){
-							item.weChatUserList = item.weChatUserList.slice(0,10)
+						if(item.weChatUserList.length > 5){
+							item.weChatUserList = item.weChatUserList.slice(0,4)
 						}
 						
 						// 格式化时间

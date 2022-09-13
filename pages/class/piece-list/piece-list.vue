@@ -64,6 +64,9 @@
 								row.avatar = self.avatar
 							}
 						})
+						if(item.weChatUserList.length > 5){
+							item.weChatUserList = item.weChatUserList.slice(0,4)
+						}
 						if(item.startPeriod){
 							item.startPeriod = this.$utils.dateTime.getLocalTime(
 								`${item.startPeriod}`, 'hh:mm')

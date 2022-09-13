@@ -27,7 +27,7 @@ const APIS_LIST = {
   "_common_download": '/common/download', // 通用下载请求
   "_course": '/course', // 课程下拉
   "_course_by_campusId": '/course-by-campusId', // 校区课程下拉
-  "_error": '/error', // errorHtml
+  "_error": '/error', // error
   "_file_download": '/file/download', // 下载文件
   "_file_remove_attachment": '/file/remove-attachment', // 删除附件
   "_file_upload": '/file/upload', // 文件上传(自动获取文件名)
