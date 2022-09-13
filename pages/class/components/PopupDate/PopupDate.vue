@@ -25,6 +25,9 @@
 					<view class="color256 text-rpopup-stu-status" v-if="row.attendanceStatus==1">已签到</view>
 					<view class="color2 text-r popup-stu-status" v-if="row.attendanceStatus==2">请假</view>
 					<view class="color text-r popup-stu-status" v-if="row.attendanceStatus==3">未到</view>
+					<view class="text-rpopup-stu-status" v-if="row.attendanceStatus==='4'">已退出</view>
+					<view class="text-rpopup-stu-status" v-if="row.attendanceStatus==='5'">已作废</view>
+					<view class="text-rpopup-stu-status" v-if="row.attendanceStatus==='6'">已取消</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -104,7 +107,12 @@
 			},
 			async handleShow(isShow = false, ls, isAttendance = false) {
 				if (isAttendance || !isShow) {
-					const res = await this.$http['classes'].courseScheduleView({
+					const  {courseScheduleView,coachStuAttendance} = this.$http['classes']
+					let getData = courseScheduleView
+					if(isAttendance){
+						getData = coachStuAttendance
+					}
+					const res = await getData({
 						// scheduleId: ls.scheduleId,
 						classId: ls.classId
 					})

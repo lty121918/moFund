@@ -48,6 +48,8 @@ export const disbandClass = params => post(apis._wx_user_class_disband_class, pa
 export const exitClass = params => post(apis._wx_user_class_exit, params)
 // 班级详情-查看课表
 export const courseScheduleView = params => get(apis._wx_user_wx_course_schedule_view, params)
+// 班级详情-考勤课表
+export const coachStuAttendance = params => get('wx/user/wx-course-schedule/coach-stu-attendance', params)
 // 教练查看-班级详情-查看课表-学员信息 
 export const coachScheduleStuInfo = params => get(apis._wx_user_wx_course_schedule_coach_schedule_stu_info, params)
 // 会员查看-班级详情-查看课表-学员信息 
