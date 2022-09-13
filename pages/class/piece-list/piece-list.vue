@@ -34,13 +34,13 @@
 		},
 		mounted() {
 			this.onLaunch().then(res => {
-				this.getInit()
+				this.search()
 			})
 		},
 		methods: {
-			getInit() {
-				this.search()
-			},
+			// getInit() {
+			// 	this.search()
+			// },
 			 search:debounce(async function()   {
 				const self = this
 				let data = []
@@ -70,14 +70,16 @@
 							item.endPeriod = this.$utils.dateTime.getLocalTime(
 								`${item.endPeriod}`,'hh:mm')
 						}
+						item['weekCodeName'] = this.$utils.dateTime.filteDay(item.weekCode)
 						item.CourseDateName = this.$utils.dateTime.filteDate(
 							item.courseDate,
 							item.startDate,
 							item.endDate
 						)
 					})
+					self.data = data
 				}
-				self.data = data
+				
 			})
 		}
 	}
