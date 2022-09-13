@@ -124,17 +124,18 @@
 		</view>
 		<!-- 考勤展示 -->
 		<view class="class-detail-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }" v-if="isAttendance">
-			<view class="class-detail-footer-button class-detail-footer-button3" 
-			:class="[studentVOList.IsStatus?'':'class-detail-footer-button4']"
-			@click="handleStutas(1,'签到')">
+			<view class="class-detail-footer-button class-detail-footer-button3"
+				:class="[studentVOList.IsStatus?'':'class-detail-footer-button4']" @click="handleStatus(1,'签到')">
 				教练签到
 			</view>
 			<view class="class-detail-footer-button class-detail-footer-button3"
-				:class="[studentVOList.isSign&& studentVOList.IsStatus?'':'class-detail-footer-button4']" @click="handleStutas(2,'请假')">
+				:class="[studentVOList.isSign&& studentVOList.IsStatus?'':'class-detail-footer-button4']"
+				@click="handleStatus(2,'请假')">
 				学员请假
 			</view>
 			<view class="class-detail-footer-button class-detail-footer-button3"
-				:class="[studentVOList.isSign && studentVOList.IsStatus?'':'class-detail-footer-button4']" @click="handleStutas(3,'未到')">
+				:class="[studentVOList.isSign && studentVOList.IsStatus?'':'class-detail-footer-button4']"
+				@click="handleStatus(3,'未到')">
 				学员未到
 			</view>
 		</view>
@@ -261,9 +262,11 @@
 						this.isHead = res.data.isBoss
 						res.data.startPeriod = this.$utils.dateTime.getLocalTime(
 							`2022-01-01 ${res.data.startPeriod}`, 'hh:mm')
-						res.data.endPeriod = this.$utils.dateTime.getLocalTime(`2022-01-01 ${res.data.endPeriod}`,
+						res.data.endPeriod = this.$utils.dateTime.getLocalTime(
+							`2022-01-01 ${res.data.endPeriod}`,
 							'hh:mm')
-						if (res.data.classStatus != 0 && res.data.classStatus != 1 && res.data.classStatus !=3) {
+						if (res.data.classStatus != 0 && res.data.classStatus != 1 && res.data.classStatus !=
+							3) {
 							res.data.nextCLassTime = -1
 						}
 						if (res.data.coverImage && res.data.coverImage.indexOf('http') == -1) {
@@ -380,13 +383,14 @@
 					if (res.code == 200) {
 						this.isAttendance = true
 						let isSign = false
-						// isSign = res.data.some(row => row.attendanceStatus > 0)
-						isSign = dataObj.status!=3 && dataObj.status!=4
-						const status = dataObj.stutas==2 ||  dataObj.stutas==3 || dataObj.stutas==4
+						isSign = res.data.some(row => row.attendanceStatus > 0) || dataObj.status != 2
+						// isSign = dataObj.status != 2//dataObj.status!=3 && dataObj.status!=4
+						const status = dataObj.status == 2 || dataObj.status == 3 || dataObj.status == 4
 						const boxActive = res.data.map(item => item.id)
 						if (!isSign) {
 							this.boxActive = boxActive
 						}
+						console.log(isSign, dataObj.status);
 						// 状态1∶未拼班2∶待考勤―3∶考勤中4∶已考勤︰5∶作废6∶已取消(该状态不可对学员进行考勤)"
 						this.studentVOList = {
 							...dataObj,
@@ -406,18 +410,18 @@
 				}, true)
 			},
 			// 修改学员考勤状态
-			handleStutas(val, type) {
+			handleStatus(val, type) {
 				// uni.showToast({
 				// 	title: type
 				// })
 				const self = this
 				let data = JSON.parse(JSON.stringify(self.studentVOList.data))
-				//  判断isSign 如果是true就代表无法考勤
-				if (!this.studentVOList.isSign) {
+				//  判断IsStatus 如果是false就代表无法考勤
+				if (!this.studentVOList.IsStatus) {
 					return false
 				}
 				// 判断val 不是教练 并且
-				if(val != 1 || !this.studentVOList.IsStatus){
+				if (!this.studentVOList.isSign && val != 1) {
 					return false
 				}
 				if (self.boxActive.length == 0) {
@@ -444,7 +448,7 @@
 						attendances: data,
 						classId: self.classId,
 						id: self.studentVOList.id,
-						periodId: self.studentVOList.periodId//1.0.1 新增
+						periodId: self.studentVOList.periodId //1.0.1 新增
 					})
 					.then(res => {
 						if (res.code == 200) {
