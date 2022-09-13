@@ -13,7 +13,8 @@ const minxin = {
 			isIphoneX: false,
 			safeAreaInsetBottom: true, //底部高度
 			isTeach: '', // 是否教练 1是2不是
-			authorization: null
+			authorization: null,
+			officialAccount:false
 		}
 	},
 	watch: {
@@ -396,8 +397,23 @@ const minxin = {
 				})
 
 			}
-		}
-
+		},
+		
+		getAttention(){
+			
+		},
+		init() {
+			let self = this;
+			const query = uni.createSelectorQuery().in(this);
+			query.select('#official_account').boundingClientRect(data => {
+				if (data&&data.width && data.height) {
+					self.officialAccount = true
+				} else {
+					self.officialAccount = false;
+				}
+			}).exec();
+		},
+		
 	},
 }
 

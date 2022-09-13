@@ -22,13 +22,16 @@
 			</view>
 			<view class="pin-content-footer">
 				<view class="pin-content-class">
-					<view class="pin-content-name">{{item.productName}} <text class="ml12"> {{item.spellType}}</text>
+					<view class="pin-content-name o-over">
+						{{item.productName}}
+						<text class="ml12"> {{item.spellType}}</text>
 					</view>
 					<view class="pin-content-url">
 						<image v-for="row in item.weChatUserList" :key="row.studentId" class="pin-content-icon"
 							:src="row.avatar" mode="aspectFill"></image>
 						<image class="pin-content-icon" src="/static/home/default-url.png" mode="aspectFill">
 						</image>
+						
 					</view>
 				</view>
 				<view class="pin-content-button">加入拼班</view>
@@ -88,7 +91,8 @@
 				display: flex;
 				justify-content: flex-start;
 				// height: 60rpx;
-				width: 320rpx;
+				max-width: 460rpx;
+				padding-right: 18rpx;
 				background: rgba(20, 29, 61, 0.05);
 				border-radius: 12rpx;
 				font-size: 24rpx;
@@ -98,10 +102,12 @@
 
 			&-name {
 				flex-shrink: 0;
-				width: 140rpx;
-				// height: 60rpx;
-				// line-height: 60rpx;
+				max-width: 292rpx;
+				padding: 0 18rpx;
+				height: 60rpx;
+				line-height: 60rpx;
 				text-align: center;
+				box-sizing: border-box;
 				background: rgba(20, 29, 61, 0.1);
 				border-radius: 12rpx;
 			}

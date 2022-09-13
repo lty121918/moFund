@@ -40,6 +40,8 @@
 		<view class="home-official" v-if="isTeach==1" :style="{'bottom':isIphoneX?`calc(50px + ${safeAreaHeight}px)`:'50px' }">
 			<official-account></official-account>
 		</view>
+		<view v-if="officialAccount && isTeach==1" :style="{'height':isIphoneX?`calc(84px + ${safeAreaHeight}px)`:'84px' }">
+		</view>
 		<page-tabpars></page-tabpars>
 	</view>
 </template>
@@ -71,6 +73,11 @@
 			bus.$on('getMounted2', () => {
 				console.log('执行');
 				this.getTeach()
+				if(this.isTeach == 1){
+					setTimeout(() => {
+						this.init();
+					}, 800)
+				}
 				this.getMounted()
 			})
 		},
