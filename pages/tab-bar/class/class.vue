@@ -37,6 +37,9 @@
 			</image>
 			<view class="">暂无数据</view>
 		</view>
+		<view class="home-official" v-if="isTeach==1" :style="{'bottom':isIphoneX?`calc(50px + ${safeAreaHeight}px)`:'50px' }">
+			<official-account></official-account>
+		</view>
 		<page-tabpars></page-tabpars>
 	</view>
 </template>
@@ -206,5 +209,11 @@
 
 	.home-title {
 		padding-top: 0;
+	}
+	.home-official {
+		position: fixed;
+		z-index: 999;
+		left: 0;
+		width: 100%;
 	}
 </style>
