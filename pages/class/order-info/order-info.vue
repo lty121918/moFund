@@ -44,8 +44,8 @@
 				<text>添加学员</text>
 			</view>
 		</view>
-		<view v-if="isHead &&classStatus=='0'" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
-		<view v-if="isHead&&classStatus=='0'" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
+		<view v-if="isHead &&data.classStatus=='0'" class="order-info-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+		<view v-if="isHead&&data.classStatus=='0'" class="order-info-footer" :style="{ paddingBottom: `${safeAreaHeight}px` }">
 			<view class="order-info-footer-button order-info-footer-button2" @click="handleCancelClass">
 				取消拼班
 			</view>
@@ -153,7 +153,8 @@
 			// 取消拼班中的
 			handleCancelClass() {
 				this.$http['classes'].cancelClass({
-					classId: this.classId
+					classId: this.classId,
+					IsFormData:true
 				}).then(res => {
 					if (res.code == 200) {
 						setTimeout(() => {

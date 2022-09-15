@@ -60,7 +60,7 @@
 							if (item.classStatus != 0 && item.classStatus != 1 && item.classStatus !=3) {
 									item.nextCLassTime = -1
 							}
-							if (item.coverImage.indexOf('http') == -1) {
+							if (item.coverImage && item.coverImage.indexOf('http') == -1) {
 								item.coverImage = self.$url + item.coverImage
 							}
 							item.startPeriod = self.$utils.dateTime.getLocalTime(

@@ -376,7 +376,7 @@
 			// 考勤按钮
 			// TODO: 根据课表返回的状态status 显示教练是否签到和按钮置灰问题
 			async getAttendance(dataObj) {
-				const res = await this.$http['classes'].coachScheduleStuInfo({
+				const res = await this.$http['classes'].coachStuAttendance({
 					id: dataObj.id,
 					classId: this.classId
 				}).then(res => {

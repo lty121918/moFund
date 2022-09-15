@@ -69,8 +69,8 @@
 					</view>
 				</view>
 				<view v-if="item.useStudentNum < item.maxNum">
-					<view class="course-nearby-content-button"
-						@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">加入拼班</view>
+					<view class="course-nearby-content-button" :class="[productInfo.sell?'':'dis-color']" 
+						@click="hanldeNavTo(item)">加入拼班</view>
 					<view class="course-nearby-content-success" v-if="item.minNumMax">差{{item.minNumMax}}人拼成</view>
 					<view class="course-nearby-content-success" v-else>差{{item.unUseNum}}人拼满</view>
 				</view>
@@ -124,7 +124,7 @@
 		<!-- 我要拼班 -->
 		<view class="course-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view class="course-footer">
-			<view class="course-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
+			<view class="course-footer-button" :class="[productInfo.sell?'':'dis-color']" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
 				我要拼班
 			</view>
 		</view>
@@ -214,6 +214,11 @@
 			}
 		},
 		methods: {
+			handleNavTo(item){
+				if(this.productInfo.sell == true){
+					this.$utils.router.navTo(this.$page.OrderInfo,{classId:item.classInfoId})
+				}
+			},
 			/**
 			 * @function 获取当前商品详情所有数据
 			 */
@@ -296,10 +301,12 @@
 			},
 			// 打开我要拼班
 			submit() {
-				this.$refs.popupPin.handleShow({
-					productId: this.productId,
-					campusId: this.campusOther.campusId,
-				})
+				if(this.productInfo.sell == true){
+					this.$refs.popupPin.handleShow({
+						productId: this.productId,
+						campusId: this.campusOther.campusId,
+					})
+				}
 			},
 			// 切换tab
 			handleTab(val) {
@@ -674,5 +681,8 @@
 		width: 750rpx;
 		height: 424rpx;
 		border-radius: 16rpx;
+	}
+	.dis-color{
+		background-color: #cecece;
 	}
 </style>

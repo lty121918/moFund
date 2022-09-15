@@ -109,9 +109,9 @@
 				if (isAttendance || !isShow) {
 					const  {courseScheduleView,coachStuAttendance} = this.$http['classes']
 					let getData = courseScheduleView
-					if(isAttendance){
-						getData = coachStuAttendance
-					}
+					// if(isAttendance){
+					// 	getData = coachStuAttendance
+					// }
 					const res = await getData({
 						// scheduleId: ls.scheduleId,
 						classId: ls.classId
