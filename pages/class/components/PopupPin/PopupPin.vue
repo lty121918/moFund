@@ -194,7 +194,7 @@
 			},
 			// 选择拼班方式
 			handleSpellType(item) {
-				if (item.spellType == this.data.spellType) {
+				if (item.productSellPriceRelId == this.data.productSellPriceRelId) {
 					return false
 				}
 				Object.assign(this.data, item)

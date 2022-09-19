@@ -93,6 +93,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "class-detail/class-detail-attendance",
+			"style": {
+				"navigationBarTitleText": "班级详情",
+				"enablePullDownRefresh": false
+			}
+
 		}]
 	}, {
 		"root": "pages/map",

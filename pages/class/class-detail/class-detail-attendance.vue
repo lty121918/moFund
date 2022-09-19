@@ -52,7 +52,9 @@
 		<view class="class-detail-user class-detail-attendance" v-if="isAttendance">
 			<view class="class-detail-attendance-item fz28 flex-bc">
 				<text class="color4">考勤</text>
-				<text class="color2">{{studentVOList.isSign?'教练已签到':'教练未签到'}}</text>
+				<text class="color2">{{statusList[studentVOList.status]}}
+				<!-- {{studentVOList.isSign?'教练已签到':'教练未签到'}} -->
+				</text>
 			</view>
 			<view class="class-detail-attendance-title flex-bc">
 				<view class="flex-sc">
@@ -204,14 +206,24 @@
 				classId: '',
 
 				stuActive: [], //选择退出学员的id
+				statusList:{
+					1:'未拼班',
+					2:'待考勤',
+					3:'考勤中',
+					4:'已考勤',
+					5:'作废',
+					6:'已取消',
+				}
 
 			}
 		},
 		onLoad(e) {
+			this.isAttendance = true
 			console.log('接收数据', e);
 			this.getTeach()
 			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
 			this.getClassDetail()
+			this.getAttendance(JSON.parse(e.dataObj))
 		},
 		// 分享给朋友
 		onShareAppMessage(res) {
@@ -229,7 +241,6 @@
 				path: `${this.$page.ClassDetail}?classId=${this.classId}` //分享默认打开是小程序首页
 			}
 		},
-
 		methods: {
 			getClassDetail() {
 				const {
@@ -377,34 +388,30 @@
 			// 考勤按钮
 			// TODO: 根据课表返回的状态status 显示教练是否签到和按钮置灰问题
 			async getAttendance(dataObj) {
-				this.$utils.router.navTo(this.$page.ClassDetailAttendance, {
-					dataObj:JSON.stringify(dataObj),
+				const res = await this.$http['classes'].coachStuAttendance({
+					id: dataObj.id,
 					classId: this.classId
+				}).then(res => {
+					if (res.code == 200) {
+						this.isAttendance = true
+						let isSign = false
+						isSign = res.data.some(row => row.attendanceStatus > 0) || dataObj.status != 2
+						// isSign = dataObj.status != 2//dataObj.status!=3 && dataObj.status!=4
+						const status = dataObj.status == 2 || dataObj.status == 3 || dataObj.status == 4
+						const boxActive = res.data.map(item => item.id)
+						if (!isSign) {
+							this.boxActive = boxActive
+						}
+						console.log(isSign, dataObj.status);
+						// 状态1∶未拼班2∶待考勤―3∶考勤中4∶已考勤︰5∶作废6∶已取消(该状态不可对学员进行考勤)"
+						this.studentVOList = {
+							...dataObj,
+							isSign,
+							data: res.data,
+							IsStatus: status
+						}
+					}
 				})
-				// const res = await this.$http['classes'].coachStuAttendance({
-				// 	id: dataObj.id,
-				// 	classId: this.classId
-				// }).then(res => {
-				// 	if (res.code == 200) {
-				// 		this.isAttendance = true
-				// 		let isSign = false
-				// 		isSign = res.data.some(row => row.attendanceStatus > 0) || dataObj.status != 2
-				// 		// isSign = dataObj.status != 2//dataObj.status!=3 && dataObj.status!=4
-				// 		const status = dataObj.status == 2 || dataObj.status == 3 || dataObj.status == 4
-				// 		const boxActive = res.data.map(item => item.id)
-				// 		if (!isSign) {
-				// 			this.boxActive = boxActive
-				// 		}
-				// 		console.log(isSign, dataObj.status);
-				// 		// 状态1∶未拼班2∶待考勤―3∶考勤中4∶已考勤︰5∶作废6∶已取消(该状态不可对学员进行考勤)"
-				// 		this.studentVOList = {
-				// 			...dataObj,
-				// 			isSign,
-				// 			data: res.data,
-				// 			IsStatus: status
-				// 		}
-				// 	}
-				// })
 			},
 			// 打开考勤课表
 			handleAttendance() {

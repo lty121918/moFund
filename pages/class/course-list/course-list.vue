@@ -21,8 +21,17 @@
 					<text class="course-list-item-payment">{{item.paymentNumber}}人付款</text>
 				</view>
 				<view class="course-list-item-info">
-					<view class="course-list-item-apply">
-						{{item.minAge}}-{{item.maxAge}}岁适用
+					<view class="course-list-item-apply" v-if="item.minAge && item.maxAge">
+						{{item.minAge}}-{{item.maxAge }}岁适用
+					</view>
+					<view class="course-list-item-apply" v-if="item.minAge && !item.maxAge">
+						大于{{item.minAge}}岁适用
+					</view>
+					<view class="course-list-item-apply" v-if="!item.minAge && item.maxAge">
+						小于{{item.maxAge }}岁适用
+					</view>
+					<view class="course-list-item-apply" v-if="!item.minAge && !item.maxAge">
+						无年龄限制
 					</view>
 					<view class="course-list-item-pin">
 						{{item.spellingClassNumber}}拼班

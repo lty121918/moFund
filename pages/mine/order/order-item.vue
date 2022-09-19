@@ -22,7 +22,7 @@
 		</view>
 		<view class="flex-bc class-content-flex" v-if="item.type=='consume'">
 			<view class="class-content-stutas">{{orderStatus[item.orderStatus] || ''}}</view>
-			<view class="class-content-eval" v-if="item.orderStatus=='2'" @click.stop="handleChange(item)">评价</view>
+			<view class="class-content-eval" v-if="item.orderStatus=='2' && !item.isEvaluation" @click.stop="handleChange(item)">评价</view>
 		</view>
 		<view class="class-content-bottom" v-if="item.type!='consume'">
 			<view class="class-content-left2">

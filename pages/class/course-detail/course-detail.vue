@@ -70,7 +70,7 @@
 				</view>
 				<view v-if="item.useStudentNum < item.maxNum">
 					<view class="course-nearby-content-button" :class="[productInfo.sell?'':'dis-color']" 
-						@click="hanldeNavTo(item)">加入拼班</view>
+						@click="handleNavTo(item)">加入拼班</view>
 					<view class="course-nearby-content-success" v-if="item.minNumMax">差{{item.minNumMax}}人拼成</view>
 					<view class="course-nearby-content-success" v-else>差{{item.unUseNum}}人拼满</view>
 				</view>

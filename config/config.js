@@ -23,6 +23,7 @@ module.exports = {
 		Home: '/pages/tab-bar/home/home', // 首页
 		Class: '/pages/tab-bar/class/class', // 班级
 		ClassDetail: '/pages/class/class-detail/class-detail', //班级详情
+		ClassDetailAttendance:'/pages/class/class-detail/class-detail-attendance',
 		Demeanour: '/pages/class/demeanour/demeanour', //班级风采
 		Map: '/pages/tab-bar/map/map', // 地图
 		Mine: '/pages/tab-bar/mine/mine', // 我的
