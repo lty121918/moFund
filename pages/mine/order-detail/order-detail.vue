@@ -83,8 +83,8 @@
 				<text class="ml12">{{listData.refundTime}}</text>
 			</view>
 			<view class="order-detail-center-item">
-				<text>退课金额:</text>
-				<text class="ml12">{{listData.refundAmount}}</text>
+				<text>退款金额:</text>
+				<text class="ml12">{{listData.refundAmount}}元</text>
 			</view>
 		</view>
 	</view>

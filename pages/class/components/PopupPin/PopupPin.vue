@@ -141,7 +141,6 @@
 					return false
 				}
 				console.log('aa',JSON.stringify(this.data));
-				// return false
 				this.$http['classes'].getInitiateSpellClass(this.data).then(res => {
 					if (res.code == 200) {
 						this.$utils.router.navTo(this.$page.OrderInfo, {

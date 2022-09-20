@@ -7,6 +7,9 @@ import {
 import {
 	utils
 } from '@/utils/index.js';
+import {
+		debounce,throttle
+	} from "@/utils/lodash.js";
 const minxin = {
 	data() {
 		return {
@@ -14,7 +17,12 @@ const minxin = {
 			safeAreaInsetBottom: true, //底部高度
 			isTeach: '', // 是否教练 1是2不是
 			authorization: null,
-			officialAccount:false
+			officialAccount:false,
+			queryParams: {
+				row: 10,
+				page: 1, //第几页
+			},
+			isMore:false
 		}
 	},
 	watch: {
@@ -412,6 +420,39 @@ const minxin = {
 					self.officialAccount = false;
 				}
 			}).exec();
+		},
+		// 加载数据
+		lower: throttle(function(e) {
+			if (this.queryParams.page * this.queryParams.row >= this.queryParams.total) {
+				this.isMore = true
+				console.log(`暂无更多加载`) //current
+				return false
+			}
+			uni.showLoading({
+				title: '加载中',
+				mask: true
+			})
+			this.isRequest().then((res) => {
+				console.log(`加载成功`) //current
+				this.$forceUpdate() //二维数组，开启强制渲染
+			})
+		}, 1000),
+		// 其他请求事件 当然刷新和其他请求可以写一起 多一层判断。
+		isRequest() {
+			return new Promise((resolve, reject) => {
+				var that = this
+				setTimeout(async () => {
+					uni.hideLoading()
+					if (this.queryParams.page * this.queryParams.row >= this.queryParams
+						.total) {
+						this.isMore = true
+					} else {
+						this.queryParams.page++
+						await this.search()
+					}
+					resolve()
+				}, 1000)
+			})
 		},
 		
 	},

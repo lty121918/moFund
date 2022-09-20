@@ -152,16 +152,24 @@
 		methods: {
 			// 取消拼班中的
 			handleCancelClass() {
-				this.$http['classes'].cancelClass({
-					classId: this.classId,
-					IsFormData:true
-				}).then(res => {
-					if (res.code == 200) {
-						setTimeout(() => {
-							this.$utils.router.swtTo(this.$page.Home)
-						}, 1000)
+				const self = this
+				self.$utils.model.showMsgModal({
+					content: '是否确认取消拼班',
+					showCancel: true,
+					confirmCallback: function() {
+						self.$http['classes'].cancelClass({
+							classId: self.classId,
+							IsFormData:true
+						}).then(res => {
+							if (res.code == 200) {
+								setTimeout(() => {
+									self.$utils.router.swtTo(self.$page.Home)
+								}, 1000)
+							}
+						})
 					}
 				})
+				
 			},
 			getMineSpellClass() {
 				this.$http['classes'].getMineSpellClass({

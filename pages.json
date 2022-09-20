@@ -164,7 +164,8 @@
 			"path": "wallet/wallet",
 			"style": {
 				"navigationBarTitleText": "我的钱包",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true, //设置参数为true
+				"onReachBottomDistance": 20 //距离底部多远时触发 单位为px
 			}
 
 		}, {

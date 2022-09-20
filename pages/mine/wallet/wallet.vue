@@ -84,8 +84,11 @@
 		onLoad() {
 			this.getData()
 		},
+		onReachBottom() {
+			console.log('已触底');
+			// this.search()
+		},
 		methods: {
-
 			getData() {
 				console.log('获取我的数据');
 				this.$http['mine'].getUserInfo().then(res => {
@@ -110,6 +113,7 @@
 			// 选择tab操作
 			handleTab(val) {
 				this.active = val
+				this.queryParams.pages = 1
 				this.search()
 			},
 			// 打开充值弹窗
@@ -123,20 +127,29 @@
 			// 模拟请求数据
 			async search() {
 				const self = this
-				let data = []
-				let income = ''
-				if (this.active == 2) {
-					income = false
-				} else if (this.active == 3) {
-					income = true
-				}
-				const res = await self.$http['mine'].getTrade({
-					income
+				return new Promise(async (resolve, reject) => {
+					let data = []
+					let income = ''
+					if (self.active == 2) {
+						income = false
+					} else if (self.active == 3) {
+						income = true
+					}
+					const res = await self.$http['mine'].getTrade({
+						income
+					})
+					if (res.code == 200) {
+						data = res.data
+					}
+					let tempList = self.data
+					if (self.queryParams.pages == 1) {
+						tempList = data
+					} else {
+						tempList = tempList.concat(data)
+					}
+					self.queryParams.total = res.data.total
+					self.data = tempList
 				})
-				if (res.code == 200) {
-					data = res.data
-				}
-				this.data = data
 			},
 		}
 	}
@@ -199,7 +212,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			
+
 			&-item {
 				margin: 0 12px;
 			}

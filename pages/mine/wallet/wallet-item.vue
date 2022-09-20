@@ -4,8 +4,8 @@
 			<text class="fwb">流水号：{{item.tradeNo}}</text>
 			<text class="color fw4" v-if="item.income">收入</text>
 			<text class="color2 fw4" v-if="!item.income">支出</text>
-		</view>
-		<view class="mt32 fz28" >
+		</view> 
+		<view class="mt32 fz28">
 			<view>变动时间：{{item.operateTime}}</view>
 			<view class="mt16">交易类型：{{tradeTypeData[item.tradeType]}}</view>
 			<view class="mt16" v-if="item.orderNo">订单编号：{{item.orderNo ||''}}</view>
@@ -20,17 +20,24 @@
 
 <script>
 	export default {
-		props:{
-			item:{
-				default:()=>{
+		props: {
+			item: {
+				default: () => {
 					return {}
 				}
 			}
 		},
-		data(){
+		data() {
 			return {
-				tradeTypeData:{
-					1:'充值',2:'提现',3:'课款缴费',4:'团长分佣',5:'教练分佣',6:'系统充值',7:'系统冲销',8:'课程退款'
+				tradeTypeData: {
+					1: '充值',
+					2: '提现',
+					3: '课款缴费',
+					4: '团长分佣',
+					5: '教练分佣',
+					6: '用户充值赠送',
+					7: '系统冲销',
+					8: '课程退款'
 				}
 			}
 		}
@@ -39,7 +46,7 @@
 
 <style lang="scss" scoped>
 	.wallet {
-		
+
 		&-content {
 			position: relative;
 			margin: 0 32rpx 32rpx 32rpx;
@@ -47,6 +54,7 @@
 			background: #FFFFFF;
 			border-radius: 16rpx;
 			border: 2rpx solid #EEF1FA;
+
 			&-top {
 				display: flex;
 				justify-content: space-between;
@@ -60,17 +68,19 @@
 				color: #141D3D;
 
 			}
-			&-price{
+
+			&-price {
 				position: absolute;
-				right:32rpx;
+				right: 32rpx;
 				bottom: 32rpx;
 				display: inline-block;
 				padding: 6rpx 12rpx;
 				background: rgba(20, 29, 61, 0.05);
 				border-radius: 8rpx;
-				
+
 			}
-			&-priceActive{
+
+			&-priceActive {
 				background: rgba(254, 140, 25, 0.05);
 				color: #FE8C19;
 			}

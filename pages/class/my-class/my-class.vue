@@ -1,8 +1,10 @@
 <template>
 	<view class="class">
-		<view v-for="(item,index) in data" :key="index">
-			<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
-		</view>
+		<YList :data="data" :isMore="isMore" @lower="lower">
+			<view v-for="(item,index) in data" :key="index">
+				<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
+			</view>
+		</YList>
 		<view class="default-empty" v-if="data.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 			</image>
@@ -21,14 +23,15 @@
 		},
 		data() {
 			return {
-				data: []
+				data: [],
+
 			}
 		},
 		computed: {},
 		onShow() {
 			this.onLaunch().then(res => {
 				const authorization = this.$utils.util.getCache('Authorization');
-				if(!authorization){
+				if (!authorization) {
 					return false
 				}
 				this.getMounted()
@@ -46,43 +49,55 @@
 				}, 300)
 			},
 			// 模拟请求数据
-			async search(val) {
+			async search() {
 				const self = this
-				console.log('class请求');
-				self.$http['classes'].getClassList({
-					...val
-				}).then(res => {
-					let data = []
-					if (res.code == 200) {
-						data = res.data || []
+				return new Promise(async (resolve, reject) => {
+					console.log('class请求');
+					self.$http['classes'].getClassList(self.queryParams).then(res => {
+						let data = []
+						if (res.code == 200) {
+							data = res.data.records || []
 
-						data.forEach(item => {
-							if (item.classStatus != 0 && item.classStatus != 1 && item.classStatus !=3) {
+							data.forEach(item => {
+								if (item.classStatus != 0 && item.classStatus != 1 && item
+									.classStatus != 3) {
 									item.nextCLassTime = -1
-							}
-							if (item.coverImage && item.coverImage.indexOf('http') == -1) {
-								item.coverImage = self.$url + item.coverImage
-							}
-							item.startPeriod = self.$utils.dateTime.getLocalTime(
-								`2022-01-01 ${item.startPeriod}`, 'hh:mm')
-							item.endPeriod = self.$utils.dateTime.getLocalTime(
-								`2022-01-01 ${item.endPeriod}`,
-								'hh:mm')
-							item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
-							if (item.nextCLassTime&& item.nextCLassTime != -1) {
-								item.nextCLassTime = self.$utils.dateTime.getLocalTime(
-									item.nextCLassTime,
-									'yyyy-MM-dd hh:mm')
-							}
-							item.CourseDateName = this.$utils.dateTime.filteDate(
-								item.courseDate,
-								item.startDate,
-								item.endDate
-							)
-						})
+								}
+								if (item.coverImage && item.coverImage.indexOf('http') == -
+									1) {
+									item.coverImage = self.$url + item.coverImage
+								}
+								item.startPeriod = self.$utils.dateTime.getLocalTime(
+									`2022-01-01 ${item.startPeriod}`, 'hh:mm')
+								item.endPeriod = self.$utils.dateTime.getLocalTime(
+									`2022-01-01 ${item.endPeriod}`,
+									'hh:mm')
+								item['weekCodeName'] = self.$utils.dateTime.filteDay(item
+									.weekCode)
+								if (item.nextCLassTime && item.nextCLassTime != -1) {
+									item.nextCLassTime = self.$utils.dateTime.getLocalTime(
+										item.nextCLassTime,
+										'yyyy-MM-dd hh:mm')
+								}
+								item.CourseDateName = self.$utils.dateTime.filteDate(
+									item.courseDate,
+									item.startDate,
+									item.endDate
+								)
+							})
 
-					}
-					this.data = data
+						}
+						let tempList = self.data
+						if (self.queryParams.pages == 1) {
+							tempList = data
+						} else {
+							tempList = tempList.concat(data)
+						}
+						self.queryParams.total = res.data.total
+						self.data = tempList
+						self.$forceUpdate() //二维数组，开启强制渲染
+						resolve(tempList)
+					})
 				})
 			},
 
