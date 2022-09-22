@@ -93,7 +93,7 @@
         "versionCode" : 100
     },
     "mp-weixin" : {
-        "appid" : "wx3da6defd6747f3d7",
+        "appid" : "wx2d42bd0c488cfda5",
         "setting" : {
             "urlCheck" : false,
             "minified" : true

@@ -106,7 +106,7 @@
 						if (self.active != active) {
 							return false
 						}
-						res.data.forEach(item => {
+						res.data.records.forEach(item => {
 							if (self.active == 1) {
 								if (item.wxFtbOrderVO) {
 									data.push({
@@ -139,6 +139,7 @@
 						self.activeList[active] = tempList
 						self.data = tempList
 						self.$forceUpdate()
+						resolve(tempList)
 					}
 				})
 			},

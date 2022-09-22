@@ -16,7 +16,7 @@ module.exports = {
 	 // BASE_URL_DEV: 'http://172.20.1.25:8302/polar', //开发接口
 	// BASE_URL_DEV: 'https://polarlight.one-sports.com.cn/wx', //生产体验版接口
 	// BASE_URL_DEV: 'http://172.20.14.187:8181/polar', //鹏辉本地接口
-	// BASE_URL_DEV: 'http://172.20.13.149:8181/polar', //吴诗怡本地接口
+	// BASE_URL_DEV: 'http://172.20.13.149:8082/polar', //吴诗怡本地接口
 	// BASE_URL_DEV: 'http://172.20.13.171:8181/polar', //金杰本地接口
 	// BASE_URL_DEV: 'http://172.20.14.94:8181/polar', // 成霖
 	// BASE_URL: 'http://172.20.3.47:8302/polar', //本地接口
