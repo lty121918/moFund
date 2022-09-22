@@ -47,6 +47,9 @@ const minxin = {
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
+		CONFIG(){
+			return this.$config
+		}
 	},
 	onShow() {
 		this.authorization = utils.util.getCache('Authorization');

@@ -174,7 +174,7 @@
 								})
 								// this.data = data
 								let tempList = self.data
-								if (self.queryParams.pages == 1) {
+								if (self.queryParams.page == 1) {
 									tempList = data
 								} else {
 									tempList = tempList.concat(data)

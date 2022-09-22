@@ -3,7 +3,7 @@
 	<view class="login">
 		<view class="login-content">
 			<image class="login-content-img" src="/static/login/logo2.png" mode="widthFix"></image>
-			<view class="fz40">向日葵体育申请获得以下权限</view>
+			<view class="fz40">{{CONFIG.DEFAULT_SYSTEM_TITLE}}申请获得以下权限</view>
 			<view class="color666 mt32">(获得您的手机号)</view>
 			<button v-if="isSubmit || protocolData.length == 0" class="login-button" type="primary"
 				open-type="getPhoneNumber" @getphonenumber="getphonenumber" size="mini">授 权</button>
