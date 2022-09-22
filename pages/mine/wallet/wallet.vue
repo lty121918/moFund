@@ -49,6 +49,7 @@
 			<view v-for="(item,index) in data" :key="index">
 				<wallet-item :item="item" @change="handleShow"></wallet-item>
 			</view>
+			<view class="default-more" v-if="isMore && data.length!=0">暂无更多数据</view>
 			<view class="default-empty" v-if="data.length===0">
 				<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 				</image>
@@ -86,7 +87,7 @@
 		},
 		onReachBottom() {
 			console.log('已触底');
-			// this.search()
+			this.lower()
 		},
 		methods: {
 			getData() {
@@ -113,7 +114,7 @@
 			// 选择tab操作
 			handleTab(val) {
 				this.active = val
-				this.queryParams.pages = 1
+				this.queryParams.page = 1
 				this.search()
 			},
 			// 打开充值弹窗
@@ -136,19 +137,22 @@
 						income = true
 					}
 					const res = await self.$http['mine'].getTrade({
-						income
+						income,
+						...this.queryParams
 					})
-					if (res.code == 200) {
-						data = res.data
-					}
+					// if (res.code == 200) {
+						data = res.data.records
+					// }
 					let tempList = self.data
-					if (self.queryParams.pages == 1) {
+					if (self.queryParams.page == 1) {
 						tempList = data
 					} else {
 						tempList = tempList.concat(data)
 					}
 					self.queryParams.total = res.data.total
 					self.data = tempList
+					self.$forceUpdate() //二维数组，开启强制渲染
+					resolve(tempList)
 				})
 			},
 		}
@@ -256,5 +260,14 @@
 				border-radius: 14rpx;
 			}
 		}
+	}
+	
+	.default-more {
+		width: 100%;
+		height: 88rpx;
+		line-height: 88rpx;
+		text-align: center;
+		font-size: 28rpx;
+		color: #6A6A6A;
 	}
 </style>

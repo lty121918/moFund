@@ -442,14 +442,18 @@ const minxin = {
 			return new Promise((resolve, reject) => {
 				var that = this
 				setTimeout(async () => {
-					uni.hideLoading()
 					if (this.queryParams.page * this.queryParams.row >= this.queryParams
 						.total) {
 						this.isMore = true
 					} else {
 						this.queryParams.page++
 						await this.search()
+						if (this.queryParams.page * this.queryParams.row >= this.queryParams
+							.total) {
+							this.isMore = true
+						} 
 					}
+					uni.hideLoading()
 					resolve()
 				}, 1000)
 			})

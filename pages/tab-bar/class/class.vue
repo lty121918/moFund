@@ -28,11 +28,12 @@
 
 		</view>
 		<view v-if="isTeach==2">
-			<YList :data="data" :isMore="isMore" scrollClass="scroll-class1" @lower="handleLower">
+			<!-- <YList :data="data" :isMore="isMore" scrollClass="scroll-class1" @lower="handleLower"> -->
 				<view v-for="(item,index) in data" :key="index">
 					<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 				</view>
-			</YList>
+				<view class="default-more" v-if="isMore && data.length!=0">暂无更多数据</view>
+			<!-- </YList> -->
 		</view>
 		<view class="default-empty" v-if="(isTeach==2&& data.length===0) || isTeach==1&& dataList.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
@@ -102,6 +103,10 @@
 				path: `${this.$page.Class}` //分享默认打开是小程序首页
 			}
 		},
+		onReachBottom() {
+			console.log('已触底');
+			this.handleLower()
+		},
 		methods: {
 			getMounted: debounce(function() {
 				uni.setNavigationBarTitle({
@@ -112,6 +117,7 @@
 					// this.$utils.userInfo.login('this')
 					return false
 				}
+				this.queryParams.pages = 1
 				this.search()
 			}),
 			handleLower(){
@@ -221,7 +227,7 @@
 <style lang="scss" scoped>
 	.class {
 		padding: 32rpx 0;
-		// min-height: 100vh;
+		min-height: 100vh;
 		box-sizing: border-box;
 		background: #EEF1FA;
 
@@ -247,5 +253,13 @@
 		z-index: 999;
 		left: 0;
 		width: 100%;
+	}
+	.default-more {
+		width: 100%;
+		height: 88rpx;
+		line-height: 88rpx;
+		text-align: center;
+		font-size: 28rpx;
+		color: #6A6A6A;
 	}
 </style>

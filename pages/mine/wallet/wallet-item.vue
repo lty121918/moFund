@@ -6,7 +6,7 @@
 			<text class="color2 fw4" v-if="!item.income">支出</text>
 		</view> 
 		<view class="mt32 fz28">
-			<view>变动时间：{{item.operateTime}}</view>
+			<view>变动时间：{{item.operateTime}} </view>
 			<view class="mt16">交易类型：{{tradeTypeData[item.tradeType]}}</view>
 			<view class="mt16" v-if="item.orderNo">订单编号：{{item.orderNo ||''}}</view>
 			<view class="fz24 wallet-content-price " :class="[item.income?'wallet-content-priceActive':'']">

@@ -368,7 +368,7 @@
 	}
 
 	.placeholder {
-		color: grey;
+		color: #666;
 		font-size: 12px;
 	}
 

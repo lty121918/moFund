@@ -1,10 +1,11 @@
 <template>
-	<view class="class">
-		<YList :data="data" :isMore="isMore" @lower="lower">
+	<view class="class" v-if="isShow">
+		<!-- <YList :data="data" :isMore="isMore" @lower="lower"> -->
 			<view v-for="(item,index) in data" :key="index">
 				<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
 			</view>
-		</YList>
+			<view class="default-more" v-if="isMore && data.length!=0">暂无更多数据</view>
+		<!-- </YList> -->
 		<view class="default-empty" v-if="data.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 			</image>
@@ -24,10 +25,14 @@
 		data() {
 			return {
 				data: [],
-
+				isShow:false
 			}
 		},
 		computed: {},
+		onReachBottom() {
+			console.log('已触底');
+			this.lower()
+		},
 		onShow() {
 			this.onLaunch().then(res => {
 				const authorization = this.$utils.util.getCache('Authorization');
@@ -43,9 +48,15 @@
 		mounted() {},
 		methods: {
 			getMounted() {
-				setTimeout(() => {
+				setTimeout(async () => {
 					this.getTeach()
-					this.search()
+					uni.showLoading({
+						title: '加载中',
+						mask: true
+					})
+					await this.search()
+					uni.hideLoading()
+					this.isShow = true
 				}, 300)
 			},
 			// 模拟请求数据
@@ -127,5 +138,13 @@
 
 	.home-title {
 		padding-bottom: 0;
+	}
+	.default-more {
+		width: 100%;
+		height: 88rpx;
+		line-height: 88rpx;
+		text-align: center;
+		font-size: 28rpx;
+		color: #6A6A6A;
 	}
 </style>
