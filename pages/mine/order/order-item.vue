@@ -1,6 +1,6 @@
 <template>
 	<view class="class-content" @click="handleNextTo(item)">
-		<view class="class-content-top">
+		<view class="class-content-top"> 
 			<text class="fwb">订单编号：{{item.tradeNo || item.orderNo}}</text>
 			<view class="flex-ec" >
 				<text class="color fw4">{{item.type=='consume'?'消费订单':'充值订单'}}</text>

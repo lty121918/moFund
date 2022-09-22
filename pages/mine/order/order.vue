@@ -6,18 +6,18 @@
 			<view class="order-tab-item" @click="handleTab(3)" :class="[active==3?'order-tab-active':'']">充值订单</view>
 		</view>
 		<!-- @lower="lower" -->
-		<YList :data="data" :isMore="isMore"  scrollClass="scroll-class2">
+		<!-- <YList :data="data" :isMore="isMore"  scrollClass="scroll-class2"> -->
 			<view v-for="(item,index) in data" :key="index">
 				<order-item :item="item" @change="handleShow"></order-item>
 			</view>
-		</YList>
+		<!-- </YList> -->
 		<!-- <view class="default-empty" v-if="data.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 			</image>
 			<view class="">暂无数据</view>
 		</view> -->
 		<!-- 订单评价 -->
-		<popup-eval ref="popupEval" @change="search" />
+		<popup-eval ref="popupEval" @change="handleSearch" />
 	</view>
 </template>
 
@@ -42,6 +42,10 @@
 		created() {
 
 		},
+		onReachBottom() {
+			console.log('已触底');
+			this.lower()
+		},
 		mounted() {
 			this.onLaunch().then(res => {
 				this.search()
@@ -57,7 +61,11 @@
 			handleTab(val) {
 				this.active = val
 				this.data = this.activeList[val] || []
-				this.queryParams.pages = 1
+				this.queryParams.page = 1
+				this.search()
+			},
+			handleSearch(){
+				this.queryParams.page = 1
 				this.search()
 			},
 			/**
@@ -122,7 +130,7 @@
 						})
 						
 						let tempList = self.data
-						if (self.queryParams.pages == 1) {
+						if (self.queryParams.page == 1) {
 							tempList = data
 						} else {
 							tempList = tempList.concat(data)
