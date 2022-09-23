@@ -162,7 +162,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .order {
-  // min-height: 100vh;
+  min-height: 100vh;
   // padding-bottom:32rpx ;
   background: #eef1fa;
   box-sizing: border-box;

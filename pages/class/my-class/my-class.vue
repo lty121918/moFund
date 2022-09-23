@@ -40,7 +40,7 @@ export default {
     console.log('已触底')
     this.lower()
   },
-  onShow() {
+  onLoad() {
     this.onLaunch().then(res => {
       const authorization = this.$utils.util.getCache('Authorization')
       if (!authorization) {
@@ -111,7 +111,7 @@ export default {
             })
           }
           let tempList = self.data
-          if (self.queryParams.pages == 1) {
+          if (self.queryParams.page == 1) {
             tempList = data
           } else {
             tempList = tempList.concat(data)
