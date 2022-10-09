@@ -1,7 +1,7 @@
 let docUrl = 'http://172.20.1.25:8304/polar' //拉取api文档接口
 let apiUrl = 'http://172.20.1.25:8304/polar' //测试
 let imageUrl = 'https://polar-light-dev.oss-cn-hangzhou.aliyuncs.com/' //测试&开发环境
-let environment = 'pre'
+let environment = 'dev'
 if (environment == 'pre') { //生产环境
   apiUrl = 'https://polarlight.one-sports.com.cn/wx'
   imageUrl = 'https://polar-light.oss-cn-hangzhou.aliyuncs.com/'

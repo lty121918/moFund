@@ -63,7 +63,7 @@
                   : data.weekCodeName || ''
               }}
             </text>
-            <text class="o-over over-time">
+            <text class="o-over over-time pl12">
               {{ data.startPeriod || data.startTime || '' }}~{{
                 data.endPeriod || data.endTime || ''
               }}
