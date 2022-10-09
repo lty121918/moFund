@@ -98,7 +98,6 @@ export default {
       active: 1, //  1 2 3
       data: [], //数据列表
       isTeach: false,
-      getPlayStatus: ''
     }
   },
   onLoad() {
@@ -138,9 +137,9 @@ export default {
     },
     // 打开充值弹窗
     handleRecharge() {
-      this.$utils.model.showToast(
-        '您充值金额将用于约课自动缴费，如未退出班级，上课后不再退费。'
-      )
+      // this.$utils.model.showToast(
+      //   '您充值金额将用于约课自动缴费，如未退出班级，上课后不再退费。'
+      // )
       this.$refs.recharge.handleShow()
     },
     // 打开提现弹窗
