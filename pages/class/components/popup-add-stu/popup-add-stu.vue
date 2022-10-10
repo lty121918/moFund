@@ -97,7 +97,10 @@ export default {
     // 曲去添加新学员
     handelAdd() {
       this.close()
-      this.$utils.router.navTo(this.$page.AddStudent)
+      this.$utils.router.navTo(this.$page.AddStudent, {
+        classId: this.classId,
+        sort: this.num
+      })
     },
     // 确认添加学员
     submit() {
@@ -106,7 +109,8 @@ export default {
       if (data.length >= this.list.maxNum) {
         // 加入拼班成功将自动支付首节课课款
         self.$utils.model.showMsgModal({
-          content: '加入拼班视为您同意自动约课，约课将自动冻结上课费用，如未退出班级，上课后不再退费。是否确认？',
+          content:
+            '加入拼班视为您同意自动约课，约课将自动冻结上课费用，如未退出班级，上课后不再退费。是否确认？',
           confirmText: '确认',
           showCancel: true,
           confirmCallback: function() {

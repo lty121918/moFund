@@ -16,61 +16,63 @@
         mode="aspectFill"
       ></image>
     </view>
-    <view
-      class="course-list-item"
-      v-for="item in data"
-      :key="item"
-      @click="$utils.router.navTo($page.CourseDetail, item)"
-    >
-      <van-image
-        use-error-slot
-        class="course-list-item-img"
-        fit="cover"
-        radius="10"
-        width="180"
-        height="204"
-        :src="item.coverImage"
-      ></van-image>
-      <!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFill"></image> -->
-      <view class="">
-        <view class="course-list-item-title">{{ item.productName }}</view>
-        <view>
-          <text class="color">
-            <text class="fz24">￥</text>
-            <text class="fz32">{{ item.price }}</text>
-          </text>
-          <text class="fz24">/节</text>
-          <text class="course-list-item-payment">
-            {{ item.paymentNumber }}人付款
-          </text>
-        </view>
-        <view class="course-list-item-info">
-          <view
-            class="course-list-item-apply"
-            v-if="item.minAge && item.maxAge"
-          >
-            {{ item.minAge }}-{{ item.maxAge }}岁适用
+    <view class="course-head-margin">
+      <view
+        class="course-list-item"
+        v-for="item in data"
+        :key="item"
+        @click="$utils.router.navTo($page.CourseDetail, item)"
+      >
+        <van-image
+          use-error-slot
+          class="course-list-item-img"
+          fit="cover"
+          radius="10"
+          width="180"
+          height="204"
+          :src="item.coverImage"
+        ></van-image>
+        <!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFill"></image> -->
+        <view class="">
+          <view class="course-list-item-title">{{ item.productName }}</view>
+          <view>
+            <text class="color">
+              <text class="fz24">￥</text>
+              <text class="fz32">{{ item.price }}</text>
+            </text>
+            <text class="fz24">/节</text>
+            <text class="course-list-item-payment">
+              {{ item.paymentNumber }}人付款
+            </text>
           </view>
-          <view
-            class="course-list-item-apply"
-            v-if="item.minAge && !item.maxAge"
-          >
-            大于{{ item.minAge }}岁适用
-          </view>
-          <view
-            class="course-list-item-apply"
-            v-if="!item.minAge && item.maxAge"
-          >
-            小于{{ item.maxAge }}岁适用
-          </view>
-          <view
-            class="course-list-item-apply"
-            v-if="!item.minAge && !item.maxAge"
-          >
-            无年龄限制
-          </view>
-          <view class="course-list-item-pin">
-            {{ item.spellingClassNumber }}拼班
+          <view class="course-list-item-info">
+            <view
+              class="course-list-item-apply"
+              v-if="item.minAge && item.maxAge"
+            >
+              {{ item.minAge }}-{{ item.maxAge }}岁适用
+            </view>
+            <view
+              class="course-list-item-apply"
+              v-if="item.minAge && !item.maxAge"
+            >
+              大于{{ item.minAge }}岁适用
+            </view>
+            <view
+              class="course-list-item-apply"
+              v-if="!item.minAge && item.maxAge"
+            >
+              小于{{ item.maxAge }}岁适用
+            </view>
+            <view
+              class="course-list-item-apply"
+              v-if="!item.minAge && !item.maxAge"
+            >
+              无年龄限制
+            </view>
+            <view class="course-list-item-pin">
+              {{ item.spellingClassNumber }}拼班
+            </view>
           </view>
         </view>
       </view>
@@ -92,9 +94,7 @@ import { debounce } from '@/utils/lodash.js'
 export default {
   mixins: [mixin],
   data() {
-    return {
-      data: []
-    }
+    return { data: [] }
   },
   mounted() {
     this.onLaunch().then(res => {
@@ -108,9 +108,7 @@ export default {
     search: debounce(async function() {
       const self = this
       // 获取课程
-      let res = await self.$http['classes'].getCourseList({
-        campusId: self.campus.campusId
-      })
+      let res = await self.$http['classes'].getCourseList({ campusId: self.campus.campusId })
       // '/static/notData.png'
       let data = []
       if (res.code == 200) {
@@ -143,7 +141,13 @@ export default {
   background: #eef1fa;
 
   &-head {
+    &-margin {
+      padding-top: 124rpx;
+    }
     &-address {
+      position: fixed;
+      z-index: 999;
+      height: 60rpx;
       display: flex;
       justify-content: flex-start;
       align-items: center;

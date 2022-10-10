@@ -13,8 +13,10 @@
         mode="aspectFill"
       ></image>
     </view>
-    <view v-for="item in data" :key="item.productSellPriceRelId">
-      <pin-item :item="item"></pin-item>
+    <view class="piece-head-margin" v-if="data.length !== 0">
+      <view v-for="item in data" :key="item.productSellPriceRelId">
+        <pin-item :item="item"></pin-item>
+      </view>
     </view>
     <view class="default-empty" v-if="data.length === 0">
       <image
@@ -109,7 +111,13 @@ export default {
   z-index: 9;
 
   &-head {
+    &-margin {
+      padding-top: 124rpx;
+    }
     &-address {
+      position: fixed;
+      z-index: 999;
+      height: 60rpx;
       display: flex;
       justify-content: flex-start;
       align-items: center;

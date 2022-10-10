@@ -31,8 +31,9 @@
           <view
             class="popup-footer-button colorw ml32 bg-color"
             @click="handleConfirm"
-            >充值</view
           >
+            充值
+          </view>
         </view>
       </view>
     </uni-popup>
@@ -40,72 +41,76 @@
 </template>
 
 <script>
-import mixin from "@/mixin.js";
+import mixin from '@/mixin.js'
 export default {
   mixins: [mixin],
-  name: "recharge",
+  name: 'recharge',
   data() {
     return {
-      amount: "",
-    };
+      amount: '',
+      isClass: false
+    }
   },
   methods: {
     changeInput(e) {
-      let value = e + "";
-      if (value != 0 && value != "0.") {
-        value = value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
-        value = value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+      let value = e + ''
+      if (value != 0 && value != '0.') {
+        value = value.replace(/[^\d.]/g, '') //清除“数字”和“.”以外的字符
+        value = value.replace(/\.{2,}/g, '.') //只保留第一个. 清除多余的
         value = value
-          .replace(".", "$#$")
-          .replace(/\./g, "")
-          .replace("$#$", ".");
-        value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/, "$1$2.$3"); //只能输入两个小数
+          .replace('.', '$#$')
+          .replace(/\./g, '')
+          .replace('$#$', '.')
+        value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3') //只能输入两个小数
         setTimeout(() => {
-          this.amount = value;
-        });
+          this.amount = value
+        })
       }
     },
     changeInput2(e) {
-      console.log();
-      this.amount = Number(this.amount);
+      console.log()
+      this.amount = Number(this.amount)
     },
     change(e) {
-      console.log("当前模式：" + e.type + ",状态：" + e.show);
+      console.log('当前模式：' + e.type + ',状态：' + e.show)
     },
-    handleShow() {
-      console.log("打开");
-      this.$refs.popup.open("bottom");
+    handleShow(val = false) {
+      console.log('打开')
+      this.isClass = val
+      this.$refs.popup.open('bottom')
     },
     close() {
-      this.amount = "";
-      this.$refs.popup.close("bottom");
+      this.amount = ''
+      this.$refs.popup.close('bottom')
     },
     handleConfirm() {
-      const self = this;
+      const self = this
       if (!self.amount || self.amount == 0) {
-        self.$utils.model.showToast("请输入充值金额");
-        return false;
+        self.$utils.model.showToast('请输入充值金额')
+        return false
       }
       self.$utils.model.showMsgModal({
-        content: "您充值金额将用于约课自动缴费，如未退出班级，上课后不再退费。",
-        confirmText: "确认",
+        content: '您充值金额将用于约课自动缴费，如未退出班级，上课后不再退费。',
+        confirmText: '确认',
         showCancel: true,
-        confirmCallback: function () {
-          self.$http["mine"].setRecharge(self.amount).then(async (res) => {
+        confirmCallback: function() {
+          self.$http['mine'].setRecharge(self.amount).then(async res => {
             if (res.code == 200) {
-              self.close();
-              await self.wxPay(res.data.payResult);
-              await self.$http["mine"].getPayStatus({
-                payOrderNo: res.data.payOrderNo,
-              });
-              self.$emit("change");
+              self.close()
+              await self.wxPay(res.data.payResult)
+              const status = await self.$http['mine'].getPayStatus({ payOrderNo: res.data.payOrderNo })
+              console.log(status.data.payStatus)
+              if (status.data.payStatus && this.isClass) {
+                self.$emit('success')
+              }
+              self.$emit('change')
             }
-          });
-        },
-      });
-    },
-  },
-};
+          })
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
