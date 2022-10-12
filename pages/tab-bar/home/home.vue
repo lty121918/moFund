@@ -2,20 +2,22 @@
   <view class="home" v-if="isTeach == 2">
     <drag-button :isDock="true" :existTabBar="true" @btnClick="btnClick" />
     <view class="home-head2"></view>
-    <view class="home-head">
-      <view class="home-head-address" @click="handleNavTo">
+    <view class="home-head-address">
+      <view class="home-head-address-view" @click="handleNavTo">
         <image
           class="home-head-address-img"
-          src="/static/home/location.png"
+          src="/static/home/location3.png"
           mode="aspectFill"
         ></image>
         <text>{{ campus.campusName || '' }}</text>
         <image
           class="home-head-address-icon"
-          src="/static/down.png"
+          src="/static/down3.png"
           mode="aspectFill"
         ></image>
       </view>
+    </view>
+    <view class="home-head">
       <view class="home-head-swiper">
         <swiper
           class="swiper"
@@ -185,6 +187,7 @@ export default {
   },
   components: { PinItem },
   created() {},
+
   onShow() {
     this.getTeach()
     if (this.isTeach == 1) {
@@ -388,24 +391,39 @@ export default {
     position: relative;
     top: 0;
     left: 0;
-    padding: 20rpx 32rpx 0 32rpx;
+    padding: 0rpx 32rpx 0 32rpx;
     margin-bottom: 142rpx;
     height: 314rpx;
     z-index: 9;
 
     &-address {
-      position: fixed;
-      top: -8rpx;
+      position: sticky;
+      top: 0px;
       z-index: 999;
-      height: 60rpx;
+      height: 106rpx;
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      margin-top: 4rpx;
+      padding-left: 32rpx;
+      box-sizing: border-box;
+      // margin-top: 4rpx;;
       font-size: 28rpx;
       font-weight: 500;
       color: #ffffff;
-
+      background-image: url('~@/static/home/bg.png');
+      background-repeat: no-repeat;
+      background-size: 100% 510rpx;
+      background-position: 0 -170rpx;
+      &-view {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 0 22rpx;
+        height: 64rpx;
+        background: #ffffff;
+        border-radius: 32px;
+        color: #de501f;
+      }
       &-img {
         margin-right: 16rpx;
         width: 18rpx;
@@ -421,10 +439,10 @@ export default {
     }
 
     &-swiper {
-      margin-top: 55rpx;
+      // margin-top: 20rpx;
       width: 686rpx;
       height: 376rpx;
-      // background: #d8d8d8;
+      background: #d8d8d8;
       border-radius: 16rpx;
     }
 

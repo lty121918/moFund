@@ -269,6 +269,7 @@ export default {
       }
       this.data.weChatUserList = this.data.weChatUserList || []
       const ls = this.data.weChatUserList.map(item => item.studentId)
+      console.log(this.classId)
       this.$refs.popupAddStu.handleShow(this.classId, ls, this.data)
       console.log('添加学员')
     },

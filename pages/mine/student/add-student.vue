@@ -168,6 +168,7 @@ export default {
     this.endTime = this.$utils.dateTime.getLocalTime()
   },
   onLoad(e) {
+    console.log(e)
     const { classId, sort } = e
     this.classId = classId
     this.sort = sort

@@ -97,6 +97,7 @@ export default {
     // 曲去添加新学员
     handelAdd() {
       this.close()
+      console.log(this.classId)
       this.$utils.router.navTo(this.$page.AddStudent, {
         classId: this.classId,
         sort: this.num
@@ -175,19 +176,19 @@ export default {
         this.boxActive = []
         this.data = []
         this.activeData = [] //已经选中的学员
-        this.classId = ''
-        this.num = 0
+        // this.classId = ''
+        // this.num = 0
       }
     },
     close() {
       this.boxActive = []
       this.data = []
       this.activeData = [] //已经选中的学员
-      this.classId = ''
-      this.num = 0
       this.$refs.popup.close('bottom')
     },
     async handleShow(classId, ls, data) {
+      // this.classId = ''
+      // this.num = 0
       this.classId = classId
       this.activeData = ls
       this.num = ls.length
