@@ -1,9 +1,18 @@
 <template>
   <view class="class-content" @click="handleNavTo">
+    <view class="flex-ec" v-if="type == 2">
+      <image
+        class="class-content-more"
+        src="/static/class/class-more.png"
+        mode="widthFix"
+        @click="handleMenu"
+      >
+      </image>
+    </view>
     <view class="class-content-top" v-if="type != 3">
       <text>
         <text v-if="data.classStatus == 1 || data.classStatus == 3">
-          下节课：{{ data.nextCLassTime || '已结课' }}
+          下节课：{{ data.nextCLassTime || "已结课" }}
         </text>
       </text>
       <text class="color fw4">{{ classStatus[data.classStatus] }}</text>
@@ -59,13 +68,13 @@
             <text class="o-over over-time">
               {{
                 data.courseType == 2
-                  ? data.CourseDateName || ''
-                  : data.weekCodeName || ''
+                  ? data.CourseDateName || ""
+                  : data.weekCodeName || ""
               }}
             </text>
             <text class="o-over over-time pl12">
-              {{ data.startPeriod || data.startTime || '' }}~{{
-                data.endPeriod || data.endTime || ''
+              {{ data.startPeriod || data.startTime || "" }}~{{
+                data.endPeriod || data.endTime || ""
               }}
             </text>
           </text>
@@ -85,51 +94,83 @@
       class="class-content-tip"
       v-if="
         type == 2 &&
-          isTeach == 2 &&
-          !data.isSufficient &&
-          data.isSufficient != null
+        isTeach == 2 &&
+        !data.isSufficient &&
+        data.isSufficient != null
       "
     >
       您的余额不足，为保证上课不受影响，请尽快充值!
     </view>
+    <!-- 右上角弹窗 -->
+    <uni-popup ref="popup">
+      <view class="class-content-popup">
+        <uni-card :is-shadow="false">
+          <view class="flex-cc class-content-popup-menu" @click="handleContant">
+            通讯录
+          </view>
+        </uni-card>
+      </view>
+    </uni-popup>
   </view>
 </template>
 
 <script>
-import vanImage from '@/wxcomponents/vant/image/index'
+import vanImage from "@/wxcomponents/vant/image/index";
 export default {
-  components: { vanImage },
+  components: {
+    vanImage,
+  },
   props: {
-    type: { default: 1 },
-    isTeach: { default: 1 },
+    type: {
+      default: 1,
+    },
+    isTeach: {
+      default: 1,
+    },
     data: {
       default: () => {
-        return {}
-      }
+        return {};
+      },
     },
     classStatus: {
       default: () => {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   methods: {
+    //打开右上角弹出框
+    handleMenu() {
+      this.$refs.popup.open("bottom");
+    },
+    //弹出框的通讯录按钮
+    handleContant() {
+      console.log(1111);
+	  console.log(this.data.classId);
+      this.$utils.router.navTo(this.$page.ClassInfo, {
+        classId: this.data.classId,
+      });
+    },
     handleNavTo() {
       if (this.type == 1) {
         if (this.data.classStatus == 0) {
-          this.$utils.router.navTo(this.$page.OrderInfo, { classId: this.data.classId })
+          this.$utils.router.navTo(this.$page.OrderInfo, {
+            classId: this.data.classId,
+          });
         } else {
-          this.$utils.router.navTo(this.$page.ClassDetail, { classId: this.data.classId })
+          this.$utils.router.navTo(this.$page.ClassDetail, {
+            classId: this.data.classId,
+          });
         }
       } else if (this.type == 3) {
         this.$utils.router.navTo(this.$page.CourseDetail, {
           productId: this.data.productId,
-          campusId: this.data.campusId
-        })
+          campusId: this.data.campusId,
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -140,8 +181,29 @@ export default {
     // min-height: 344rpx;
     // background: #FFFFFF;
     border-radius: 16rpx;
-    background-image: url('~@/static/class/class-item.png');
+    background-image: url("~@/static/class/class-item.png");
     background-size: 100%;
+
+    &-more {
+      margin-top: 10rpx;
+      width: 40rpx;
+      height: 40rpx;
+    }
+
+    &-popup {
+      padding-top: 5rpx;
+      padding-bottom: 10rpx;
+      width: 750rpx;
+      max-height: 1052rpx;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      background: #ffffff;
+      border-radius: 36rpx 36rpx 0rpx 0rpx;
+
+      &-menu {
+        font-size: 30rpx;
+      }
+    }
 
     &-top {
       display: flex;

@@ -1,4 +1,6 @@
-let docUrl = 'http://172.20.1.25:8304/polar' //拉取api文档接口
+// let docUrl = 'http://172.20.1.25:8304/polar' //拉取api文档接口
+let docUrl = 'http://172.20.14.94:8081/polar' //拉取api文档接口成林
+
 let apiUrl = 'http://172.20.1.25:8304/polar' //测试
 let imageUrl = 'https://polar-light-dev.oss-cn-hangzhou.aliyuncs.com/' //测试&开发环境
 let environment = 'dev'
@@ -12,13 +14,13 @@ module.exports = {
   CACHE_PREFIX: 'DONGAO_', //本地缓存前缀
   DOC_URL: docUrl,
   // BASE_URL_DEV: 'http://172.20.3.47:8302/polar', //本地接口
-  BASE_URL_DEV: 'http://172.20.1.25:8304/polar', // 1.0.1测试环境接口
-  // BASE_URL_DEV: 'http://172.20.1.25:8302/polar', //开发接口
+  // BASE_URL_DEV: 'http://172.20.1.25:8304/polar', // 1.0.1测试环境接口
+  // BASE_URL_DEV: 'http://172.20.1.25:8302/polar', //开发接口1.1.1
   // BASE_URL_DEV: 'https://polarlight.one-sports.com.cn/wx', //生产体验版接口
   // BASE_URL_DEV: 'http://172.20.14.187:8181/polar', //鹏辉本地接口
   // BASE_URL_DEV: 'http://172.20.13.149:8082/polar', //吴诗怡本地接口
   // BASE_URL_DEV: 'http://172.20.13.171:8181/polar', //金杰本地接口
-  // BASE_URL_DEV: 'http://172.20.14.94:8181/polar', // 成霖
+  BASE_URL_DEV: 'http://172.20.14.94:8081/polar', // 成霖
   // BASE_URL: 'http://172.20.3.47:8302/polar', //本地接口
   BASE_URL: apiUrl, // 1.0.1测试环境接口
   IMAGE_URL: imageUrl, //测试&开发环境
@@ -28,6 +30,7 @@ module.exports = {
     Home: '/pages/tab-bar/home/home', // 首页
     Class: '/pages/tab-bar/class/class', // 班级
     ClassDetail: '/pages/class/class-detail/class-detail', //班级详情
+	ClassInfo:'/pages/class/class-detail/class-info',//通讯录
     ClassDetailAttendance: '/pages/class/class-detail/class-detail-attendance',
     Demeanour: '/pages/class/demeanour/demeanour', //班级风采
     Map: '/pages/tab-bar/map/map', // 地图
