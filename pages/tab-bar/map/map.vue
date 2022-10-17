@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="map">
-			<map :markers="markers" id="map1" scale="12" :latitude="latitude" :longitude="longitude"
+			<map :markers="markers" id="map1" scale="12" :latitude="latitude2" :longitude="longitude2"
 				style="width: 100%;" :style="{ height: `calc(100vh - ${safeAreaHeight+50}px)` }" @markertap="markertap"
 				@callouttap="markertap">
 				<cover-view class="map-tip" @click="$utils.router.navTo($page.AddDeclare)">找不到校区？试试校区申请</cover-view>
@@ -73,8 +73,8 @@
 		data() {
 			return {
 				isShow: false,
-				latitude: 24.485193, // 地图默认显示的维度
-				longitude: 118.179483, // 地图默认显示的纬度
+				latitude2: 24.485193, // 地图默认显示的维度
+				longitude2: 118.179483, // 地图默认显示的纬度
 				markers: [],
 				campusName: '',
 				data: [] //社区的课程列表
@@ -86,8 +86,8 @@
 			const self = this
 			this.onLaunch().then(res=>{
 				self.getLocation(false).then(async (res) => {
-					self.latitude = res.latitude
-					self.longitude = res.longitude
+					self.latitude2 = res.latitude
+					self.longitude2 = res.longitude
 					self.getData()
 				})
 			})

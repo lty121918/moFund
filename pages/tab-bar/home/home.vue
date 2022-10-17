@@ -189,6 +189,9 @@ export default {
   created() {},
 
   onShow() {
+    this.SET_STORAGE({
+			str: 'location'
+		})
     this.getTeach()
     if (this.isTeach == 1) {
       this.$utils.router.swtTo(this.$page.Class)
@@ -203,52 +206,13 @@ export default {
   mounted() {},
   methods: {
     handleNavTo() {
-      this.getSettingLocal().then(res => {
-        if (res == 3) {
-          this.$utils.router.navTo(this.$page.Search)
-        } else {
-          uni.showModal({
-            title: '提示',
-            content: '您拒绝了定位权限，将无法使用社区定位功能',
-            success: res => {
-              if (res.confirm) {
-                // 跳转设置页面
-                uni.openSetting({
-                  success: res => {
-                    if (res.authSetting['scope.userLocation']) {
-                      self.getLocation()
-                    } else {
-                      uni.showToast({
-                        title: '您拒绝了定位权限，将无法使用社区定位功能',
-                        icon: 'none'
-                      })
-                      // 没有允许定位权限
-                    }
-                  }
-                })
-              } else {
-                this.$utils.router.navTo(this.$page.Search)
-              }
-            }
-          })
-        }
-      })
+      this.$utils.router.navTo(this.$page.Search)
     },
     // home 页面调用
     getMounted: debounce(function(e) {
       this.$nextTick(() => {
         uni.setNavigationBarTitle({ title: '首页' })
       })
-      if (!this.location.latitude) {
-        this.SET_STORAGE({
-          data: {
-            latitude: '30.555175310610363',
-            longitude: '114.31188993115236'
-          },
-          str: 'location'
-        })
-      }
-
       this.getData()
     }),
     btnClick() {},
@@ -269,8 +233,8 @@ export default {
       }
       // 获取社区
       let res2 = await getSearchList({
-        lat: this.location.latitude,
-        lng: this.location.longitude
+        lat: this.location.latitude || this.latitude,
+        lng: this.location.longitude || this.longitude
       })
       if (res2.code == 200) {
         let list = res2.data

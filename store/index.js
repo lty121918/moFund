@@ -55,6 +55,7 @@ const state = {
 		8: '团长取消',
 		9: '校区取消'
 	},
+	isLocation: null,//是否授权
 	shareInfo:{},//分享信息
 	avatar:require('@/static/avatar.png')
 	// 'https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132'
@@ -73,7 +74,8 @@ const getters = {
 	city: state => state.city,
 	classStatus: state => state.classStatus,
 	avatar: state => state.avatar,
-	shareInfo:state => state.shareInfo
+	shareInfo:state => state.shareInfo,
+	isLocation:state => state.isLocation,
 	
 
 }
