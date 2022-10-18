@@ -1,7 +1,7 @@
 // let docUrl = 'http://172.20.1.25:8304/polar' //拉取api文档接口
 let docUrl = 'http://172.20.14.94:8081/polar' //拉取api文档接口成林
 
-let apiUrl = 'http://172.20.1.25:8304/polar' //测试
+let apiUrl = 'http://172.20.3.47:8304/polar' //测试
 let imageUrl = 'https://polar-light-dev.oss-cn-hangzhou.aliyuncs.com/' //测试&开发环境
 let environment = 'dev'
 if (environment == 'pre') { //生产环境
@@ -31,7 +31,7 @@ module.exports = {
     Home: '/pages/tab-bar/home/home', // 首页
     Class: '/pages/tab-bar/class/class', // 班级
     ClassDetail: '/pages/class/class-detail/class-detail', //班级详情
-	ClassInfo:'/pages/class/class-detail/class-info',//通讯录
+    ClassInfo: '/pages/class/class-detail/class-info', //通讯录
     ClassDetailAttendance: '/pages/class/class-detail/class-detail-attendance',
     Demeanour: '/pages/class/demeanour/demeanour', //班级风采
     Map: '/pages/tab-bar/map/map', // 地图

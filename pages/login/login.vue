@@ -148,7 +148,7 @@ export default {
     getphonenumber2: debounce(function(e) {
       const self = this
       if (!self.isSubmit) {
-        let data = protocolData || []
+        let data = this.protocolData || []
         let protocolTitle = data[0].protocolTitle
         let protocolTitle2 = data[1].protocolTitle
         self.$utils.model.showToast(
