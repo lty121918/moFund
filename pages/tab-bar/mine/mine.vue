@@ -41,9 +41,9 @@
             >
               授权您的微信头像及昵称
             </text>
+            <!-- type="nickname" -->
             <input
               :focus="true"
-              type="nickname"
               ref="input"
               @blur="handleBlur"
               v-if="showName"
