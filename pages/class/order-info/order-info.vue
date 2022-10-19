@@ -369,7 +369,7 @@ export default {
               res.data.startDate,
               res.data.endDate
             )
-            this.data = res.data
+            this.data = {...res.data,classId: this.classId}
             this.data.CourseDateName = CourseDateName
             uni.setNavigationBarTitle({ title: this.isHead ? '我的拼班' : '加入拼班' })
             this.SET_STORAGE({

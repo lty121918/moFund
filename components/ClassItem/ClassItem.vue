@@ -1,14 +1,15 @@
 <template>
-  <view class="class-content" @click="handleNavTo">
-    <view class="flex-ec" v-if="type == 2">
+  <view class="class-content" >
+    <view class="flex-ec" v-if="type == 2||type == 3">
       <image
         class="class-content-more"
         src="/static/class/class-more.png"
         mode="widthFix"
-        @click="handleMenu"
+        @click.stop="handleMenu"
       >
       </image>
     </view>
+	<view  @click="handleNavTo">
     <view class="class-content-top" v-if="type != 3">
       <text>
         <text v-if="data.classStatus == 1 || data.classStatus == 3">
@@ -90,6 +91,7 @@
         </view>
       </view>
     </view>
+	</view>
     <view
       class="class-content-tip"
       v-if="
@@ -145,8 +147,7 @@ export default {
     },
     //弹出框的通讯录按钮
     handleContant() {
-      console.log(1111);
-	  console.log(this.data.classId);
+	  this.$refs.popup.close("bottom");
       this.$utils.router.navTo(this.$page.ClassInfo, {
         classId: this.data.classId,
       });
