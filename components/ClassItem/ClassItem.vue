@@ -100,8 +100,7 @@
         !data.isSufficient &&
         data.isSufficient != null
       "
-    >
-      您的余额不足，为保证上课不受影响，请尽快充值!
+    >您余额不足自动约下一节课
     </view>
     <!-- 右上角弹窗 -->
     <uni-popup ref="popup">
