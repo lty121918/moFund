@@ -159,7 +159,8 @@ export default {
                 }
               })
             } else {
-              const data = [...self.activeData, self.boxActive]
+              const data = [...self.activeData, ...self.boxActive]
+              console.log(data.length, self.list.maxNum);
               if (data.length >= self.list.maxNum) {
                 self.$utils.model.showToast('拼班已成功')
               }
