@@ -118,7 +118,6 @@
             src="/static/attendance.png"
             mode="widthFix"
           ></image>
-          a
           <text class="color4">考勤名单</text>
         </view>
         <text class="color2">
