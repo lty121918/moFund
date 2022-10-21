@@ -127,7 +127,8 @@ const minxin = {
         this.isTeach = 2;
         this.$utils.util.setCache("role", this.isTeach);
       } else {
-        isTeach == 1 ? uni.hideShareMenu() : "";
+        const isShare = this.$mp.page.route == 'pages/class/class-detail/class-detail'
+        isTeach == 1 && !isShare ? uni.hideShareMenu() : "";
         this.isTeach = isTeach;
       }
       this.SET_TEACH(this.isTeach);

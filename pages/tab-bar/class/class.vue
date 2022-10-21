@@ -73,7 +73,11 @@
 
 		computed: {},
 		onShow() {
-			this.getMounted()
+			const authorization = this.$utils.util.getCache("Authorization");
+			if(authorization){
+				this.getMounted()
+			}
+			
 		},
 		created() {
 			bus.$on('getMounted2', () => {

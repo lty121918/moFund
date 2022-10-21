@@ -7,9 +7,9 @@ if (process.env.NODE_ENV === 'development') {
 } else {
   console.log('生产环境')
 }
-const {Login,Home,Map,Search,Course,CourseDetail,Evaluate,PieceList,OrderInfo} = DEV_CONFIG.ROUTER_LIST
+const {Login,Home,Map,Search,Course,CourseDetail,Evaluate,PieceList,OrderInfo,ClassDetail} = DEV_CONFIG.ROUTER_LIST
 const currentList = [
-	Login,Home,Map,Course,CourseDetail,Evaluate,PieceList,Search,OrderInfo
+	Login,Home,Map,Course,CourseDetail,Evaluate,PieceList,Search,OrderInfo,ClassDetail
 ]
 let requestingList = []
 const requestBefore = (config) => {
@@ -71,15 +71,18 @@ const requestBefore = (config) => {
 	if (Authorization) {
 		config.header['Authorization'] = 'Bearer ' + Authorization
 	}
+	config.url = baseUrl + config.url
 	let routes = getCurrentPages() //获取当前页面栈
 	let curRoute = routes[routes.length - 1].route //获取当前页面的路由
 	let isLogin = currentList.indexOf(`/${curRoute}`)==-1
 	if (!config.header['Authorization'] && isLogin && DEV_CONFIG.IS_VERIFICATION) {
 		utils.userInfo.login()
-		return false
+		return config
+	} else {
+		
+		return config
 	}
-	config.url = baseUrl + config.url
-	return config
+	
 };
 const response = async (result) => {
 	if (result.config) {
@@ -133,7 +136,11 @@ const responseErr = (err) => {
 uni.addInterceptor('request', {
 	invoke(args) {
 		// request 触发前拼接 url 
-		args = requestBefore(args)
+		try{
+			args = requestBefore(args)
+		}catch(e){
+			console.log('测试',e);
+		}
 		// console.log('list',args);
 	},
 	success(args) {
