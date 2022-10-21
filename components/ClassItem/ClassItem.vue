@@ -6,7 +6,7 @@
         src="/static/class/class-more.png"
         mode="widthFix"
         @click.stop="handleMenu"
-		v-if="data.classStatus==0||data.classStatus==1||data.classStatus==3"
+		v-if="data.classStatus==0||data.classStatus==1||data.classStatus==3||data.classStatus==4"
       >
       </image>
     </view>
