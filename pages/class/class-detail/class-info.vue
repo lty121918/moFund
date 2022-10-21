@@ -25,12 +25,12 @@
 			</view>
 			<view class="class-detail-head" v-if="data.classAddressBookCoachVO">
 				<view class="class-detail-head-flex">
-					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFill"></image>
-					<text class="fwb fz32">{{data.studentName || '微信昵称'}}</text>
+					<image class="class-detail-head-img" :src="data.classAddressBookCoachVO.avatar" mode="aspectFill"></image>
+					<text class="fwb fz32">{{data.classAddressBookCoachVO.nickName || '微信昵称'}}</text>
 					<image class="class-detail-head-icon" src="/static/class/head.png" mode="aspectFill"></image>
 				</view>
-				<view class="class-detail-head-contact" @click="handlePhone(data.phone)">
-					<text>{{data.phone}}</text>
+				<view class="class-detail-head-contact" @click="handlePhone(data.classAddressBookCoachVO.phone)">
+					<text>{{data.classAddressBookCoachVO.phone}}</text>
 				</view>
 			</view>
 			<view class="home-title" v-if="data.classAddressBookStudentList">
