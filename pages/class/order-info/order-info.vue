@@ -141,7 +141,7 @@
 </template>
 <script>
 import mixin from '@/mixin.js'
-import ClassItem from '@/components/ClassItem/ClassItem.vue'
+import ClassItem from '@/components/class-item/class-item.vue'
 import PopupShare from '../components/PopupShare/PopupShare.vue'
 import PopupAddStu from '../components/popup-add-stu/popup-add-stu.vue'
 import Recharge from '@/components/Recharge/Recharge.vue'

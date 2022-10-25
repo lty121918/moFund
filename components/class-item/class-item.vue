@@ -6,7 +6,7 @@
         src="/static/class/class-more.png"
         mode="widthFix"
         @click.stop="handleMenu"
-		v-if="data.classStatus==0||data.classStatus==1||data.classStatus==3||data.classStatus==4"
+		    v-if="data.classStatus==0||data.classStatus==1||data.classStatus==3||data.classStatus==4"
       >
       </image>
     </view>
@@ -93,16 +93,15 @@
       </view>
     </view>
 	</view>
-    <view
+    <!-- <view
       class="class-content-tip"
       v-if="
         type == 2 &&
-        isTeach == 2 &&
-        !data.isSufficient &&
-        data.isSufficient != null
+        isTeach == 2 && !data.isSufficient &&
+        data.isSufficient != null && data.nextCLassTime
       "
-    >您余额不足自动约下一节课
-    </view>
+    >您余额不足上{{data.isSufficientTime}}课,为保证上课不收影响,请尽快充值!
+    </view> -->
     <!-- 右上角弹窗 -->
     <uni-popup ref="popup">
       <view class="class-content-popup">
@@ -119,6 +118,7 @@
 <script>
 import vanImage from "@/wxcomponents/vant/image/index";
 export default {
+  name: 'class-item',
   components: {
     vanImage,
   },
@@ -152,7 +152,9 @@ export default {
         classId: this.data.classId,
       });
     },
+    // 跳转到商品按钮
     handleNavTo() {
+      // 判断type类型 1默认值 列表使用 2班级详情3我的拼班
       if (this.type == 1) {
         if (this.data.classStatus == 0) {
           this.$utils.router.navTo(this.$page.OrderInfo, {
@@ -296,7 +298,7 @@ export default {
 
     &-tip {
       margin: 32rpx auto 0rpx auto;
-      width: 542rpx;
+      // width: 542rpx;
       height: 48rpx;
       background: rgba(222, 80, 31, 0.1);
       border-radius: 12rpx;

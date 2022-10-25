@@ -36,8 +36,8 @@
 		},
 		data() {
 			return {
-				top: 0,
-				left: 0,
+				top: 456,
+				left: 309,
 				width: 0,
 				height: 0,
 				offsetWidth: 0,
@@ -71,7 +71,7 @@
 				this.offsetWidth = data.width / 2;
 				this.offsetHeight = data.height / 2;
 				this.left = this.windowWidth - this.width - this.edge;
-				this.top = this.windowHeight - this.height - this.edge - 100;
+				this.top = this.windowHeight - this.height - this.edge - 120;
 			}).exec();
 			this.$http['classes'].getCustomerWx().then(res=>{
 				this.img = this.$url + res.data
@@ -166,8 +166,8 @@
 		// background-color: rgba(0, 0, 0, 0.5);
 		// box-shadow: 0 0 6upx rgba(0, 0, 0, 0.4);
 		color: $uni-text-color-inverse;
-		width: 116rpx;
-		height: 116rpx;
+		width: 132rpx;
+		height: 132rpx;
 		// border-radius: 50%;
 		font-size: $uni-font-size-sm;
 		position: fixed;
@@ -179,8 +179,8 @@
 	}
 
 	.kefu {
-		width: 116rpx;
-		height: 116rpx;
+		width: 132rpx;
+		height: 132rpx;
 	}
 
 	.warp {

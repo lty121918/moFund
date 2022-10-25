@@ -6,7 +6,7 @@
       :classStatus="classStatus"
       :isTeach="isTeach"
     ></class-item>
-    <view class="class-detail-user" v-if="!isAttendance">
+    <view class="class-detail-user">
       <view class="home-title">
         <view class="home-title-item">
           <image
@@ -58,7 +58,7 @@
           class="class-detail-stu-flex fz28"
           v-for="row in data.studentVOList"
           :key="row.id"
-          @click="changeStu(row)"
+          @click="handleChangeStu(row)"
         >
           <view
             v-if="
@@ -87,11 +87,9 @@
           }}</view>
           <view class="class-detail-stu-age">{{ row.age }}岁</view>
           <view class="class-detail-stu-tip">
-            <text
-              class="class-detail-stu-tip2"
-              v-if="isTeach == 1 && !row.isSufficient"
-              >余额不足</text
-            >
+            <text class="class-detail-stu-tip2" v-if="row.isShow">
+              7月7日课,余额不足
+            </text>
           </view>
           <image
             class="class-detail-stu-icon"
@@ -103,79 +101,7 @@
         </view>
       </view>
     </view>
-
-    <!-- 考勤 -->
-    <view class="class-detail-user class-detail-attendance" v-if="isAttendance">
-      <view class="class-detail-attendance-item fz28 flex-bc">
-        <text class="color4">考勤</text>
-        <text class="color2">{{
-          studentVOList.isSign ? "教练已签到" : "教练未签到"
-        }}</text>
-      </view>
-      <view class="class-detail-attendance-title flex-bc">
-        <view class="flex-sc">
-          <image
-            class="class-detail-attendance-img"
-            src="/static/attendance.png"
-            mode="widthFix"
-          ></image>
-          <text class="color4">考勤名单</text>
-        </view>
-        <text class="color2">
-          <text>{{ studentVOList.courseDate }}</text>
-          <text class="ml12"
-            >{{ studentVOList.startTime }}~{{ studentVOList.endTime }}</text
-          >
-        </text>
-      </view>
-      <view class="class-detail-stu">
-        <view
-          class="class-detail-stu-flex fz28"
-          v-for="(item, index) in studentVOList.data"
-          :key="index"
-          @click="changeBox(item)"
-        >
-          <view
-            v-if="boxActive.indexOf(item.id) == -1 && studentVOList.isSign"
-            class="class-detail-attendance-check"
-          >
-          </view>
-          <image
-            v-if="boxActive.indexOf(item.id) > -1 && studentVOList.isSign"
-            class="class-detail-attendance-check"
-            src="/static/checkbox.png"
-            mode="widthFix"
-          >
-          </image>
-          <image
-            class="class-detail-stu-img"
-            :src="avatar"
-            mode="aspectFill"
-          ></image>
-          <view class="fwb class-detail-stu-name">{{ item.studentName }}</view>
-          <view class="class-detail-stu-sex">{{
-            item.gender == 1 ? "男" : "女"
-          }}</view>
-          <view class="class-detail-stu-age">{{ item.age }}岁</view>
-          <view
-            class="color256 text-r class-detail-stu-status"
-            v-if="item.attendanceStatus == 1"
-            >已出勤</view
-          >
-          <view
-            class="color2 text-r class-detail-stu-status"
-            v-if="item.attendanceStatus == 2"
-            >学员请假</view
-          >
-          <view
-            class="color text-r class-detail-stu-status"
-            v-if="item.attendanceStatus == 3"
-            >学员未到</view
-          >
-        </view>
-      </view>
-    </view>
-
+    <!-- 底部撑起 -->
     <view
       class="class-detail-footer2"
       :style="{ marginBottom: `${safeAreaHeight}px` }"
@@ -184,7 +110,7 @@
     <view
       class="class-detail-footer"
       :style="{ paddingBottom: `${safeAreaHeight}px` }"
-      v-if="isTeach == 2 && !isAttendance"
+      v-if="isTeach == 2"
     >
       <view
         v-if="'456'.indexOf(data.classStatus) == -1"
@@ -201,7 +127,7 @@
             ? ''
             : 'class-detail-footer-button3',
         ]"
-        @click="checkTimetable"
+        @click="handleCheckTimetable"
       >
         查看课表
       </view>
@@ -232,11 +158,11 @@
     <view
       class="class-detail-footer"
       :style="{ paddingBottom: `${safeAreaHeight}px` }"
-      v-if="isTeach == 1 && !isAttendance"
+      v-if="isTeach == 1"
     >
       <view
         class="class-detail-footer-button class-detail-footer-button3"
-        @click="checkTimetable"
+        @click="handleCheckTimetable"
       >
         查看课表
       </view>
@@ -258,42 +184,6 @@
         班级考勤
       </view>
     </view>
-    <!-- 考勤展示 -->
-    <view
-      class="class-detail-footer"
-      :style="{ paddingBottom: `${safeAreaHeight}px` }"
-      v-if="isAttendance"
-    >
-      <view
-        class="class-detail-footer-button class-detail-footer-button3"
-        :class="[studentVOList.IsStatus ? '' : 'class-detail-footer-button4']"
-        @click="handleStatus(1, '签到')"
-      >
-        教练签到
-      </view>
-      <view
-        class="class-detail-footer-button class-detail-footer-button3"
-        :class="[
-          studentVOList.isSign && studentVOList.IsStatus
-            ? ''
-            : 'class-detail-footer-button4',
-        ]"
-        @click="handleStatus(2, '请假')"
-      >
-        学员请假
-      </view>
-      <view
-        class="class-detail-footer-button class-detail-footer-button3"
-        :class="[
-          studentVOList.isSign && studentVOList.IsStatus
-            ? ''
-            : 'class-detail-footer-button4',
-        ]"
-        @click="handleStatus(3, '未到')"
-      >
-        学员未到
-      </view>
-    </view>
     <!-- 充值 -->
     <recharge ref="recharge" />
     <!-- 课表弹窗 -->
@@ -306,12 +196,13 @@
 </template>
 <script>
 import mixin from "@/mixin.js";
-import ClassItem from "@/components/ClassItem/ClassItem.vue";
+import ClassItem from "@/components/class-item/class-item.vue";
 import Recharge from "@/components/Recharge/Recharge.vue";
 import PopupDate from "../components/PopupDate/PopupDate";
 import PopupEval from "../components/PopupEval/PopupEval.vue";
 import PopupEval2 from "../components/PopupEval/PopupEval2.vue";
 export default {
+  name:'class-detail',
   components: {
     ClassItem,
     Recharge,
@@ -323,9 +214,6 @@ export default {
   data() {
     return {
       isHead: true, //是否 是团长进入该页面
-      isAttendance: false, //是否考勤
-      boxActive: [],
-      studentVOList: [], // 教练考勤人员
       data: {
         avatar: "",
         campusId: "",
@@ -357,7 +245,6 @@ export default {
         wxPhone: "",
       },
       classId: null,
-
       stuActive: [], //选择退出学员的id
     };
   },
@@ -383,8 +270,8 @@ export default {
       path: `${this.$page.ClassDetail}?classId=${this.classId}&isClass=true`,
     };
   },
+  //分享到朋友圈
   onShareTimeline(res) {
-    //分享到朋友圈
     return {
       title: this.data.className, //this.share.title,
       path: `${this.$page.ClassDetail}?classId=${this.classId}&isClass=true`, //分享默认打开是小程序首页
@@ -392,6 +279,92 @@ export default {
   },
 
   methods: {
+    // 联系团长
+    handlePhone(val) {
+      wx.makePhoneCall({
+        phoneNumber: val, //仅为示例，并非真实的电话号码
+      });
+    },
+    /**
+     * @function 打开评价评分方法
+     * @param {Object} item
+     */
+    handleShow(item) {
+      if (this.isTeach == 1) {
+        // 教练评价
+        let isCheck = false;
+        if (item.isEvaluate) {
+          isCheck = true;
+        }
+        this.$refs.popupEval.handleShow({
+          ...item,
+          ...this.data,
+          isCheck,
+        });
+      } else {
+        // 家长查看评价
+        this.$refs.popupEval2.handleShow({
+          ...item,
+          ...this.data,
+        });
+      }
+    },
+    // 打开充值弹窗
+    handleRecharge() {
+      this.$refs.recharge.handleShow();
+    },
+    // 解散
+    handleDismiss() {
+      if (this.stuActive.length == 0) {
+        uni.showToast({
+          title: "请选择退出学员",
+        });
+        return false;
+      }
+      this.$http["classes"]
+        .exitClass({
+          classId: this.classId,
+          studentList: this.stuActive,
+        })
+        .then((res) => {
+          if (res.code == 200) {
+            this.getClassDetail();
+          }
+        });
+    },
+    // 打开考勤课表
+    handleAttendance() {
+      this.$refs.popupDate.handleShow(
+        false,
+        {
+          isTeach: this.isTeach,
+          scheduleId: this.data.scheduleId,
+          classId: this.classId,
+        },
+        true
+      );
+    },
+    // 选择退出班级学员
+    handleChangeStu(val) {
+      if (this.isTeach == 1 || !val.isChildren) {
+        return false;
+      }
+      let index = this.stuActive.indexOf(val.id);
+      if (index > -1) {
+        this.stuActive.splice(index, 1);
+      } else {
+        this.stuActive.push(val.id);
+      }
+    },
+    // 查看课表
+    handleCheckTimetable() {
+      this.$refs.popupDate.handleShow(false, {
+        isTeach: this.isTeach,
+        scheduleId: this.data.scheduleId,
+        classId: this.classId,
+      });
+    },
+    // 获取班级详情数据
     getClassDetail() {
       const self = this;
       const { getClassStudenDetail, getClassDetail } = this.$http["classes"];
@@ -445,14 +418,13 @@ export default {
                 cancelText: "课程详情",
                 showCancel: data.productFlag,
                 confirmCallback: function () {
-					self.$utils.router.swtTo(self.$page.Home);
+                  self.$utils.router.swtTo(self.$page.Home);
                 },
                 cancelCallback: function () {
-					self.$utils.router.navTo(self.$page.CourseDetail, {
+                  self.$utils.router.navTo(self.$page.CourseDetail, {
                     productId: data.productId,
                     campusId: data.campusId,
                   });
-                  
                 },
               });
             }
@@ -503,6 +475,14 @@ export default {
             } else {
               item.headUrl = this.avatar;
             }
+            if (!item.isSufficient) {
+              item.isSufficientTime = this.$utils.dateTime.getLocalTime(
+                item.nextClassDate,
+                "MM月dd日"
+              );
+            }
+            item.isShow =
+              !item.isSufficient && (item.isChildren || this.isTeach == 1);
           });
           let courseDateList = res.data.courseDate || [];
           let CourseDateName = this.$utils.dateTime.filteDate(
@@ -516,205 +496,13 @@ export default {
         }
       });
     },
-    // 联系团长
-    handlePhone(val) {
-      wx.makePhoneCall({
-        phoneNumber: val, //仅为示例，并非真实的电话号码
-      });
-    },
-    /**
-     * @function 打开评价评分方法
-     * @param {Object} item
-     */
-    handleShow(item) {
-      if (this.isTeach == 1) {
-        // 教练评价
-        let isCheck = false;
-        if (item.isEvaluate) {
-          isCheck = true;
-        }
-        this.$refs.popupEval.handleShow({
-          ...item,
-          ...this.data,
-          isCheck,
-        });
-      } else {
-        // 家长查看评价
-        this.$refs.popupEval2.handleShow({
-          ...item,
-          ...this.data,
-        });
-      }
-    },
-    // 打开充值弹窗
-    handleRecharge() {
-      this.$refs.recharge.handleShow();
-    },
-    // 解散
-    handleDismiss() {
-      // uni.showToast({
-      // 	title: this.isHead ? "解散" : "退出"
-      // })
-      // if (this.isHead) {
-      // 	this.$http['classes'].disbandClass({
-      // 		classId: this.classId,
-      // 		studentIds: this.data.studentVOList.map(item => item.id)
-      // 	}).then(res => {
-      // 		if (res.code == 200) {
-      // 			this.$utils.router.navBackData()
-      // 		}
-      // 	})
-      // } else {
-      if (this.stuActive.length == 0) {
-        uni.showToast({
-          title: "请选择退出学员",
-        });
-        return false;
-      }
-      this.$http["classes"]
-        .exitClass({
-          classId: this.classId,
-          studentList: this.stuActive,
-        })
-        .then((res) => {
-          if (res.code == 200) {
-            this.getClassDetail();
-          }
-        });
-      // }
-    },
-    // 考勤按钮
-    // TODO: 根据课表返回的状态status 显示教练是否签到和按钮置灰问题
+
+    // 考勤按钮 跳转到考勤页面
     async getAttendance(dataObj) {
       this.$utils.router.navTo(this.$page.ClassDetailAttendance, {
         dataObj: JSON.stringify(dataObj),
         classId: this.classId,
       });
-      // const res = await this.$http['classes'].coachStuAttendance({
-      // 	id: dataObj.id,
-      // 	classId: this.classId
-      // }).then(res => {
-      // 	if (res.code == 200) {
-      // 		this.isAttendance = true
-      // 		let isSign = false
-      // 		isSign = res.data.some(row => row.attendanceStatus > 0) || dataObj.status != 2
-      // 		// isSign = dataObj.status != 2//dataObj.status!=3 && dataObj.status!=4
-      // 		const status = dataObj.status == 2 || dataObj.status == 3 || dataObj.status == 4
-      // 		const boxActive = res.data.map(item => item.id)
-      // 		if (!isSign) {
-      // 			this.boxActive = boxActive
-      // 		}
-      // 		console.log(isSign, dataObj.status);
-      // 		// 状态1∶未拼班2∶待考勤―3∶考勤中4∶已考勤︰5∶作废6∶已取消(该状态不可对学员进行考勤)"
-      // 		this.studentVOList = {
-      // 			...dataObj,
-      // 			isSign,
-      // 			data: res.data,
-      // 			IsStatus: status
-      // 		}
-      // 	}
-      // })
-    },
-    // 打开考勤课表
-    handleAttendance() {
-      this.$refs.popupDate.handleShow(
-        false,
-        {
-          isTeach: this.isTeach,
-          scheduleId: this.data.scheduleId,
-          classId: this.classId,
-        },
-        true
-      );
-    },
-    // 修改学员考勤状态
-    handleStatus(val, type) {
-      // uni.showToast({
-      // 	title: type
-      // })
-      const self = this;
-      let data = JSON.parse(JSON.stringify(self.studentVOList.data));
-      //  判断IsStatus 如果是false就代表无法考勤
-      if (!this.studentVOList.IsStatus) {
-        return false;
-      }
-      // 判断val 不是教练 并且
-      if (!this.studentVOList.isSign && val != 1) {
-        return false;
-      }
-      if (self.boxActive.length == 0) {
-        uni.showToast({
-          title: "请选择考勤学员",
-        });
-        return false;
-      }
-      data = data.filter((item) => {
-        item.attendanceStatus = val;
-        let index = self.boxActive.indexOf(item.id);
-        return index > -1;
-      });
-
-      // this.studentVOList
-      console.log("考勤数据：", {
-        attendanceStatus: val,
-        attendances: data,
-        classId: self.classId,
-        id: self.studentVOList.id,
-      });
-      self.$http["classes"]
-        .scheduleAttendance({
-          attendanceStatus: val,
-          attendances: data,
-          classId: self.classId,
-          id: self.studentVOList.id,
-          periodId: self.studentVOList.periodId, //1.0.1 新增
-        })
-        .then((res) => {
-          if (res.code == 200) {
-            self.getAttendance(self.studentVOList);
-            self.getClassDetail();
-            self.boxActive = [];
-          }
-        });
-    },
-    // 查看课表
-    checkTimetable() {
-      // uni.showToast({
-      // 	title: "查看课表"
-      // })
-      this.$refs.popupDate.handleShow(false, {
-        isTeach: this.isTeach,
-        scheduleId: this.data.scheduleId,
-        classId: this.classId,
-      });
-    },
-
-    changeBox(val) {
-      if (!this.studentVOList.isSign) {
-        return false;
-      }
-      let index = this.boxActive.indexOf(val.id);
-      console.log(val, index);
-      if (index > -1) {
-        this.boxActive.splice(index, 1);
-      } else {
-        this.boxActive.push(val.id);
-      }
-      console.log(this.boxActive);
-    },
-    // 选择退出班级学员
-    changeStu(val) {
-      if (this.isTeach == 1 || !val.isChildren) {
-        return false;
-      }
-      let index = this.stuActive.indexOf(val.id);
-      console.log(val, index);
-      if (index > -1) {
-        this.stuActive.splice(index, 1);
-      } else {
-        this.stuActive.push(val.id);
-      }
-      console.log(this.stuActive);
     },
   },
 };
@@ -741,12 +529,6 @@ export default {
   }
 
   &-attendance {
-    &-item {
-      margin: 0 32rpx;
-      padding: 32rpx 0;
-      border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
-    }
-
     &-check {
       margin-right: 24rpx;
       flex-shrink: 0;
@@ -755,45 +537,6 @@ export default {
       background: #ffffff;
       border-radius: 8rpx;
       border: 2rpx solid #e7e8eb;
-    }
-
-    &-title {
-      margin-top: 30rpx;
-      margin-left: 32rpx;
-      padding: 0 32rpx;
-      width: 622rpx;
-      height: 64rpx;
-      box-sizing: border-box;
-      background: rgba(20, 29, 61, 0.05);
-      border-radius: 12rpx;
-      font-size: 24rpx;
-    }
-
-    &-img {
-      margin-right: 10rpx;
-      width: 24rpx;
-      height: 24rpx;
-    }
-  }
-
-  &-adduser {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 32rpx 0 0 32rpx;
-    width: 156rpx;
-    height: 52rpx;
-    background: #de501f;
-    border-radius: 12rpx;
-    font-size: 24rpx;
-    font-family: SourceHanSansSC-Regular, SourceHanSansSC;
-    font-weight: 400;
-    color: #ffffff;
-
-    &-add {
-      margin-right: 8rpx;
-      width: 24rpx;
-      height: 26rpx;
     }
   }
 
@@ -866,7 +609,7 @@ export default {
     }
 
     &-name {
-      width: 200rpx;
+      width: 150rpx;
     }
 
     &-sex {
@@ -890,8 +633,8 @@ export default {
 
     &-tip2 {
       display: inline-block;
-      width: 116rpx;
-      height: 40rpx;
+      width: 125rpx;
+      // height: 40rpx;
       background: rgba(222, 80, 31, 0.1);
       border-radius: 6rpx;
       font-size: 24rpx;

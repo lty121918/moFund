@@ -164,7 +164,7 @@
 import { debounce } from '@/utils/lodash.js'
 import bus from '@/utils/bus.js'
 import mixin from '@/mixin.js'
-import DragButton from '@/components/DragButton/DragButton.vue'
+import DragButton from '@/components/drag-button/drag-button.vue'
 import PinItem from '@/components/PinItem/PinItem.vue'
 export default {
   mixins: [mixin],

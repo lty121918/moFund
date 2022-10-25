@@ -52,7 +52,7 @@
 </template>
 
 <script>
-	import ClassItem from '@/components/ClassItem/ClassItem.vue'
+	import ClassItem from '@/components/class-item/class-item.vue'
 	import mixin from '@/mixin.js'
 	import bus from '@/utils/bus.js'
 	import {
