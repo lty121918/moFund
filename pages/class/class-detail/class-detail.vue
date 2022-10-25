@@ -88,7 +88,7 @@
           <view class="class-detail-stu-age">{{ row.age }}岁</view>
           <view class="class-detail-stu-tip">
             <text class="class-detail-stu-tip2" v-if="row.isShow">
-              7月7日课,余额不足
+              {{row.isSufficientTime}},余额不足
             </text>
           </view>
           <image
@@ -480,7 +480,9 @@ export default {
                 item.nextClassDate,
                 "MM月dd日"
               );
+             
             }
+            // item.isSufficientTime = "12月31日"
             item.isShow =
               !item.isSufficient && (item.isChildren || this.isTeach == 1);
           });
@@ -606,34 +608,30 @@ export default {
       align-items: center;
       padding: 32rpx 0;
       border-bottom: 2rpx solid rgba(20, 29, 61, 0.05);
+      font-size: 24rpx;
     }
 
     &-name {
-      width: 150rpx;
+      width: 100rpx;
     }
 
     &-sex {
       text-align: center;
-      width: 80rpx;
+      width: 50rpx;
     }
 
     &-age {
       text-align: center;
-      width: 100rpx;
-    }
-
-    &-status {
-      width: 120rpx;
-      font-size: 28rpx;
+      width: 80rpx;
     }
 
     &-tip {
-      width: 116rpx;
+      width: 230rpx;
     }
 
     &-tip2 {
       display: inline-block;
-      width: 125rpx;
+      width: 230rpx;
       // height: 40rpx;
       background: rgba(222, 80, 31, 0.1);
       border-radius: 6rpx;
