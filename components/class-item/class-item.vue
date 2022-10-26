@@ -9,17 +9,19 @@
           下节课：{{ data.nextCLassTime || "已结课" }}
         </text>
       </text>
-      <text class="color fw4" v-if="type != 3">{{ classStatus[data.classStatus] }}</text>
-	  <view class="flex-ec" v-if="type !=1 && data.classStatus<=4 && data.classStatus!=2">
-	    <image
-	      class="class-content-more"
-	      src="/static/class/class-more.png"
-	      mode="widthFix"
-	      @click.stop="handleMenu"
-	  	    v-if="data.classStatus<=4&&data.classStatus!=2"
-	    >
-	    </image>
-	  </view>
+      <view class="flex-ec">
+        <text class="color fw4" v-if="type != 3">{{ classStatus[data.classStatus] }}</text>
+        <view class="flex-ec" v-if="type !=1 && data.classStatus<=4 && data.classStatus!=2">
+          <image
+            class="class-content-more"
+            src="/static/class/class-more.png"
+            mode="widthFix"
+            @click.stop="handleMenu"
+              v-if="data.classStatus<=4&&data.classStatus!=2"
+          >
+          </image>
+        </view>
+      </view>
     </view>
     <view class="class-content-bottom">
       <view class="class-content-left">
@@ -188,10 +190,10 @@ export default {
     // background: #FFFFFF;
     border-radius: 16rpx;
     background-image: url("~@/static/class/class-item.png");
-    background-size: 100%;
+    background-size: 100% 100%;
 
     &-more {
-      margin-top: 10rpx;
+      // margin-top: 10rpx;
       width: 40rpx;
       height: 40rpx;
     }
