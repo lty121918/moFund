@@ -1,13 +1,22 @@
 <template>
-	<view class="class-detail">
-		<view class="class-detail-user">
-			<view class="home-title">
+	
+	<view class="class-detail" >
+		<view class="default-empty" v-if="!data.phone">
+		  <image
+		    class="default-empty-image"
+		    :src="require('@/static/notData.png')"
+		    mode="widthFix"
+		  ></image>
+		  <view class="">暂无数据</view>
+		</view>
+		<view class="class-detail-user" v-if="data.phone">
+			<view class="home-title" v-if="data.phone">
 				<view class="home-title-item">
 					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>团长</text>
 				</view>
 			</view>
-			<view class="class-detail-head">
+			<view class="class-detail-head" v-if="data.phone">
 				<view class="class-detail-head-flex">
 					<image class="class-detail-head-img" :src="data.avatar" mode="aspectFill"></image>
 					<text class="fwb fz32">{{data.nickName || '微信昵称'}}</text>

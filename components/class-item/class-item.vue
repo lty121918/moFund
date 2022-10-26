@@ -1,23 +1,25 @@
 <template>
   <view class="class-content" >
-    <view class="flex-ec" v-if="type == 2||type == 3">
-      <image
-        class="class-content-more"
-        src="/static/class/class-more.png"
-        mode="widthFix"
-        @click.stop="handleMenu"
-		    v-if="data.classStatus==0||data.classStatus==1||data.classStatus==3||data.classStatus==4"
-      >
-      </image>
-    </view>
+
 	<view  @click="handleNavTo">
-    <view class="class-content-top" v-if="type != 3">
+		
+    <view class="class-content-top" >
       <text>
-        <text v-if="data.classStatus == 1 || data.classStatus == 3">
+        <text v-if="(data.classStatus == 1 || data.classStatus == 3)&&type != 3">
           下节课：{{ data.nextCLassTime || "已结课" }}
         </text>
       </text>
-      <text class="color fw4">{{ classStatus[data.classStatus] }}</text>
+      <text class="color fw4" v-if="type != 3">{{ classStatus[data.classStatus] }}</text>
+	  <view class="flex-ec" v-if="type !=1 && data.classStatus<=4 && data.classStatus!=2">
+	    <image
+	      class="class-content-more"
+	      src="/static/class/class-more.png"
+	      mode="widthFix"
+	      @click.stop="handleMenu"
+	  	    v-if="data.classStatus<=4&&data.classStatus!=2"
+	    >
+	    </image>
+	  </view>
     </view>
     <view class="class-content-bottom">
       <view class="class-content-left">
@@ -45,6 +47,7 @@
             <text class="fz32">{{ data.price || 0 }}</text>
             <text class="color3 fz24">/节</text>
           </view>
+		  
         </view>
         <!-- 上课周期 -->
         <view class="class-content-cycle" v-if="data.startDate">
