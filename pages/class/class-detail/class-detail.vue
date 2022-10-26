@@ -395,7 +395,7 @@ export default {
           const data = res.data;
           //   查看者是否与此班级相关
           if (!data.shareFlag) {
-            if (!data.joinClassFlag) {
+            if (data.joinClassFlag) {
               self.$utils.model.showMsgModal({
                 content: "是否加入拼班",
                 confirmText: "加入拼班",
