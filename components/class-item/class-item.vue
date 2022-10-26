@@ -14,14 +14,13 @@
         }}</text>
         <view
           class="flex-ec"
-          v-if="type != 1 && data.classStatus <= 4 && data.classStatus != 2"
+          v-if="type != 1 && (data.classStatus <= 4 && data.classStatus != 2 || data.classStatus == 10) "
         >
           <image
             class="class-content-more"
             src="/static/class/class-more.png"
             mode="widthFix"
             @click.stop="handleMenu"
-            v-if="data.classStatus <= 4 && data.classStatus != 2"
           >
           </image>
         </view>
