@@ -1,103 +1,107 @@
 <template>
-  <view class="class-content" >
-
-	<view  @click="handleNavTo">
-		
-    <view class="class-content-top" >
+  <view class="class-content">
+    <view class="class-content-top">
       <text>
-        <text v-if="(data.classStatus == 1 || data.classStatus == 3)&&type != 3">
+        <text
+          v-if="(data.classStatus == 1 || data.classStatus == 3) && type != 3"
+        >
           下节课：{{ data.nextCLassTime || "已结课" }}
         </text>
       </text>
       <view class="flex-ec">
-        <text class="color fw4" v-if="type != 3">{{ classStatus[data.classStatus] }}</text>
-        <view class="flex-ec" v-if="type !=1 && data.classStatus<=4 && data.classStatus!=2">
+        <text class="color fw4" v-if="type != 3">{{
+          classStatus[data.classStatus]
+        }}</text>
+        <view
+          class="flex-ec"
+          v-if="type != 1 && data.classStatus <= 4 && data.classStatus != 2"
+        >
           <image
             class="class-content-more"
             src="/static/class/class-more.png"
             mode="widthFix"
             @click.stop="handleMenu"
-              v-if="data.classStatus<=4&&data.classStatus!=2"
+            v-if="data.classStatus <= 4 && data.classStatus != 2"
           >
           </image>
         </view>
       </view>
     </view>
-    <view class="class-content-bottom">
-      <view class="class-content-left">
-        <van-image
-          use-error-slot
-          class="class-content-img"
-          fit="cover"
-          radius="10"
-          width="140"
-          height="132"
-          :src="data.coverImage"
-        ></van-image>
-      </view>
-      <view class="">
-        <!-- 班级名称 -->
-        <view class="class-content-info">
-          <view class="class-content-info-title">
-            <text class="class-content-info-num">
-              {{ data.typeName || data.spellType }}
-            </text>
-            <text>{{ data.className }}</text>
+    <view @click="handleNavTo">
+      <view class="class-content-bottom">
+        <view class="class-content-left">
+          <van-image
+            use-error-slot
+            class="class-content-img"
+            fit="cover"
+            radius="10"
+            width="140"
+            height="132"
+            :src="data.coverImage"
+          ></van-image>
+        </view>
+        <view class="">
+          <!-- 班级名称 -->
+          <view class="class-content-info">
+            <view class="class-content-info-title">
+              <text class="class-content-info-num">
+                {{ data.typeName || data.spellType }}
+              </text>
+              <text>{{ data.className }}</text>
+            </view>
+            <view class="color">
+              <text class="fz24">￥</text>
+              <text class="fz32">{{ data.price || 0 }}</text>
+              <text class="color3 fz24">/节</text>
+            </view>
           </view>
-          <view class="color">
-            <text class="fz24">￥</text>
-            <text class="fz32">{{ data.price || 0 }}</text>
-            <text class="color3 fz24">/节</text>
+          <!-- 上课周期 -->
+          <view class="class-content-cycle" v-if="data.startDate">
+            <image
+              class="class-content-cycle-img"
+              src="/static/class/cycle.png"
+              mode="widthFix"
+            ></image>
+            <text>上课周期：{{ data.startDate }}~{{ data.endDate }}</text>
           </view>
-		  
-        </view>
-        <!-- 上课周期 -->
-        <view class="class-content-cycle" v-if="data.startDate">
-          <image
-            class="class-content-cycle-img"
-            src="/static/class/cycle.png"
-            mode="widthFix"
-          ></image>
-          <text>上课周期：{{ data.startDate }}~{{ data.endDate }}</text>
-        </view>
-        <!-- 上课时段 -->
-        <view
-          class="class-content-cycle"
-          v-if="data.startPeriod || data.startTime"
-        >
-          <image
-            class="class-content-cycle-img"
-            src="/static/class/time.png"
-            mode="widthFix"
-          ></image>
-          <text>
-            <text class="o-over over-time">上课时段：</text>
-            <text class="o-over over-time">
-              {{
-                data.courseType == 2
-                  ? data.CourseDateName || ""
-                  : data.weekCodeName || ""
-              }}
+          <!-- 上课时段 -->
+          <view
+            class="class-content-cycle"
+            v-if="data.startPeriod || data.startTime"
+          >
+            <image
+              class="class-content-cycle-img"
+              src="/static/class/time.png"
+              mode="widthFix"
+            ></image>
+            <text>
+              <text class="o-over over-time">上课时段：</text>
+              <text class="o-over over-time">
+                {{
+                  data.courseType == 2
+                    ? data.CourseDateName || ""
+                    : data.weekCodeName || ""
+                }}
+              </text>
+              <text class="o-over over-time pl12">
+                {{ data.startPeriod || data.startTime || "" }}~{{
+                  data.endPeriod || data.endTime || ""
+                }}
+              </text>
             </text>
-            <text class="o-over over-time pl12">
-              {{ data.startPeriod || data.startTime || "" }}~{{
-                data.endPeriod || data.endTime || ""
-              }}
-            </text>
-          </text>
-        </view>
-        <!-- 教练 -->
-        <view class="class-content-cycle" v-if="type == 1">
-          <image
-            class="class-content-cycle-img"
-            src="/static/class/coach.png"
-            mode="widthFix"
-          ></image>
-          <text>教练：{{ data.staffName }}</text>
+          </view>
+          <!-- 教练 -->
+          <view class="class-content-cycle" v-if="type == 1">
+            <image
+              class="class-content-cycle-img"
+              src="/static/class/coach.png"
+              mode="widthFix"
+            ></image>
+            <text>教练：{{ data.staffName }}</text>
+          </view>
         </view>
       </view>
     </view>
-	</view>
     <!-- <view
       class="class-content-tip"
       v-if="
@@ -123,7 +127,7 @@
 <script>
 import vanImage from "@/wxcomponents/vant/image/index";
 export default {
-  name: 'class-item',
+  name: "class-item",
   components: {
     vanImage,
   },
@@ -152,7 +156,7 @@ export default {
     },
     //弹出框的通讯录按钮
     handleContant() {
-	  this.$refs.popup.close("bottom");
+      this.$refs.popup.close("bottom");
       this.$utils.router.navTo(this.$page.ClassInfo, {
         classId: this.data.classId,
       });

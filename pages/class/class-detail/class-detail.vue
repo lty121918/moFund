@@ -246,6 +246,7 @@ export default {
       },
       classId: null,
       stuActive: [], //选择退出学员的id
+      isShareClass:false
     };
   },
   onLoad(e) {
@@ -255,6 +256,7 @@ export default {
       this.setTeachApp();
       // 分享进来的
     }
+    this.isShareClass = e.isClass 
 
     this.classId = e.classId; //|| '39fffa311d849b8719aa8293bd302397'
     this.getClassDetail();
@@ -393,8 +395,8 @@ export default {
             return false;
           }
           const data = res.data;
-          //   查看者是否与此班级相关
-          if (!data.shareFlag) {
+          //   查看者是否与此班级相关&& this.isShareClass
+          if (!data.shareFlag ) {
             if (data.joinClassFlag) {
               self.$utils.model.showMsgModal({
                 content: "是否加入拼班",
