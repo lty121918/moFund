@@ -100,7 +100,7 @@ export default {
               await self.wxPay(res.data.payResult)
               const status = await self.$http['mine'].getPayStatus({ payOrderNo: res.data.payOrderNo })
               console.log(status.data.payStatus)
-              if (status.data.payStatus && this.isClass) {
+              if (status.data.payStatus && self.isClass) {
                 self.$emit('success')
               }
               self.$emit('change')

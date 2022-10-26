@@ -196,7 +196,7 @@ export default {
     background-size: 100% 100%;
 
     &-more {
-      // margin-top: 10rpx;
+      margin-left: 10rpx;
       width: 40rpx;
       height: 40rpx;
     }
