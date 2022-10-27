@@ -131,10 +131,8 @@
     <popup-add-stu
       ref="popupAddStu"
       @change="getMineSpellClass"
-      @recharge="recharge"
     ></popup-add-stu>
-    <!-- 充值 -->
-    <recharge ref="recharge" />
+
     <!-- 画布分享 -->
     <!-- <share-canvas></share-canvas> -->
   </view>
@@ -144,14 +142,12 @@ import mixin from '@/mixin.js'
 import ClassItem from '@/components/class-item/class-item.vue'
 import PopupShare from '../components/PopupShare/PopupShare.vue'
 import PopupAddStu from '../components/popup-add-stu/popup-add-stu.vue'
-import Recharge from '@/components/Recharge/Recharge.vue'
 import ShareCanvas from '../components/ShareCanvas/ShareCanvas.vue'
 export default {
   components: {
     ClassItem,
     PopupShare,
     PopupAddStu,
-    Recharge,
     ShareCanvas
   },
   mixins: [mixin],
@@ -388,10 +384,7 @@ export default {
     submit() {
       this.$utils.router.navBackData()
     },
-    // 调起充值界面
-    recharge() {
-      this.$refs.recharge.handleShow()
-    }
+  
   }
 }
 </script>

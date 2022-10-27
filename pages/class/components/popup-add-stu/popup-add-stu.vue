@@ -17,7 +17,7 @@
               :class="[
                 activeData.indexOf(item.id) == -1
                   ? ''
-                  : 'popup-content-child-dis'
+                  : 'popup-content-child-dis',
               ]"
             ></view>
             <image
@@ -37,7 +37,7 @@
                   mode="widthFix"
                 ></image>
               </view>
-              <view class="mt12">证件号码：{{ item.idCard || '' }}</view>
+              <view class="mt12">证件号码：{{ item.idCard || "" }}</view>
               <view class="mt12">出生日期：{{ item.birthday }}</view>
             </view>
           </view>
@@ -65,147 +65,155 @@
         </view>
       </view>
     </uni-popup>
+    <!-- 充值 -->
+    <recharge ref="recharge" @success="confirm" />
   </view>
 </template>
 
 <script>
+import Recharge from "@/components/Recharge/Recharge.vue";
 export default {
+  components: { Recharge },
   data() {
     return {
       boxActive: [],
       data: [],
       activeData: [], //已经选中的学员
-      classId: '',
+      classId: "",
       num: 0,
-      list: {}
-    }
+      list: {},
+    };
   },
   methods: {
     // 选择学员
     changeBox(val) {
       if (this.activeData.indexOf(val.id) > -1) {
-        return false
+        return false;
       }
-      let index = this.boxActive.indexOf(val.id)
-      console.log(val, index)
+      let index = this.boxActive.indexOf(val.id);
+      console.log(val, index);
       if (index > -1) {
-        this.boxActive.splice(index, 1)
+        this.boxActive.splice(index, 1);
       } else {
-        this.boxActive.push(val.id)
+        this.boxActive.push(val.id);
       }
     },
     // 曲去添加新学员
     handelAdd() {
-      this.close()
-      console.log(this.classId)
+      this.close();
+      console.log(this.classId);
       this.$utils.router.navTo(this.$page.AddStudent, {
         classId: this.classId,
-        sort: this.num
-      })
+        sort: this.num,
+      });
     },
     // 确认添加学员
     submit() {
-      const self = this
-      const data = [...this.activeData, this.boxActive]
+      const self = this;
+      const data = [...this.activeData, this.boxActive];
       if (data.length >= this.list.maxNum) {
         // 加入拼班成功将自动支付首节课课款
         self.$utils.model.showMsgModal({
           content:
-            '加入拼班视为您同意自动约课，约课将自动冻结上课费用，如未退出班级，上课后不再退费。是否确认？',
-          confirmText: '确认',
+            "加入拼班视为您同意自动约课，约课将自动冻结上课费用，如未退出班级，上课后不再退费。是否确认？",
+          confirmText: "确认",
           showCancel: true,
-          confirmCallback: function() {
-            self.confirm()
-          }
-        })
+          confirmCallback: function () {
+            self.confirm();
+          },
+        });
       } else {
         // 加入拼班将冻结课款，拼班成功自动支付首节课课款
         self.$utils.model.showMsgModal({
           content:
-            '加入拼班视为您同意自动约课，约课将自动冻结上课费用，如未退出班级，上课后不再退费。是否确认？',
-          confirmText: '确认',
+            "加入拼班视为您同意自动约课，约课将自动冻结上课费用，如未退出班级，上课后不再退费。是否确认？",
+          confirmText: "确认",
           showCancel: true,
-          confirmCallback: function() {
-            self.confirm()
-          }
-        })
+          confirmCallback: function () {
+            self.confirm();
+          },
+        });
       }
     },
     confirm() {
-      const self = this
-      let list = []
-      this.boxActive.forEach(item => {
-        this.num++
+      const self = this;
+      let list = [];
+      this.boxActive.forEach((item) => {
+        this.num++;
         list.push({
-          classStudentId: '',
+          classStudentId: "",
           sort: this.num,
-          studentId: item
-        })
-      })
-      this.$http['classes']
+          studentId: item,
+        });
+      });
+      this.$http["classes"]
         .indexAddStu({
           classId: self.classId,
-          stuInfo: list
+          stuInfo: list,
         })
-        .then(res => {
+        .then((res) => {
           if (res.code == 200) {
             if (!res.data) {
               self.$utils.model.showMsgModal({
-                content: '您的余额不足，最少需要满足一节课的余额！',
-                confirmText: '去充值',
+                content: "您的余额不足，最少需要满足一节课的余额！",
+                confirmText: "去充值",
                 showCancel: true,
-                confirmCallback: function() {
-                  self.$emit('recharge')
-                }
-              })
+                confirmCallback: function () {
+                  // self.$emit("recharge");
+                  self.recharge();
+                },
+              });
             } else {
-              const data = [...self.activeData, ...self.boxActive]
+              const data = [...self.activeData, ...self.boxActive];
               console.log(data.length, self.list.maxNum);
               if (data.length >= self.list.maxNum) {
-                self.$utils.model.showToast('拼班已成功')
+                self.$utils.model.showToast("拼班已成功");
               }
               // self.$utils.model.showToast('参与拼班将冻结课款，拼班成功后自动扣课款。', 2500)
+              self.close();
+              self.$emit("change");
             }
-            self.close()
-            self.$emit('change')
           }
-        })
+        });
     },
     change(e) {
-      console.log('当前模式：' + e.type + ',状态：' + e.show)
-      if (!e.show) {
-        this.boxActive = []
-        this.data = []
-        this.activeData = [] //已经选中的学员
-        // this.classId = ''
-        // this.num = 0
-      }
+      console.log("当前模式：" + e.type + ",状态：" + e.show);
+    },
+    // 调起充值界面
+    recharge() {
+      this.$refs.popup.close("bottom");
+      this.$refs.recharge.handleShow(true);
     },
     close() {
-      this.boxActive = []
-      this.data = []
-      this.activeData = [] //已经选中的学员
-      this.$refs.popup.close('bottom')
+      this.boxActive = [];
+      this.data = [];
+      this.activeData = []; //已经选中的学员
+      this.$refs.popup.close("bottom");
     },
     async handleShow(classId, ls, data) {
+      this.boxActive = [];
+      this.data = [];
+      this.activeData = []; //已经选中的学员
       // this.classId = ''
       // this.num = 0
-      this.classId = classId
-      this.activeData = ls
-      this.num = ls.length
-      this.list = data
-      const res = await this.$http['mine'].getStudent()
+      this.classId = classId;
+      this.activeData = ls;
+      this.num = ls.length;
+      this.list = data;
+      const res = await this.$http["mine"].getStudent();
       if (res.code == 200) {
-        res.data = res.data || []
-        res.data.forEach(item => {
-          item.birthday = this.$utils.dateTime.getLocalTime(item.birthday || '')
-        })
-        this.data = res.data || []
-        this.$refs.popup.open('bottom')
+        res.data = res.data || [];
+        res.data.forEach((item) => {
+          item.birthday = this.$utils.dateTime.getLocalTime(
+            item.birthday || ""
+          );
+        });
+        this.data = res.data || [];
+        this.$refs.popup.open("bottom");
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
