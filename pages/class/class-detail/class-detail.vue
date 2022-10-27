@@ -395,8 +395,8 @@ export default {
             return false;
           }
           const data = res.data;
-          //   查看者是否与此班级相关&& this.isShareClass
-          if (!data.shareFlag ) {
+          //   查看者是否与此班级相关
+          if (!data.shareFlag && this.isShareClass) {
             if (data.joinClassFlag) {
               self.$utils.model.showMsgModal({
                 content: "是否加入拼班",
@@ -486,7 +486,7 @@ export default {
             }
             // item.isSufficientTime = "12月31日"
             item.isShow =
-              !item.isSufficient && (item.isChildren || this.isTeach == 1);
+              !item.isSufficient && (item.isChildren || this.isTeach == 1 || res.data.isBoss);
           });
           let courseDateList = res.data.courseDate || [];
           let CourseDateName = this.$utils.dateTime.filteDate(
