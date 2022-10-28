@@ -63,16 +63,18 @@ const requestBefore = (config) => {
 		config.header['Content-Type'] = "application/x-www-form-urlencoded"
 	}
 	// 添加token
-	config.header['Origin-Client-Code'] = 'WX_ORGANIZATION'//'WX_ORGANIZATION'
+	config.header['Origin-Client-Code'] = 'WX'
 	const Authorization = utils.util.getCache('Authorization');
 	if (Authorization) {
 		config.header['Authorization'] = 'Bearer ' + Authorization
 	}
 	let routes = getCurrentPages() //获取当前页面栈
 	let curRoute = routes[routes.length - 1].route //获取当前页面的路由
+	console.log(curRoute);
 	let isLogin = curRoute !== 'pages/login/login'
-	if (!config.header['Authorization'] && isLogin) {
+	if (!config.header['Authorization'] && isLogin && DEV_CONFIG.IS_VERIFICATION) {
 		utils.userInfo.login()
+		return false
 	}
 	config.url = baseUrl + config.url
 	return config
@@ -105,7 +107,7 @@ const response = async (result) => {
 				duration: 2000
 			});
 		}
-		if (curRoute !== 'pages/login/login' && curRoute !== 'pages/login/FirstLogin') {
+		if (curRoute !== 'pages/login/login' && curRoute !== 'pages/login/FirstLogin' && DEV_CONFIG.IS_VERIFICATION) {
 			utils.userInfo.login()
 		}
 	} else if (code === 312 && curRoute !== 'pages/login/login') {
@@ -134,9 +136,11 @@ uni.addInterceptor('request', {
 	},
 	success(args) {
 		// 请求成功后，修改code值为1
+		console.log('请求成功后数据：',args.data);
 		response(args)
 	},
 	fail(err) {
+		console.log('请求失败后数据：',err);
 		responseErr(err)
 	},
 	complete(res) {

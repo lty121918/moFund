@@ -61,6 +61,11 @@
 	justify-content: center;
 	align-items: center;
 }
+.flex-ec{
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
 .flex-fc{
 	flex-flow: column;
 }
@@ -108,12 +113,22 @@
 .pl12{
 	padding-left: 12rpx;
 }
+.pl32{
+	padding-left: 32rpx;
+}
 .pr20{
 	padding-right: 20rpx;
+}
+.pr32{
+	padding-right: 32rpx;
 }
 .pt16{
 	padding-top: 16rpx;
 }
+.pt32{
+	padding-top: 32rpx;
+}
+
 .mt32{
 	margin-top: 32rpx;
 }
@@ -146,6 +161,22 @@
 }
 .ml12{
 	margin-left: 12rpx;
+}
+	
+.o-over{
+	overflow: hidden; /*超出隐藏*/
+	text-overflow: ellipsis;/*隐藏后添加省略号*/
+	white-space: nowrap;/*强制不换行*/
+}
+.t-over{
+	overflow: hidden;//超出文本隐藏
+	text-overflow: ellipsis;//溢出显示省略号
+	display: -webkit-box;//设置为弹性盒子
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;//只显示两行
+}
+.ww{
+	word-wrap: break-word; word-break: normal;
 }
 // 通用标题头部
 .home-title{
@@ -193,4 +224,27 @@
 }
 .uni-popup .uni-popup__wrapper {
 	background-color: transparent !important;
+}
+.popup-content-input .uni-easyinput__content-input{
+	font-size: 48rpx !important;
+}
+.default-empty {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-flow: column;
+	height: 100%;
+	margin-top: 25%;
+	margin-bottom: 25%;
+	font-size: 28rpx;
+	font-family: SourceHanSansSC-Regular, SourceHanSansSC;
+	font-weight: 400;
+	color: #DE501F !important;
+
+}
+
+.default-empty-image {
+	margin-bottom: 48rpx;
+	width: 170rpx;
+	height: 170rpx;
 }

@@ -2,26 +2,60 @@
 <template>
 	<view class="login">
 		<view class="login-content">
-			<image class="login-content-img" src="/static/login/logo.png" mode="widthFix"></image>
+			<image class="login-content-img" src="/static/login/logo2.png" mode="widthFix"></image>
 			<view class="fz40">极光体育申请获得以下权限</view>
-			<view class="color666 mt32">获得你的公开信息（昵称、头像等）</view>
-			<button class="login-button" type="primary" open-type="getPhoneNumber" @getphonenumber="getphonenumber" size="mini">授 权</button>
+			<view class="color666 mt32">(获得您的手机号)</view>
+			<button v-if="isSubmit.indexOf(1)>-1&& isSubmit.indexOf(2)>-1" class="login-button" type="primary"
+				open-type="getPhoneNumber" @getphonenumber="getphonenumber" size="mini">授 权</button>
+			<button v-else class="login-button" type="primary" @click="getphonenumber2" size="mini">授 权</button>
+			<view class="tip-box flex" v-if="protocolData.length > 0">
+				<view>登录即视为您同意</view>
+				<view class="blue" @click.stop="showModal(protocolData[0],1)">《{{protocolData[0].protocolTitle}}》</view>
+				<view v-if="protocolData[1]">及</view>
+				<view class="blue" @click.stop="showModal(protocolData[1],2)" v-if="protocolData[1]">
+					《{{protocolData[1].protocolTitle}}》</view>
+			</view>
 		</view>
+		<Protocol ref="protocol" />
 	</view>
 </template>
 <script>
 	import {
 		debounce
 	} from "@/utils/lodash.js";
+	import {
+		mapMutations
+	} from 'vuex'
+	import mixin from '@/mixin.js'
+	import Protocol from './components/Protocol/Protocol.vue'
+	import {
+		protocolData
+	} from './login.js'
 	export default {
 		name: "login",
-		components: {},
-		data() {
-			return {};
+		mixins: [mixin],
+		components: {
+			Protocol
 		},
-		onLoad() {},
+		data() {
+			return {
+				protocolData,
+				isSubmit: []
+			};
+		},
+		onLoad() {
+			this.SET_STORAGE({
+				str: 'shareInfo'
+			})
+		},
 		onReady() {},
 		methods: {
+			...mapMutations(['SET_STORAGE']),
+			// 协议展示
+			showModal(protocol, val) {
+				this.isSubmit.push(val)
+				this.$refs.protocol.toggle(protocol)
+			},
 			//当前登录按钮操作
 			login(data) {
 				try {
@@ -38,73 +72,146 @@
 				}
 			},
 			async nextToHome(data) {
-				console.log(this.$utils);
-				this.$utils.util.setCache("Authorization", data.accessToken)
-				// const res = await this.$http['user'].getUser();
-				// if (res.code == 200) {
-				// 	let list = res.data || {};
-				// 	this.$utils.util.setCache('userInfo', JSON.stringify({
-				// 		...data,
-				// 		...list
-				// 	}))
-					this.$utils.router.swtTo(this.$page.Home)
-				// }
+				// this.$utils.util.setCache("Authorization", data.accessToken)
+				this.SET_STORAGE({
+					str: 'Authorization',
+					data: data.accessToken
+				})
+				console.log('登录TOKEN:');
+				console.log('Bearer ' + data.accessToken);
+
+				this.SET_STORAGE({
+					str: 'userInfo',
+					data
+				})
+				// console.log('1是2否教练', isTeach);
+				this.$utils.util.setCache('role', data.isCoach ? 1 : 2)
+
+				if (this.shareInfo.classId) {
+					if (data.isCoach == 1) {
+						this.setTeachLogin(this.shareInfo)
+						// this.$utils.router.redTo(this.$page.ClassDetail, this.shareInfo)
+					} else {
+						this.$utils.router.redTo(this.$page.OrderInfo, this.shareInfo)
+					}
+
+				} else {
+					this.$utils.router.swtTo(this.$page.Home, {
+						type: '1'
+					})
+				}
+
+
+
 			},
+			getphonenumber2: debounce(function(e) {
+				const self = this
+				const o = self.isSubmit.indexOf(1)
+				const t = self.isSubmit.indexOf(2)
+				if (o == -1 || t == -1) {
+					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
+					return false
+				}
+			}),
 			getphonenumber: debounce(function(e) {
-				uni.login({
-					success: async (res) => {
-						console.log('JS_CODE', res.code);
-						console.log('CODE', e.detail.code)
-						if (!e.detail.code) {
-							return false
-						}
-						const data = await this.$http['login'].login({
-							code: e.detail.code,
-							jsCode: res.code,
+				const self = this
+				const o = self.isSubmit.indexOf(1)
+				const t = self.isSubmit.indexOf(2)
+				if (o == -1 || t == -1) {
+					self.$utils.model.showToast('需您阅读《用户服务协议》、《隐私政策》。')
+					return false
+				}
+				wx.getUserInfo({
+					success: function(log) {
+						console.log(log.userInfo);
+						uni.login({
+							success: res => {
+								console.log('CODE：', e.detail.code, 'JS_CODE：', res.code)
+								if (!e.detail.code) {
+									return false
+								}
+								self.getLocation().then(async () => {
+									const data = await self.$http['login']
+										.login({
+											code: e.detail.code,
+											jsCode: res.code,
+											avatarUrl: log.userInfo
+												.avatarUrl,
+											nickname: log.userInfo.nickName
+										});
+									self.login(data);
+								})
+
+							},
 						});
-						this.login(data);
-					},
-				});
+					}
+				})
 			}, 500),
 		},
 	};
 </script>
 
 <style scoped lang="scss">
-.login{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	background-image: url(~@/static/login/bg.png);
-	background-repeat: no-repeat;
-	background-size: 100% 100%;
-	&-content{
-		padding: 32rpx;
-		width: 690rpx;
-		height: 812rpx;
-		box-sizing: border-box;
-		background: #FFFFFF;
-		border-radius: 32rpx;
-		text-align: center;
-		&-img{
-			margin-top: 42rpx;
-			margin-bottom: 136rpx;
-			width: 314rpx;
-			height: 248rpx;
+	.login {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+		background-image: url(~@/static/login/bg.png);
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
+
+		&-content {
+			padding: 32rpx;
+			width: 690rpx;
+			// height: 812rpx;
+			box-sizing: border-box;
+			background: #FFFFFF;
+			border-radius: 32rpx;
+			text-align: center;
+
+			&-img {
+
+				margin-top: 168rpx;
+				margin-bottom: 194rpx;
+				width: 538rpx;
+				height: 96rpx;
+				// margin-top: 42rpx;
+				// margin-bottom: 136rpx;
+				// width: 314rpx;
+				// height: 248rpx;
+			}
+		}
+
+		&-button {
+			margin-top: 100rpx;
+			width: 626rpx;
+			height: 92rpx;
+			background: #DE501F;
+			border-radius: 16rpx;
+			font-size: 32rpx;
+			font-family: PingFangSC-Medium, PingFang SC;
+			font-weight: 500;
+			color: #FFFFFF;
+			line-height: 92rpx;
 		}
 	}
-	&-button{
-		margin-top: 100rpx;
-		width: 626rpx;
-		height: 92rpx;
-		background: #DE501F;
-		border-radius: 16rpx;
-		font-size: 32rpx;
-		font-family: PingFangSC-Medium, PingFang SC;
-		font-weight: 500;
-		color: #FFFFFF;
-		line-height: 92rpx;
+
+	.flex {
+		display: flex;
 	}
-}
+
+	.tip-box {
+		margin-top: 32rpx;
+		width: 100%;
+		height: 60rpx;
+		justify-content: center;
+		z-index: 100;
+		flex-wrap: wrap;
+		line-height: 26rpx;
+	}
+
+	.blue {
+		color: #3B94FF;
+	}
 </style>

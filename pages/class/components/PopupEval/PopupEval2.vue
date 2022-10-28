@@ -6,14 +6,14 @@
 					<view class="popup-content-top">
 						<view class="flex-sc">
 							<image class="popup-content-img" src="/static/time.png" mode="widthFix"></image>
-							<text class="fz28">2022-07-03</text>
+							<text class="fz28">{{data.evaluationTime}}</text>
 						</view>
 						<view class="flex-sc ml32">
 							<image class="popup-content-img" src="/static/eval.png" mode="widthFix"></image>
-							<text class="fz28">李老师</text>
+							<text class="fz28">{{data.coachName}}</text>
 						</view>
 					</view>
-					<uni-easyinput disabled type="textarea" v-model="value2" placeholder=""></uni-easyinput>
+					<uni-easyinput disabled type="textarea" v-model="data.evaluationContent" placeholder=""></uni-easyinput>
 				</view>
 			</view>
 		</uni-popup>
@@ -24,15 +24,32 @@
 	export default {
 		data() {
 			return {
-				value2: '哈哈哈'
+				data:{}
 			}
 		},
 		methods: {
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow() {
-				this.$refs.popup.open('bottom')
+			handleShow(data) {
+				this.$http['classes'].getEvaluate({
+					classId:data.classId,
+					courseId:data.courseId,
+					studentId:data.id,
+					campusId:data.campusId,
+				}).then(res=>{
+					if(res.code==200){
+						if(res.data){
+							this.$refs.popup.open('bottom')
+							res.data.evaluationTime = this.$utils.dateTime.getLocalTime(res.data.evaluationTime,'yyyy-MM-dd hh:mm')
+							this.data = res.data
+						} else {
+							this.$utils.model.showToast('暂无评价')
+						}
+						
+					}
+				})
+				
 			},
 		}
 	}

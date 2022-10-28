@@ -30,7 +30,7 @@
 		}, {
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "登录"
 			}
 		}
 
@@ -86,6 +86,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "my-class/my-class",
+			"style": {
+				"navigationBarTitleText": "我的拼班",
+				"enablePullDownRefresh": false
+			}
+
 		}]
 	}, {
 		"root": "pages/map",
@@ -112,7 +119,7 @@
 		}]
 	}, {
 		"root": "pages/mine",
-		"pages": [{}, {
+		"pages": [{
 			"path": "order/order",
 			"style": {
 				"navigationBarTitleText": "订单列表",
@@ -153,6 +160,13 @@
 				"enablePullDownRefresh": false
 			}
 
+		}, {
+			"path": "order-detail/order-detail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"enablePullDownRefresh": false
+			}
+
 		}]
 	}],
 	"globalStyle": {
@@ -162,7 +176,10 @@
 		"navigationBarBackgroundColor": "#DE501F",
 		"backgroundColor": "#DE501F",
 		"backgroundColorTop": "#DE501F",
-		"backgroundColorBottom": "#003920"
+		"backgroundColorBottom": "#003920",
+		"usingComponenets": {
+			"van-image": "/wxcomponents/vant/image/index"
+		}
 	},
 	"tabBar": {
 		"color": "#141D3D",

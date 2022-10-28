@@ -1,14 +1,15 @@
 <template>
 	<view class="">
-		<uni-popup ref="popup"  @change="change">
+		<uni-popup ref="popup" @change="change">
 			<view class="popup-content">
+
 				<image class="popup-content-bg" src="/static/share/bg.png" mode="widthFix"></image>
 				<view class="popup-content-pos">
 					<view class="popup-content-top flex-cc fz46 fwb colorw">
-						XXXXXXX课程劲爆来袭了
+						{{title}}
 					</view>
 					<view class="popup-content-center flex-cc">
-						<image class="popup-content-img" src="/static/home/bg-item.png" mode="widthFix"></image>
+						<image class="popup-content-img" :src="coverImage" mode="aspectFill"></image>
 					</view>
 					<view class="popup-content-bottom flex-bc fz24 text-c colorw">
 						<button class="is-view flex-fc flex-cc" open-type="share">
@@ -19,40 +20,66 @@
 							<image class="popup-content-icon" src="/static/share/url.png" mode=""></image>
 							<text>复制链接</text>
 						</view>
-						<view class="flex-fc flex-cc">
+						<view class="flex-fc flex-cc" @click="copyQrcode">
 							<image class="popup-content-icon" src="/static/share/qr.png" mode=""></image>
 							<text>二维码分享</text>
 						</view>
 					</view>
 				</view>
 			</view>
+			<uni-popup ref="popup2" @change="change">
+				<view class="popup2-content">
+					<canvas v-show="!imageUrl" canvas-id="qrcode" style="width: 500rpx;height:500rpx;margin: 0 auto;" />
+					<image v-show="imageUrl" :src="imageUrl" show-menu-by-longpress mode="widthFix"
+						style="width: 500rpx;height:500rpx;margin: 0 auto;"></image>
+				</view>
+			</uni-popup>
 		</uni-popup>
 	</view>
 </template>
 
 <script>
+	import uQRCode from '../PopupShare/uqrcode.js'
 	export default {
 		data() {
 			return {
+				data: '', //https://wxaurl.cn/BQZRrcFCPvg
+				imageUrl: '',
+				title: '',
+				coverImage: ''
 			}
 		},
+		components: {},
 		methods: {
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow(isShow=false) {
-				this.$refs.popup.open('center')
+			handleShow(val) {
+				this.title = val.title
+				this.coverImage = val.coverImage
+				this.imageUrl = ''
+				this.$http['classes'].shareGenerateUrlLink(val).then(res => {
+					if (res.code == 200) {
+						this.data = res.data
+						this.$refs.popup.open('center')
+					}
+				})
+
+
 			},
 			// 复制链接
 			copyUrl() {
+				const self = this
+				console.log('11');
 				uni.setClipboardData({
-					data: '123',
+					data: self.data,
 					success: function() {
-						uni.hideToast({
+						uni.showToast({
 							title: '复制成功',
 							duration: 2000,
 							icon: 'none'
 						});
+						// self.$refs.popup.close('center')
 					},
 					fail: function(err) {
 						uni.showToast({
@@ -63,7 +90,31 @@
 					}
 				});
 			},
-			
+			copyQrcode() {
+
+				const self = this
+				self.$refs.popup2.open('center')
+				if (this.imageUrl) {
+					return false
+				}
+				self.$nextTick(() => {
+					uQRCode.make({
+						canvasId: 'qrcode',
+						componentInstance: self,
+						text: self.data,
+						size: 250,
+						margin: 0,
+						backgroundColor: '#ffffff',
+						foregroundColor: '#000000',
+						fileType: 'jpg',
+						errorCorrectLevel: uQRCode.errorCorrectLevel.H,
+						success: res => {
+							console.log(res);
+							self.imageUrl = res
+						}
+					})
+				})
+			},
 		}
 	}
 </script>
@@ -75,33 +126,41 @@
 			width: 714rpx;
 			margin: auto;
 			height: 1102rpx;
-			&-bg{
+
+			&-bg {
 				width: 100%;
 			}
-			&-pos{
+
+			&-pos {
 				position: absolute;
-				top:0;
+				top: 0;
 				left: 16rpx;
 				right: 0;
 				width: 684rpx;
 				height: 1102rpx;
-				
+
 			}
-			&-top{
+
+			&-top {
 				height: 182rpx;
 			}
-			&-center{
+
+			&-center {
 				height: 722rpx;
 			}
-			&-img{
+
+			&-img {
 				width: 586rpx;
-				max-height: 664rpx;
+				height: 664rpx;
+				border-radius: 12rpx;
 			}
-			&-bottom{
+
+			&-bottom {
 				padding: 32rpx 64rpx;
 				box-sizing: border-box;
 			}
-			&-icon{
+
+			&-icon {
 				width: 80rpx;
 				height: 80rpx;
 				margin-bottom: 12rpx;
@@ -109,20 +168,37 @@
 		}
 
 
-		
+
 	}
-	.is-view{
-		background-color: transparent!important;
+
+	.is-view {
+		background-color: transparent !important;
 		box-sizing: border-box;
 		cursor: pointer;
-		line-height: normal!important;
+		line-height: normal !important;
 		overflow: auto;
 		font-size: 24rpx !important;
 		color: white;
-		margin:0 !important;
+		margin: 0 !important;
 		padding: 0 !important;
 		position: relative;
 		text-align: center;
 		text-decoration: none;
+		border-color: transparent !important;
+		&::after {
+			border: none;
+		}
+	}
+
+	
+
+	.popup2-content {
+		width: 686rpx;
+		height: 686rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #ffffff;
+		border-radius: 12rpx;
 	}
 </style>

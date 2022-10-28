@@ -1,52 +1,74 @@
 <template>
 	<view class="piece">
 		<view class="piece-head-address" @click="$utils.router.navTo($page.Search)">
-			<image class="piece-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-			<text> 福田区</text>
-			<image class="piece-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
+			<image class="piece-head-address-img" src="/static/home/location2.png" mode="aspectFill"></image>
+			<text> {{campus.campusName}}</text>
+			<image class="piece-head-address-icon" src="/static/down2.png" mode="aspectFill"></image>
 		</view>
-		<y-list ref="yList" :scrollClass="'scroll-class2'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="piece-content" v-for="item in 30" :key="item"
-					@click="$utils.router.navTo($page.OrderInfo)">
-					<image class="piece-content-img" src="/static/notData.png" mode="aspectFit"></image>
-					<view class="piece-content-center">
-						<view>Do.Ting.le</view>
-						<view class="piece-content-class">
-							<view class="piece-content-name">启蒙班</view>
-							<view class="piece-content-url">
-								<image v-for="item in 5" :key="item" class="piece-content-icon"
-									src="/static/home/default-url.png" mode="aspectFit"></image>
-							</view>
-						</view>
+		<view class="piece-content" v-for="item in data" :key="item.productSellPriceRelId"
+			@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
+			<image class="piece-content-img" :src="item.headUrl" mode="aspectFill"></image>
+			<view class="piece-content-center">
+				<view>{{item.nickName || '微信昵称'}}</view>
+				<view class="piece-content-class">
+					<view class="piece-content-name">{{item.productName}} <text class="ml12"> {{item.spellType}}</text> </view>
+					<view class="piece-content-url">
+						<image v-for="row in item.weChatUserList" :key="row.studentId" class="piece-content-icon"
+							:src="row.avatar" mode="aspectFill"></image>
+						<image class="piece-content-icon" src="/static/home/default-url.png" mode="aspectFill">
+						</image>
 					</view>
-					<view class="piece-content-button">加入拼班</view>
 				</view>
-			</template>
-		</y-list>
+			</view>
+			<view class="piece-content-button">加入拼班</view>
+		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
+		</view>
 	</view>
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
-			return {}
+			return {
+				data: []
+			}
 		},
 		mounted() {
-			this.$refs.yList.init()
+			this.search()
 		},
 		methods: {
-			search() {
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					for (let i = 0; i < 100; i++) {
-						data.push({})
-					}
-					resolve({
-						data,
-						totalRows: 10
-					})
+			async search() {
+				const self = this
+				let data = []
+				// 获取当前社区拼班
+				let res = await self.$http['classes'].getSpellClassList({
+					campusId: self.campus.campusId
 				})
+				if (res.code == 200) {
+					data = res.data
+					data.forEach(item=>{
+						if(item.headUrl&& item.headUrl.indexOf('http')==-1){
+							item.headUrl = self.$url + item.headUrl
+						} else if(!item.headUrl){
+							item.headUrl = self.avatar
+						}
+						item.weChatUserList = item.weChatUserList || []
+						item.weChatUserList.forEach(row=>{
+							if(row.avatar && row.avatar.indexOf('http')==-1){
+								row.avatar = self.$url + row.avatar
+							} else if(!row.avatar){
+								row.avatar = self.avatar
+							}
+						})
+					})
+				}
+				self.data = data
 			}
 		}
 	}
@@ -95,7 +117,7 @@
 			display: flex;
 			justify-content: flex-start;
 			align-items: center;
-			margin-bottom:32rpx;
+			margin-bottom: 32rpx;
 			padding: 24rpx;
 			width: 686rpx;
 			min-height: 180rpx;
@@ -107,7 +129,7 @@
 				flex-shrink: 0;
 				margin-right: 26rpx;
 				width: 140rpx;
-				height: 132rpx;
+				height: 140rpx;
 				border-radius: 12rpx;
 			}
 
@@ -123,7 +145,7 @@
 				display: flex;
 				justify-content: flex-start;
 				margin-top: 18rpx;
-				height: 60rpx;
+				// height: 60rpx;
 				width: 320rpx;
 				background: rgba(20, 29, 61, 0.05);
 				border-radius: 12rpx;
@@ -134,8 +156,8 @@
 
 			&-name {
 				width: 140rpx;
-				height: 60rpx;
-				line-height: 60rpx;
+				// height: 60rpx;
+				// line-height: 60rpx;
 				text-align: center;
 				background: rgba(20, 29, 61, 0.1);
 				border-radius: 12rpx;
@@ -152,6 +174,7 @@
 				margin-left: -20rpx;
 				width: 44rpx;
 				height: 44rpx;
+				border-radius: 50%
 			}
 
 			&-button {

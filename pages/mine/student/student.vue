@@ -1,36 +1,39 @@
 <template>
 	<view class="student">
-		<y-list ref="yList" :scrollClass="'student-scroll-class'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="flex-start mr32 ml32 mt32">
-					<image class="student-head-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<view>
-						<view>
-							<text class="student-head-name">Do.Ting.le</text>
-							<text class="student-head-role">家长</text>
-						</view>
-						<view class="fz28 colorw mt16">13687341234</view>
-					</view>
+		<view class="student-head flex-start pr32 pl32 pt32">
+			<image class="student-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
+			<view>
+				<view>
+					<text class="student-head-name">{{userInfo.name || '微信昵称'}}</text>
+					<text class="student-head-role">家长</text>
 				</view>
-				<view class="flex-bc student-content" v-for="(item,index) in data" :key="index">
-					<view class="">
-						<view class="flex-sc">
-							<text>姓名：张真真 - 5岁</text>
-							<image class="student-sex" src="/static/sex-m.png" mode="widthFix"></image>
-						</view>
-						<view class="pt16">证件号码：350522201704122</view>
-						<view class="pt16">出生日期：2017-04-12</view>
-					</view>
-					<view class="student-status" @click="handleDel(item)">
-						<image class="student-head-del" src="/static/del.png" mode="aspectFit"></image>
-					</view>
+				<view class="fz28 colorw mt16">{{userInfo.phone}}</view>
+			</view>
+		</view>
+		<view class="flex-bc student-content" v-for="(item,index) in data" :key="index">
+			<view class="">
+				<view class="flex-sc">
+					<text>姓名：{{item.studentName}} - {{item.age}}岁</text>
+					<image class="student-sex" :src="item.gender==1?'/static/sex-m.png':'/static/sex-w.png'"
+						mode="widthFix"></image>
 				</view>
-			</template>
-		</y-list>
+				<view class="pt16">证件号码：{{item.idCard || ''}}</view>
+				<view class="pt16">出生日期：{{item.birthday}}</view>
+			</view>
+			<view class="student-status" @click="handleDel(item)">
+				<image class="student-head-del" src="/static/del.png" mode="aspectFill"></image>
+			</view>
+		</view>
+		<view :style="{ height: `calc(${safeAreaHeight}px + 168rpx)` }"></view>
 		<view class="student-footer">
 			<view class="student-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
 				添加学员
 			</view>
+		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
 		</view>
 	</view>
 </template>
@@ -40,61 +43,62 @@
 	export default {
 		mixins: [mixin],
 		data() {
-			return {}
+			return {
+				data: []
+			}
 		},
 		computed: {},
-		created() {
-
-		},
-		mounted() {
-			this.$refs.yList.init()
+		onShow() {
+			this.search()
 		},
 		methods: {
 			submit() {
 				this.$utils.router.navTo(this.$page.AddStudent)
 			},
-			handleDel(){
+			handleDel(item) {
+				const self = this
 				this.$utils.model.showMsgModal({
-					content:'确认要删除该学员嘛？',
-					showCancel:true,
-					confirmCallback:()=>{
+					content: '确认要删除该学员嘛？',
+					showCancel: true,
+					confirmCallback: () => {
 						console.log('确认');
+						self.$http['mine'].delStudent(item.id).then(res => {
+							console.log(res);
+							if (res.code == 200) {
+								self.search()
+							}
+						})
 					},
-					cancelCallback:()=>{
+					cancelCallback: () => {
 						console.log('取消');
 					}
 				})
 			},
 			// 模拟请求数据
-			search() {
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					for (let i = 0; i < 10; i++) {
-						data.push({})
-					}
-					resolve({
-						data,
-						totalRows: 10
+			async search() {
+				const self = this
+				let data = []
+				const res = await self.$http['mine'].getStudent()
+				if (res.code == 200) {
+					res.data = res.data || []
+					res.data.forEach(item=>{
+						item.birthday = this.$utils.dateTime.getLocalTime(item.birthday)
 					})
-				})
+					data = res.data
+				}
+				this.data = data
 			},
 
 		}
 	}
 </script>
-<style>
-	.student-scroll-class {
-		height: calc(100vh - 160rpx);
-	}
-</style>
 <style lang="scss" scoped>
 	.student {
 		min-height: 100vh;
 		background: #EEF1FA;
-
 		&::before {
 			content: '';
-			position: absolute;
+			position: fixed;
 			top: 0;
 			left: -150rpx;
 			width: 1050rpx;
@@ -102,6 +106,7 @@
 			background: linear-gradient(180deg, #DE501F 0%, #DE501F 100%);
 			border-bottom-left-radius: 50%;
 			border-bottom-right-radius: 50%;
+			z-index: 1;
 		}
 
 		&-sex {
@@ -112,6 +117,7 @@
 
 		&-content {
 			position: relative;
+			z-index: 99;
 			margin: 32rpx 32rpx 0 32rpx;
 			padding: 32rpx;
 			width: 686rpx;
@@ -126,10 +132,13 @@
 		}
 
 		&-head {
+			position: relative;
+			z-index: 1;
 			&-img {
 				margin-right: 28rpx;
 				width: 90rpx;
 				height: 90rpx;
+				border-radius: 50%;
 			}
 
 			&-name {
@@ -155,11 +164,12 @@
 				color: #FFFFFF;
 				line-height: 34rpx;
 			}
-			&-del{
+
+			&-del {
 				width: 64rpx;
 				height: 64rpx;
 			}
-			
+
 		}
 
 		&-footer2 {
@@ -169,6 +179,7 @@
 
 		&-footer {
 			position: fixed;
+			z-index: 999;
 			bottom: 0;
 			width: 750rpx;
 			padding: 32rpx 30rpx;

@@ -3,52 +3,63 @@
 
 		<view class="mine-head">
 			<view class="mine-head-flex">
-				<image class="mine-head-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
+				<!-- <view class="mine-head-img2" v-if="isTeach==1">
+					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
+				</view> -->
+				<button class="mine-head-img2" open-type="chooseAvatar" @chooseavatar="bindchooseavatar">
+					<image class="mine-head-img" :src="userInfo.avatar" mode="aspectFill"></image>
+				</button>
+				<!-- <image class="mine-head-img2" :src="userInfo.avatar" mode="aspectFill"></image> -->
 				<view>
-					<view>
-						<text class="mine-head-name">Do.Ting.le</text>
+					<view class="flex-sc">
+						<text class="mine-head-name" v-show="!showName" @click="showName=true,name=''">
+							{{userInfo.name|| '授权您的微信头像及昵称'}}
+						</text>
+						<input :focus='true' type="nickname" ref="input" @blur="handleBlur"
+							v-if="showName" placeholder-style="font-size:30rpx;color:#cecece" maxlength="25"
+							v-model="name" class="weui-input" placeholder="请输入昵称" />
 						<text class="mine-head-role" v-if="isTeach==2">家长</text>
 						<text class="mine-head-role mine-head-role2" v-if="isTeach==1">教练</text>
 					</view>
 					<view class="mine-head-balance">
-						<image class="mine-head-balance-img" src="/static/mine/balance.png" mode="aspectFit"></image>
-						<text>账户余额：￥2890.00</text>
+						<image class="mine-head-balance-img" src="/static/mine/balance.png" mode="aspectFill"></image>
+						<text @click="setCopy">账户余额：￥{{userInfo.remainingSum}}</text>
 					</view>
 				</view>
 			</view>
 			<view class="mine-head-switch" @click="setTeach">
-				<image class="mine-head-switch-img" src="/static/mine/switch.png" mode="aspectFit"></image>
+				<image class="mine-head-switch-img" src="/static/mine/switch.png" mode="aspectFill"></image>
 				<text>切换身份</text>
 			</view>
 			<view class="mine-nav" v-if="isTeach==2">
 				<view class="mine-nav-item" @click="$utils.router.navTo($page.Order)">
-					<image class="mine-nav-img1" src="/static/mine/order.png" mode="aspectFit"></image>
+					<image class="mine-nav-img1" src="/static/mine/order.png" mode="aspectFill"></image>
 					<view>我的订单</view>
 				</view>
-				<view class="mine-nav-item" @click="$utils.router.swtTo($page.Class)">
-					<image class="mine-nav-img2" src="/static/mine/competition.png" mode="aspectFit"></image>
+				<view class="mine-nav-item" @click="$utils.router.navTo($page.MyClass)">
+					<image class="mine-nav-img2" src="/static/mine/competition.png" mode="aspectFill"></image>
 					<view>我的拼班</view>
 				</view>
 				<view class="mine-nav-item" @click="$utils.router.navTo($page.Student)">
-					<image class="mine-nav-img3" src="/static/mine/student.png" mode="aspectFit"></image>
+					<image class="mine-nav-img3" src="/static/mine/student.png" mode="aspectFill"></image>
 					<view>我的学员</view>
 				</view>
 				<view class="mine-nav-item" @click="$utils.router.navTo($page.Wallet)">
-					<image class="mine-nav-img4" src="/static/mine/wallet.png" mode="aspectFit"></image>
+					<image class="mine-nav-img4" src="/static/mine/wallet.png" mode="aspectFill"></image>
 					<view>我的钱包</view>
 				</view>
 			</view>
-			<view class="mine-operation mine-operation2" v-if="isTeach==1" >
+			<view class="mine-operation mine-operation2" v-if="isTeach==1">
 				<view class="mine-operation-item mine-operation-item2" @click="$utils.router.navTo($page.Wallet)">
 					<view class="mine-operation-item-left">
-						<image class="mine-operation-item-img" src="/static/mine/balance2.png" mode="aspectFit"></image>
+						<image class="mine-operation-item-img" src="/static/mine/balance2.png" mode="aspectFill"></image>
 						<text>我的钱包</text>
 					</view>
 					<uni-icons type="right" color="#141D3D" size="24" />
 				</view>
 				<!-- <view class="mine-operation-item mine-operation-item2">
 					<view class="mine-operation-item-left">
-						<image class="mine-operation-item-img" src="/static/mine/guestbook.png" mode="aspectFit"></image>
+						<image class="mine-operation-item-img" src="/static/mine/guestbook.png" mode="aspectFill"></image>
 						<text>社区留言板</text>
 					</view>
 					<uni-icons type="right" color="#141D3D" size="24" />
@@ -56,24 +67,24 @@
 			</view>
 		</view>
 
-		<view class="mine-operation" v-if="isTeach==2" >
+		<view class="mine-operation" v-if="isTeach==2">
 			<view class="mine-operation-item" @click="$utils.router.navTo($page.Declare)">
 				<view class="mine-operation-item-left">
-					<image class="mine-operation-item-img" src="/static/mine/declare.png" mode="aspectFit"></image>
+					<image class="mine-operation-item-img" src="/static/mine/declare.png" mode="aspectFill"></image>
 					<text>我的申报</text>
 				</view>
 				<uni-icons type="right" color="#141D3D" size="24" />
 			</view>
 			<!-- <view class="mine-operation-item">
 				<view class="mine-operation-item-left">
-					<image class="mine-operation-item-img" src="/static/mine/match.png" mode="aspectFit"></image>
+					<image class="mine-operation-item-img" src="/static/mine/match.png" mode="aspectFill"></image>
 					<text>我的赛事</text>
 				</view>
 				<uni-icons type="right" color="#141D3D" size="24" />
 			</view>
 			<view class="mine-operation-item mine-operation-item2">
 				<view class="mine-operation-item-left">
-					<image class="mine-operation-item-img" src="/static/mine/guestbook.png" mode="aspectFit"></image>
+					<image class="mine-operation-item-img" src="/static/mine/guestbook.png" mode="aspectFill"></image>
 					<text>社区留言板</text>
 				</view>
 				<uni-icons type="right" color="#141D3D" size="24" />
@@ -83,7 +94,7 @@
 		<view v-if="isTeach==2" class="mine-operation">
 			<view class="mine-operation-item mine-operation-item2" @click="$utils.router.navTo($page.Coach)">
 				<view class="mine-operation-item-left">
-					<image class="mine-operation-item-img" src="/static/mine/apply.png" mode="aspectFit"></image>
+					<image class="mine-operation-item-img" src="/static/mine/apply.png" mode="aspectFill"></image>
 					<text>成为教练</text>
 				</view>
 				<uni-icons type="right" color="#141D3D" size="24" />
@@ -95,37 +106,122 @@
 </template>
 
 <script>
-	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
 	import mixin from '@/mixin.js'
 	export default {
 		mixins: [mixin],
 		data() {
 			return {
 				isGetData: false, // 数据加载
+				// userInfo:{}
+				name: '',
+				showName: false,
+				num: 0
 			}
 		},
-		computed: {
-			...mapGetters(['active']),
-		},
+		computed: {},
 		onShow() {
 			this.getData()
 		},
 		created() {
-			const active = 'mine'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
+			// console.log('身份验证',this.$utils.validate.validateIdNum('350623199611085735'));
 			// 获取数据
 
 		},
 		methods: {
-			...mapMutations(['SET_ACTIVE']),
+			setCopy() {
+				// if (this.num == 3) {
+				// 	const Authorization = this.$utils.util.getCache('Authorization');
+				// 	uni.setClipboardData({
+				// 		data: 'Bearer ' + Authorization,
+				// 		success: function() {},
+				// 	});
+				// 	this.num = 0
+				// } else {
+				// 	this.num++
+				// }
+
+			},
+			bindchooseavatar(e) {
+				const self = this
+				console.log('11', e.detail.avatarUrl);
+				let baseUrl = self.$config.BASE_URL
+				if (process.env.NODE_ENV === 'development') {
+					baseUrl = self.$config.BASE_URL_DEV
+				}
+				uni.uploadFile({
+					name: "file", //文件上传的name值
+					url: baseUrl + '/file/upload', //接口地址
+					header: {
+						"Content-Type": "multipart/form-data"
+					}, //头信息
+					formData: {
+
+					}, //上传额外携带的参数
+					filePath: e.detail.avatarUrl, //临时路径
+					fileType: "image", //文件类型
+					success: (uploadFileRes) => {
+
+						const data = JSON.parse(uploadFileRes.data)
+						let url = ''
+						for (let item in data) {
+							url = data[item]
+						}
+						this.$http['mine'].centerUpdate({
+							avatar: url,
+							nickname: this.userInfo.name
+						}).then(res => {
+							if(res.code==200){
+								this.getData()
+							}
+						})
+
+					},
+				});
+			},
+			handleBlur() {
+				if (this.name == '') {
+					this.showName = false
+					return false
+				}
+				console.log(this.name);
+				const url = this.userInfo.avatar.replace(this.$url, '')
+				this.$http['mine'].centerUpdate({
+					avatar: url==this.avatar?'':url,
+					nickname: this.name
+				}).then(res => {
+					if (res.code == 200) {
+						this.showName = false
+						this.getData()
+					} else{
+						this.name = '',
+						this.showName = false
+					}
+				})
+
+			},
 			// 模拟请求数据
 			getData() {
 				console.log('获取我的数据');
+				this.$http['mine'].getUserInfo().then(res => {
+					console.log(res);
+					if (res.code == 200) {
+						if (res.data.avatar && res.data.avatar.indexOf('http') == -1) {
+							res.data.avatar = this.$url + res.data.avatar
+						}
+						const result = {
+							...this.userInfo,
+							avatar: res.data.avatar || this.avatar,
+							name: res.data.name,
+							remainingSum: res.data.remainingSum,
+							roleName: res.data.roleName,
+						}
+						this.SET_STORAGE({
+							str: 'userInfo',
+							data: result
+						})
+						this.$forceUpdate()
+					}
+				})
 			},
 		}
 	}
@@ -154,9 +250,18 @@
 			}
 
 			&-img {
-				margin-right: 28rpx;
 				width: 90rpx;
 				height: 90rpx;
+				border-radius: 50%;
+			}
+
+			&-img2 {
+				padding: 0 !important;
+				margin-right: 28rpx;
+				margin-left: 0rpx;
+				width: 90rpx;
+				height: 90rpx;
+				border-radius: 50%;
 			}
 
 			&-name {
@@ -282,11 +387,12 @@
 		}
 
 		// 操作栏
-		&-operation2{
+		&-operation2 {
 			position: absolute;
 			left: 0;
 			bottom: -66rpx;
 		}
+
 		&-operation {
 			margin-bottom: 40rpx;
 			margin-left: 32rpx;
@@ -323,5 +429,16 @@
 				border-bottom: none
 			}
 		}
+	}
+
+	.weui-input {
+		display: inline-block;
+		height: 48rpx;
+		width: 150rpx;
+		font-size: 32rpx;
+		font-family: SourceHanSansSC-Bold, SourceHanSansSC;
+		font-weight: bold;
+		color: #FFFFFF;
+		line-height: 48rpx;
 	}
 </style>

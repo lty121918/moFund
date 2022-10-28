@@ -4,13 +4,13 @@
 			<view class="wallet-mony-text">余额</view>
 			<view class="mt28">
 				<text class="fz44">￥</text>
-				<text class="fz76 fwb">1235.00</text>
+				<text class="fz76 fwb">{{userInfo.remainingSum}}</text>
 			</view>
 			<view class="mt28 flex-cc" v-if="isTeach==2">
 				<view class="wallet-mony-button" @click="handleWithdrawal">
 					提现
 				</view>
-				<view  class="wallet-mony-button wallet-mony-button2 ml32" @click="handleRecharge">
+				<view class="wallet-mony-button wallet-mony-button2 ml32" @click="handleRecharge">
 					充值
 				</view>
 			</view>
@@ -29,16 +29,18 @@
 				<view class="wallet-tab-item" @click="handleTab(3)" :class="[active==3?'wallet-tab-active':'']">收入
 				</view>
 			</view>
-			<y-list ref="yList" scrollClass="wallet-scroll" :setData="search">
-				<template slot-scope="{data}">
-					<view v-for="(item,index) in data" :key="index">
-						<wallet-item @change="handleShow"></wallet-item>
-					</view>
-				</template>
-			</y-list>
+			<view v-for="(item,index) in data" :key="index">
+				<wallet-item :item="item" @change="handleShow"></wallet-item>
+			</view>
+			<view class="default-empty" v-if="data.length===0">
+				<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+				</image>
+				<view class="">暂无数据</view>
+			</view>
 		</view>
-		<recharge ref="recharge" />
-		<withdrawal ref="withdrawal" />
+		<view :style="{ height: `calc(${safeAreaHeight}px + 32rpx)` }"></view>
+		<recharge ref="recharge" @change="getData" />
+		<withdrawal ref="withdrawal" @change="getData" />
 	</view>
 </template>
 
@@ -56,39 +58,66 @@
 		},
 		data() {
 			return {
-				active: 1,
-				isTeach: false
+				active: 1, //  1 2 3
+				data: [], //数据列表
+				isTeach: false,
+				getPlayStatus: ''
 			}
 		},
-		computed: {},
-		created() {
-
-		},
-		mounted() {
-			this.$refs.yList.init()
+		onLoad() {
+			this.getData()
 		},
 		methods: {
+			getData() {
+				console.log('获取我的数据');
+				this.$http['mine'].getUserInfo().then(res => {
+					console.log(res);
+					if (res.code == 200) {
+						const result = {
+							...this.userInfo,
+							avatar: res.data.avatar,
+							name:  res.data.name,
+							remainingSum:  res.data.remainingSum,
+							roleName:  res.data.roleName,
+						}
+						this.SET_STORAGE({
+							str: 'userInfo',
+							data: result
+						})
+						this.handleTab(1)
+					}
+				})
+			},
+			// 选择tab操作
 			handleTab(val) {
 				this.active = val
+				this.search()
 			},
+			// 打开充值弹窗
 			handleRecharge() {
 				this.$refs.recharge.handleShow()
 			},
+			// 打开提现弹窗
 			handleWithdrawal() {
-				this.$refs.withdrawal.handleShow()
+				this.$refs.withdrawal.handleShow(this.userInfo.remainingSum)
 			},
 			// 模拟请求数据
-			search() {
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					for (let i = 0; i < 100; i++) {
-						data.push({})
-					}
-					resolve({
-						data,
-						totalRows: 10
-					})
+			async search() {
+				const self = this
+				let data = []
+				let income = ''
+				if (this.active == 2) {
+					income = false
+				} else if (this.active == 3) {
+					income = true
+				}
+				const res = await self.$http['mine'].getTrade({
+					income
 				})
+				if (res.code == 200) {
+					data = res.data
+				}
+				this.data = data
 			},
 		}
 	}
@@ -177,6 +206,7 @@
 		&-content {
 			&-item {
 				margin-left: 32rpx;
+				padding-bottom: 16rpx;
 				width: 686rpx;
 				background: #FFFFFF;
 				border-radius: 14rpx;

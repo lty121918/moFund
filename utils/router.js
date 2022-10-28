@@ -111,7 +111,7 @@ class Router {
 			url
 		})
 	}
-	other(url, id, envVersion = 'release') {
+	other(url, id, envVersion = 'trial') {
 		console.log(url);
 		uni.navigateToMiniProgram({
 			appId: id,

@@ -93,7 +93,7 @@
         "versionCode" : 100
     },
     "mp-weixin" : {
-        "appid" : "wx607c7993c6743df6",
+        "appid" : "wx3da6defd6747f3d7",
         "setting" : {
             "urlCheck" : false,
             "minified" : true
@@ -106,7 +106,9 @@
             "scope.userLocation" : {
                 "desc" : "演示定位能力"
             }
-        }
+        },
+        "lazyCodeLoading" : "requiredComponents",
+        "requiredPrivateInfos" : [ "getLocation" ]
     },
     "mp-alipay" : {
         "usingComponents" : true

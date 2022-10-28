@@ -4,35 +4,35 @@
 			<view class="popup-content">
 				<view class="popup-content-info">
 					<view class="popup-content-top">
-						<text class="fwb">订单编号：SF202206270001</text>
+						<text class="fwb">订单编号：{{data.orderNo}}</text>
 						<text class="color fw4">消费订单</text>
 					</view>
 					<view class="popup-content-bottom">
 						<view class="popup-content-left">
-							<image class="popup-content-img" src="/static/notData.png" mode="aspectFit"></image>
+							<image class="popup-content-img" src="/static/notData.png" mode="aspectFill"></image>
 						</view>
 						<view class="">
-							<view class="popup-content-cycle mt0">下单时间：2022-06-27 18:47:29</view>
-							<view class="popup-content-cycle">订单课程：篮球启蒙A</view>
-							<view class="popup-content-cycle">订单班级：启蒙A班</view>
-							<view class="popup-content-cycle">订单学员：张真真</view>
-							<view class="popup-content-cycle">订单金额：￥50.00</view>
+							<view class="popup-content-cycle mt0">下单时间：{{data.operateTime ||data.orderTime}}</view>
+							<view class="popup-content-cycle">订单课程：{{data.courseName}}</view>
+							<view class="popup-content-cycle">订单班级：{{data.className}}</view>
+							<view class="popup-content-cycle">订单学员：{{data.studentName}}</view>
+							<view class="popup-content-cycle">订单金额：￥{{data.orderAmount}}</view>
 						</view>
 					</view>
 					<view class="fz32 mt32">服务评价</view>
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32">等级</view>
-						<uni-rate v-model="value" color="#838899" active-color="#DE501F" />
+						<uni-rate :disabled="isCheck" disabledColor="#DE501F" v-model="evaluationLevel" color="#838899" active-color="#DE501F" />
 					</view>
 					<view class="mt32 flex-start">
 						<view class="fz32 mr32 flex0">评价</view>
 						<view class="popup-content-textarea">
-							<uni-easyinput type="textarea" v-model="value2" placeholder="请输入内容"></uni-easyinput>
+							<uni-easyinput :disabled="isCheck" type="textarea" v-model="content" :placeholder="isCheck?'':'请输入内容'"></uni-easyinput>
 						</view>
 					</view>
 				</view>
 				<view class="popup-footer">
-					<view class="popup-footer-button">提交</view>
+					<view class="popup-footer-button" @click="handleConfirm">{{isCheck?'关闭':'提交'}}</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -43,17 +43,40 @@
 	export default {
 		data() {
 			return {
-				value: '',
-				value2: ''
+				evaluationLevel: '',
+				content: '',
+				data:{},
+				isCheck:false
 			}
 		},
 		methods: {
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow() {
+			handleShow(data) {
+				this.data = data
+				this.evaluationLevel= data.evaluationLevel || ''
+				this.content= data.content || ''
+				this.isCheck = data.isCheck
 				this.$refs.popup.open('bottom')
 			},
+			handleConfirm(){
+				if(!this.isCheck){
+					this.$http['mine'].insertServiceEvaluation({
+						evaluationLevel: this.evaluationLevel,
+						content: this.content,
+						ordersId: this.data.orderId
+					}).then(res=>{
+						if(res.code==200){
+							this.$refs.popup.close('bottom')
+							this.$emit('change')
+						}
+					})
+				} else {
+					this.$refs.popup.close('bottom')
+				}
+				
+			}
 		}
 	}
 </script>

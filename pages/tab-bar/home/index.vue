@@ -2,46 +2,51 @@
 	<view class="home">
 		<view class="home-head2"></view>
 		<view class="home-head">
-			<view class="home-head-address" @click="$utils.router.navTo($page.Search)">
-				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFit"></image>
-				<text> 福田区</text>
-				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFit"></image>
+			<view class="home-head-address" @click="handleNavTo">
+				<image class="home-head-address-img" src="/static/home/location.png" mode="aspectFill"></image>
+				<text> {{campus.campusName ||''}}</text>
+				<image class="home-head-address-icon" src="/static/down.png" mode="aspectFill"></image>
 			</view>
 			<view class="home-head-swiper">
 				<swiper class="swiper" circular :indicator-dots="false" :autoplay="true" :interval="5000"
 					:duration="500">
-					<swiper-item>
-						<view class="swiper-item uni-bg-red">A</view>
+					<swiper-item v-for="item in banner" :key="item.id" @click="hanldeNext(item)">
+						<view class="home-head-view">
+							<image class="home-head-img" :src="url+item.imageUrl" mode="aspectFill" alt="加载失败"></image>
+						</view>
 					</swiper-item>
-					<swiper-item>
-						<view class="swiper-item uni-bg-green">B</view>
-					</swiper-item>
-					<swiper-item>
-						<view class="swiper-item uni-bg-blue">C</view>
+					<swiper-item v-if="banner.length==0">
+						<view class="home-head-view">
+							<image class="home-head-img" src="/static/default.png" mode="widthFix" alt="加载失败"></image>
+						</view>
 					</swiper-item>
 				</swiper>
 			</view>
 		</view>
 		<!-- 热门活动 -->
 		<view class="home-activity">
-			<view class="home-title">
+			<view class="home-title" v-if="courseList.length>0">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
-					<text>热门活动</text>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
+					<text>社区课程</text>
 				</view>
 				<view class="home-title-item" @click="$utils.router.navTo($page.Course)">
 					<text class="home-title-name">全部</text>
-					<image class="home-title-icon" src="/static/left.png" mode="aspectFit"></image>
+					<image class="home-title-icon" src="/static/left.png" mode="aspectFill"></image>
 				</view>
 			</view>
 			<view class="home-activity-content">
-				<view class="home-activity-content-item" v-for="item in 3" :key="item" @click="$utils.router.navTo($page.CourseDetail)">
-					<image class="home-activity-content-img" src="/static/mine/head-url.png" mode="aspectFit"></image>
-					<view class="home-activity-content-title">篮球启蒙1</view>
-					<view class="home-activity-content-msg">666团</view>
+				<view class="home-activity-content-item" v-for="item in courseList" :key="item.productId"
+					@click="$utils.router.navTo($page.CourseDetail,item)">
+					<van-image use-error-slot class="home-activity-content-img" radius="10" width="216" height="124"
+						:src="item.coverImage" fit="cover">
+					</van-image>
+					<!-- <image class="home-activity-content-img" :src="item.coverImage" mode="aspectFit"></image> -->
+					<view class="home-activity-content-title t-over">{{item.productName}}</view>
+					<!-- <view class="home-activity-content-msg">&nbsp;</view> -->
 					<view class="home-activity-content-price">
-						<text>￥60</text>
-						<image class="home-activity-content-icon" src="/static/home/right.png" mode="aspectFit"></image>
+						<text>￥{{item.price}}</text>
+						<image class="home-activity-content-icon" src="/static/home/right.png" mode="aspectFill"></image>
 					</view>
 				</view>
 			</view>
@@ -49,66 +54,229 @@
 
 		<!-- 附近拼班 -->
 		<view class="home-nearby">
-			<view class="home-title">
+			<view class="home-title" v-if="spellClassList.length>0">
 				<view class="home-title-item">
-					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFit"></image>
+					<image class="home-title-img" src="/static/home/icon.png" mode="aspectFill"></image>
 					<text>附近拼班</text>
 				</view>
 				<view class="home-title-item" @click="$utils.router.navTo($page.PieceList)">
 					<text class="home-title-name">全部</text>
-					<image class="home-title-icon" src="/static/left.png" mode="aspectFit"></image>
+					<image class="home-title-icon" src="/static/left.png" mode="aspectFill"></image>
 				</view>
 			</view>
-			<view class="home-nearby-content" v-for="item in 30" :key="item" @click="$utils.router.navTo($page.OrderInfo)">
-				<image class="home-nearby-content-img" src="/static/notData.png" mode="aspectFit"></image>
+			<view class="home-nearby-content" v-for="(item,index) in spellClassList" :key="index"
+				@click="$utils.router.navTo($page.OrderInfo,{classId:item.classInfoId})">
+				<image class="home-nearby-content-img" :src="item.headUrl" mode="aspectFill"></image>
 				<view class="home-nearby-content-center">
-					<view>Do.Ting.le</view>
+					<view>{{item.nickName || '微信昵称'}}</view>
 					<view class="home-nearby-content-class">
-						<view class="home-nearby-content-name">启蒙班</view>
+						<view class="home-nearby-content-name">{{item.productName}}<text class="ml12">{{item.spellType}}</text></view>
 						<view class="home-nearby-content-url">
-							<image v-for="item in 5" :key="item" class="home-nearby-content-icon"
-								src="/static/home/default-url.png" mode="aspectFit"></image>
+							<image v-for="row in item.weChatUserList" :key="row.studentId"
+								class="home-nearby-content-icon" :src="row.avatar" mode="aspectFill">
+							</image>
+							<image class="home-nearby-content-icon" src="/static/home/default-url.png" mode="aspectFill">
+							</image>
 						</view>
 					</view>
 				</view>
 				<view class="home-nearby-content-button">加入拼班</view>
 			</view>
 		</view>
-
-
-
+		<!-- Tabbar -->
 		<page-tabpars></page-tabpars>
 	</view>
 </template>
 
 <script>
 	import {
-		mapGetters,
-		mapMutations
-	} from 'vuex'
+		debounce
+	} from "@/utils/lodash.js";
+	import bus from '@/utils/bus.js'
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
-			return {}
+			return {
+				banner: [], // 轮播图
+				courseList: [], // 社区课程
+				spellClassList: [], // 附件拼班
+				campusName:''
+			}
 		},
 		computed: {
-			...mapGetters(['active']),
+			url() {
+				return this.$url
+			}
 		},
 		created() {
-			const active = 'home'
-			if (this.active !== active) {
-				this.SET_ACTIVE(active)
-			}
-			uni.setNavigationBarTitle({
-				title: '首页'
+			// this.getMounted()
+			bus.$on('getMounted',()=>{
+				console.log('执行');
+				this.getMounted()
 			})
-			this.getData()
+		},
+		mounted() {
+			
 		},
 		methods: {
-			...mapMutations(['SET_ACTIVE']),
-			// 模拟请求数据
-			getData() {
-				console.log('数据请求home');
+			handleNavTo(){
+				this.getSettingLocal().then(res=>{
+					if(res==3) {
+						this.$utils.router.navTo(this.$page.Search)
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '您拒绝了定位权限，将无法使用社区定位功能',
+							success: res => {
+								if (res.confirm) {
+									// 跳转设置页面
+									uni.openSetting({
+										success: res => {
+											if (res
+												.authSetting[
+													'scope.userLocation'
+												]
+											) {
+												self.getLocation()
+											} else {
+												uni.showToast({
+													title: '您拒绝了定位权限，将无法使用社区定位功能',
+													icon: 'none'
+												});
+												// 没有允许定位权限
+											}
+										}
+						
+									});
+								} else {
+									this.$utils.router.navTo(this.$page.Search)
+								}
+							}
+						});
+					}
+					
+				})
+				
+				
 			},
+			// home 页面调用
+			getMounted: debounce(function(e) {
+				uni.setNavigationBarTitle({
+					title: '首页'
+				})
+				this.getData()
+			}),
+			// 请求数据
+			async getData() {
+				console.log('数据请求home');
+				// 读取社区信息 已经缓存在本地
+				this.SET_STORAGE({
+					str: 'campus'
+				})
+				console.log('校区',this.campus);
+				// 读取登录时获取的坐标轴
+				this.SET_STORAGE({
+					str: 'location'
+				})
+				const {
+					getSearchList,
+					getBanner
+				} = this.$http['map']
+				const {
+					getCourseList,
+					getSpellClassList
+				} = this.$http['classes']
+				// 轮播图
+				let res1 = await getBanner()
+				if (res1.code == 200) {
+					this.banner = res1.data
+				}
+				// 获取社区
+				let res2 = await getSearchList({
+					lat: this.location.latitude,
+					lng: this.location.longitude
+				})
+				if (res2.code == 200) {
+					let list = res2.data
+					if (!this.campus) {
+						// 没有社区 保存一下
+						this.SET_STORAGE({
+							str: 'campus',
+							data: list[0]
+						})
+					} else {
+						// 如果之前缓存的社区已经被删除 则重新选取
+						const isTrue = list.some(item => item.campusId == this.campus.campusId)
+						if (!isTrue) {
+							this.SET_STORAGE({
+								str: 'campus',
+								data: list[0]
+							})
+						}
+					}
+					if(list.length==0){
+						this.SET_STORAGE({
+							str: 'campus',
+							data: {
+								campusId:'',
+								campusName:''
+							}
+						})
+					}
+				}
+				// 获取课程
+				let res3 = await getCourseList({
+					campusId: this.campus.campusId
+				})
+				if (res3.code == 200) {
+					const data = [
+						...res3.data,
+					]
+					data.forEach(item => {
+						item.coverImage = this.$url + item.coverImage
+					})
+					if (data.length > 4) {
+						this.courseList = data.slice(0, 4)
+					} else {
+						this.courseList = data
+					}
+
+				}
+				// 获取当前社区拼班
+				let res4 = await getSpellClassList({
+					campusId: this.campus.campusId
+				})
+				if (res4.code == 200) {
+					res4.data.forEach(item => {
+						if(item.headUrl && item.headUrl.indexOf('http')==-1){
+							item.headUrl = this.$url + item.headUrl
+						}  
+						if(!item.headUrl){
+							item.headUrl = this.avatar
+						}
+					
+						item.weChatUserList = item.weChatUserList || []
+						item.weChatUserList.forEach(row => {
+							if(row.avatar && row.avatar.indexOf('http')==-1){
+								row.avatar = this.$url + row.avatar
+							} else if(!row.avatar){
+								row.avatar = this.avatar
+							}
+							
+						})
+					})
+					this.spellClassList = [
+						...res4.data
+					]
+					console.log(this.spellClassList);
+				}
+				this.$forceUpdate()
+			},
+			// 跳转到其他小程序
+			hanldeNext(item) {
+				this.$utils.router.other(item.linkUrl, item.appid)
+			}
 		}
 	}
 </script>
@@ -163,13 +331,20 @@
 			}
 
 			&-swiper {
-				position: absolute;
-				left: 32rpx;
-				bottom: -132rpx;
+				margin-top: 20rpx;
 				width: 686rpx;
 				height: 376rpx;
-				background: #D8D8D8;
+				// background: #D8D8D8;
 				border-radius: 16rpx;
+			}
+
+			&-view {
+				text-align: center;
+			}
+
+			&-img {
+				width: 100%;
+				height: 376rpx;
 			}
 		}
 
@@ -191,8 +366,8 @@
 					flex-shrink: 0;
 					margin-left: 24rpx;
 					padding: 20rpx;
-					width: 200rpx;
-					height: 280rpx;
+					width: 256rpx;
+					height: 312rpx;
 					box-sizing: border-box;
 					background-image: url('~@/static/home/bg-item.png');
 					background-repeat: no-repeat;
@@ -201,6 +376,7 @@
 				}
 
 				&-title {
+					height: 85rpx;
 					margin-top: 26rpx;
 					font-size: 32rpx;
 					font-weight: 500;
@@ -226,8 +402,11 @@
 				}
 
 				&-img {
-					width: 84rpx;
-					height: 84rpx;
+					// width: 84rpx;
+					// height: 84rpx;
+					width: 216rpx;
+					height: 124rpx;
+					border-radius: 8rpx;
 				}
 
 				&-icon {
@@ -258,7 +437,7 @@
 					flex-shrink: 0;
 					margin-right: 26rpx;
 					width: 140rpx;
-					height: 132rpx;
+					height: 140rpx;
 					border-radius: 12rpx;
 				}
 
@@ -274,7 +453,7 @@
 					display: flex;
 					justify-content: flex-start;
 					margin-top: 18rpx;
-					height: 60rpx;
+					// height: 60rpx;
 					width: 320rpx;
 					background: rgba(20, 29, 61, 0.05);
 					border-radius: 12rpx;
@@ -285,8 +464,8 @@
 
 				&-name {
 					width: 140rpx;
-					height: 60rpx;
-					line-height: 60rpx;
+					// height: 60rpx;
+					// line-height: 60rpx;
 					text-align: center;
 					background: rgba(20, 29, 61, 0.1);
 					border-radius: 12rpx;
@@ -303,6 +482,7 @@
 					margin-left: -20rpx;
 					width: 44rpx;
 					height: 44rpx;
+					border-radius: 50%
 				}
 
 				&-button {
@@ -326,6 +506,7 @@
 	.swiper {
 		width: 686rpx;
 		height: 376rpx;
+		overflow: hidden;
 		border-radius: 16rpx;
 	}
 </style>

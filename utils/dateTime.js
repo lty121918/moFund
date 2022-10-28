@@ -1,5 +1,30 @@
 class DateTime {
 	constructor() {}
+	getBirthday(idCard) {
+		var birthday = "";
+		if (idCard != null && idCard != "") {
+			if (idCard.length == 15) {
+				birthday = "19" + idCard.substr(6, 6);
+			} else if (idCard.length == 18) {
+				birthday = idCard.substr(6, 8);
+			}
+			console.log('vvv',idCard);
+			birthday = birthday.replace(/(.{4})(.{2})/, "$1-$2-");
+		}
+
+		return birthday;
+	}
+	getSex(idCard){
+		const num = idCard.charAt(16);
+		if(num%2==0){
+		  console.log('女');
+		  return '女'
+		}else{
+		  console.log('男');
+		   return '男'
+		}
+		 
+	}
 	/**
 	 * @description 格式化年月日的时间
 	 * @param {*} date 2018年4月15日 10:10
@@ -46,7 +71,14 @@ class DateTime {
 		if (date == undefined || date == '') {
 			date = new Date()
 		} else {
-			if ((date + '').indexOf('-') > -1) {
+			let index = (date+'').indexOf('.')
+			if( (date + '').indexOf('T') > -1){
+				date = new Date(date)
+			} else if ((date + '').indexOf('-') > -1) {
+				if(index>-1){
+					date = date.substr(0,index)
+				}
+				// console.log(date);
 				date = new Date(date.replace(/-/g, '/'))
 			} else {
 				date = new Date(date)
@@ -55,7 +87,6 @@ class DateTime {
 		if (format == undefined || format == '') {
 			format = 'yyyy-MM-dd'
 		}
-
 		let o = {
 			'M+': date.getMonth() + 1,
 			'd+': date.getDate(),
@@ -203,6 +234,16 @@ class DateTime {
 			sunday
 		}
 	}
+	// 获取当前星期几
+	getNowWeek(time) {
+		let now = new Date()
+		if (time) {
+			now = new Date(time.replace(/-/g, '/'));
+		}
+
+		let day = now.getDay() || 7 //为周日的时候 day 修改为7  否则当天周天会有问题
+		return day
+	}
 	// 判断是大于当前时间还是小于当前时间 或者再范围内  0;未开始;1进行中;2已完成）
 	ltgtDate(startTime, endTime, value) {
 		value = value || {}
@@ -236,7 +277,9 @@ class DateTime {
 		if (startTime) {
 			time2 = startTime.replace(/-(\d)(?!\d)/g, '-0$1')
 		}
-		if (time <= time2) {
+		if (time > time2) {
+			return 1
+		} else if (time <= time2) {
 			return 0
 		} else {
 			return 2
@@ -338,6 +381,56 @@ class DateTime {
 		let min = Math.round(disparity / 1000 / 60);
 		// console.log(disparity)
 		return min
+	}
+	// 处理星期是否连贯
+	filteDay(value) {
+		if (!value) {
+			return ''
+		}
+		value = value.sort((a,b)=>a-b)
+		let weekTime = ['一', '二', '三', '四', '五', '六', '日']
+		let ncontinuity = 0 //用于连续个数的统计
+		for (let i = 1; i < value.length; i++) {
+			if (value[i] - value[i - 1] == 1 || value[i] - value[i - 1] == -1) {
+				//等于1代表升序连贯   等于-1代表降序连贯
+				ncontinuity += 1 //存在连贯：计数+1
+			}
+		}
+		let str = ``
+		if (ncontinuity > value.length - 2) {
+			// console.log('全部连贯')
+			str = `周${weekTime[value[0] - 1]}~周${
+	          weekTime[value[value.length - 1] - 1]
+	        }`
+		} else {
+			console.log('不全部连贯')
+			value.forEach((item, index) => {
+				str += `${index === 0 ? '' : ','}周${weekTime[item - 1]}`
+			})
+		}
+		return str
+	}
+
+	// 给时间或者星期返回时间
+	getRangeDay(data, num,week=[], type = 'date') {
+		let list = []
+		let start = data[0]
+		let end = data[1]
+		let weeks = week.join(',')
+		for (let i = 0; i <= num; i++) {
+			const code = this.getNowWeek(start)
+			if(type == 'week' && weeks.indexOf(code) > -1){
+				list.push(start)
+			}
+			if(type=='date'){
+				list.push(start)
+			}
+			start = this.getNextDay(1, start)
+			if(start>end){
+				break;
+			}
+		}
+		return list
 	}
 }
 export default DateTime

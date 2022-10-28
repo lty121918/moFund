@@ -1,65 +1,80 @@
 <template>
 	<view class="course">
 		<view class="course-head-address" @click="$utils.router.navTo($page.Search)">
-			<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFit"></image>
-			<text> 福田区</text>
-			<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFit"></image>
+			<image class="course-head-address-img" src="/static/home/location2.png" mode="aspectFill"></image>
+			<text> {{campus.campusName}}</text>
+			<image class="course-head-address-icon" src="/static/down2.png" mode="aspectFill"></image>
 		</view>
-		<y-list ref="yList" :scrollClass="'scroll-class2'" :setData="search">
-			<template slot-scope="{data}">
-				<view class="course-list-item" v-for="item in data" :key="item"  @click="$utils.router.navTo($page.CourseDetail)">
-					<image class="course-list-item-img" src="/static/notData.png" mode="aspectFit"></image>
-					<view class="course-list-item-surplus">
-						<text>剩余</text>
-						<text class="color fz32">10</text>
-						<text>件</text>
+		<view class="course-list-item" v-for="item in data" :key="item"
+			@click="$utils.router.navTo($page.CourseDetail,item)">
+			<van-image use-error-slot class="course-list-item-img" fit="cover"  radius="10" width="180" height="204" :src="item.coverImage" >
+			</van-image>
+			<!-- <image class="course-list-item-img" :src="item.coverImage" mode="aspectFill"></image> -->
+			<view class="">
+				<view class="course-list-item-title">{{item.productName}}</view>
+				<view>
+					<text class="color">
+						<text class="fz24">￥</text>
+						<text class="fz32">{{item.price}}</text>
+					</text>
+					<text class="fz24">/节</text>
+					<text class="course-list-item-payment">{{item.paymentNumber}}人付款</text>
+				</view>
+				<view class="course-list-item-info">
+					<view class="course-list-item-apply">
+						{{item.minAge}}-{{item.maxAge}}岁适用
 					</view>
-					<view class="">
-						<view class="course-list-item-title">篮球启蒙课A</view>
-						<view>
-							<text class="color">
-								<text class="fz24">￥</text>
-								<text class="fz32">50.0</text>
-							</text>
-							<text class="fz24">/节</text>
-							<text class="course-list-item-payment">245人付款</text>
-						</view>
-						<view class="course-list-item-info">
-							<view class="course-list-item-apply">
-								4-5岁适用
-							</view>
-							<view class="course-list-item-pin">
-								100+拼班
-							</view>
-						</view>
+					<view class="course-list-item-pin">
+						{{item.spellingClassNumber}}拼班
 					</view>
 				</view>
-			</template>
-		</y-list>
+			</view>
+		</view>
+		<view class="default-empty" v-if="data.length===0">
+			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+			</image>
+			<view class="">暂无数据</view>
+		</view>
 	</view>
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
 			return {
+				data:[]
 			}
 		},
 		mounted() {
-			this.$refs.yList.init()
+			this.getInit()
 		},
 		methods: {
-			search() {
-				return new Promise(async (resolve, reject) => {
-					let data = []
-					for (let i = 0; i < 100; i++) {
-						data.push({})
-					}
-					resolve({
-						data,
-						totalRows: 10
+			getInit() {
+				this.search()
+			},
+			async search() {
+				const self = this
+					// 获取课程
+					let res = await self.$http['classes'].getCourseList({
+						campusId: self.campus.campusId
 					})
-				})
+					// '/static/notData.png'
+					let data = []
+					if (res.code == 200) {
+						data = res.data
+						data.forEach(item => {
+							if(item.spellingClassNumber<100){
+								item.spellingClassNumber = `${item.spellingClassNumber}个`
+							} else{
+								item.spellingClassNumber = '100+'
+							}
+							item.coverImage = this.$url + item.coverImage
+						})
+
+					}
+					this.data =data 
 			}
 		}
 	}
@@ -70,8 +85,6 @@
 	}
 </style>
 <style scoped lang="scss">
-	
-
 	.course {
 		min-height: 100vh;
 		padding: 0 32rpx;
@@ -123,8 +136,9 @@
 					height: 204rpx;
 					// background-color: rgba(0, 0, 0, 0.1);
 				}
-				&-title{
-					width: 300rpx;
+
+				&-title {
+					// width: 300rpx;
 					min-height: 86rpx;
 					font-size: 36rpx;
 					font-family: PingFangSC-Medium, PingFang SC;
@@ -132,13 +146,15 @@
 					color: #141D3D;
 					line-height: 48rpx;
 				}
-				&-payment{
+
+				&-payment {
 					margin-left: 16rpx;
 					font-size: 24rpx;
 					font-weight: 400;
 					color: rgba(20, 29, 61, 0.5);
 				}
-				&-info{
+
+				&-info {
 					display: flex;
 					justify-content: space-around;
 					margin-top: 22rpx;
@@ -153,17 +169,19 @@
 					line-height: 44rpx;
 					text-align: center;
 				}
-				&-apply{
+
+				&-apply {
 					width: 148rpx;
 					height: 44rpx;
 					background: rgba(20, 29, 61, 0.1);
 					border-radius: 12rpx;
 				}
-				&-pin{
+
+				&-pin {
 					width: 148rpx;
 				}
-				
-				
+
+
 				&-surplus {
 					position: absolute;
 					right: 24rpx;

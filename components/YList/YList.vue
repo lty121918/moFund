@@ -31,11 +31,16 @@
 			},
 			scrollClass: {
 				default: 'scroll-class'
-			}
+			},
+			params: {
+				default: ()=>{
+					return {}
+				}
+			},
 		},
 		data() {
 			return {
-				data: [{}],
+				data: [],
 				scrollTop: 0,
 				isMore: false,
 				queryParams: {
@@ -46,11 +51,12 @@
 		},
 		methods: {
 			// 初始化
-			init() {
+			init(val) {
 				console.log('初始化列表');
 				this.queryParams = {
 					page: 1,
-					row: 10
+					row: 10,
+					...val
 				}
 				this.search()
 			},
@@ -94,7 +100,8 @@
 				return new Promise(async (resolve, reject) => {
 					this.isMore = false
 					const formData = {
-						...this.queryParams
+						...this.queryParams,
+						...this.params
 					}
 					const res = await this.setData(formData)
 					console.log('数据', res);

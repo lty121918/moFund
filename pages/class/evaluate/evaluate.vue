@@ -3,33 +3,26 @@
 		<!-- 详情 + 评价 -->
 		<view class="course-detail">
 			<!-- tab -->
-			<view class="course-detail-tab">
+			<!-- <view class="course-detail-tab">
 				<view v-for="(item, index) in tabData" :key="index" class="course-detail-tab-item" @click="handleTab(index)"
 					:class="[active==index?'course-detail-tab-active':'']">{{item.name}}</view>
-			</view>
+			</view> -->
 			<view class="">
-				<view class="course-detail-evaluate" v-for="item in 5" :key="item">
-					<image class="course-detail-evaluate-img" src="/static/mine/head-urlm.png" mode="scaleToFill">
+				<view class="course-detail-evaluate" v-for="item in productEvaluate" :key="item">
+					<image class="course-detail-evaluate-img" :src="item.avatar" mode="aspectFill">
 					</image>
 					<view>
 						<view class="course-detail-evaluate-info">
 							<view class="course-detail-evaluate-info2">
-								<text class="color4 fz28">李晓明</text>
+								<text class="color4 fz28">{{item.nickname || '微信昵称'}}</text>
 								<view class="course-detail-evaluate-info3">
-									<image v-for="item in 5" :key="item" class="course-detail-evaluate-info-img"
-										src="/static/class/eva.png" mode="scaleToFill"></image>
+									<uni-rate v-model="item.evaluationLevel" disabled size="20" disabledColor="#DE501F" color="#838899" active-color="#DE501F" />
 								</view>
 							</view>
-							<view class="fz24 color2">2022-06-12</view>
+							<view class="fz24 color2">{{item.createdDate||''}}</view>
 						</view>
-						<view class="course-detail-evaluate-text">
-							老师不错，挺负责的，孩子也喜欢老师不错，挺负责的，孩子也喜欢老师不错，挺负责的，孩子也喜欢
-						</view>
+						<view class="course-detail-evaluate-text">{{item.content || ""}}</view>
 					</view>
-				</view>
-				<view class="course-detail-evaluate-more" @click="$utils.router.navTo($page.Evaluate)">
-					<text>查看更多</text>
-					<image class="course-detail-evaluate-more-img" src="/static/class/more.png" mode=""></image>
 				</view>
 			</view>
 		</view>
@@ -41,6 +34,7 @@
 		data() {
 			return {
 				active: 1,
+				productEvaluate:[],
 				tabData: [{
 						name: '全部'
 					},
@@ -54,6 +48,25 @@
 						name: '好评'
 					}
 				]
+			}
+		},
+		async onLoad(e) {
+			const res = await this.$http['classes'].getProductEvaluate({
+				productId: e.productId
+			})
+			if (res.code == 200) {
+				res.data = res.data.filter(item => item)
+				res.data.forEach(item => {
+					if( item.avatar.indexOf('http')==-1){
+						item.avatar = this.$url + item.avatar
+					}
+					if(!item.avatar){
+						item.avatar = this.avatar
+					}
+					item.createdDate = this.$utils.dateTime.getLocalTime(item.createdDate)
+					item.evaluationLevel = item.evaluationLevel || 0
+				})
+				this.productEvaluate = res.data
 			}
 		},
 		methods: {
@@ -129,6 +142,7 @@
 					margin-right: 28rpx;
 					width: 88rpx;
 					height: 88rpx;
+					border-radius: 16rpx;
 				}
 
 				&-text {
@@ -143,7 +157,8 @@
 					display: flex;
 					justify-content: space-between;
 					align-items: center;
-
+					width: 510rpx;
+					
 					&-img {
 						margin-right: 8rpx;
 						width: 24rpx;

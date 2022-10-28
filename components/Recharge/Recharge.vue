@@ -11,15 +11,15 @@
 					<view class="flex-sc mt42">
 						<text class="fz28 mr12">￥</text>
 						<view class="popup-content-input">
-							<uni-easyinput :inputBorder="false" v-model="value"
-								@blur="changeInput2" @input="changeInput" type="number" placeholder="请输入" />
+							<uni-easyinput :inputBorder="false" v-model="amount" @blur="changeInput2"
+								@input="changeInput" placeholder="请输入" />
 						</view>
 						<text class="fz28 ml12">元</text>
 					</view>
 				</view>
 				<view class="popup-footer flex-cc">
 					<view class="popup-footer-button" @click="close">取消</view>
-					<view class="popup-footer-button colorw ml32 bg-color">充值</view>
+					<view class="popup-footer-button colorw ml32 bg-color" @click="handleConfirm">充值</view>
 				</view>
 			</view>
 		</uni-popup>
@@ -27,30 +27,32 @@
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		name: "recharge",
 		data() {
 			return {
-				value: '11111111'
+				amount: ''
 			};
 		},
 		methods: {
 			changeInput(e) {
 				let value = e + ''
-				if (value != 0 && value != '0.' ) {
+				if (value != 0 && value != '0.') {
 					value = value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
 					value = value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的   
 					value = value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
 					value = value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3'); //只能输入两个小数 
 					setTimeout(() => {
-						this.value = value
+						this.amount = value
 					})
-			
+
 				}
 			},
 			changeInput2(e) {
 				console.log();
-				this.value = Number(this.value)
+				this.amount = Number(this.amount)
 			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
@@ -60,8 +62,25 @@
 				this.$refs.popup.open('bottom')
 			},
 			close() {
+				this.amount = ''
 				this.$refs.popup.close('bottom')
 			},
+			handleConfirm() {
+				const self = this
+				if (!self.amount || self.amount == 0) {
+					self.$utils.model.showToast('请输入充值金额')
+					return false
+				}
+				self.$http['mine'].setRecharge(self.amount).then(async res => {
+					if (res.code == 200) {
+						self.close()
+						await self.wxPay(res.data.payResult)
+						await self.$http['mine'].getPayStatus({payOrderNo:res.data.payOrderNo})
+						self.$emit('change')
+					}
+				})
+
+			}
 		},
 	}
 </script>
