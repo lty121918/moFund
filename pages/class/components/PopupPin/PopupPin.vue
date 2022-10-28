@@ -144,7 +144,8 @@
 				this.$http['classes'].getInitiateSpellClass(this.data).then(res => {
 					if (res.code == 200) {
 						this.$utils.router.navTo(this.$page.OrderInfo, {
-							classId: res.data.classInfoId
+							classId: res.data.classInfoId,
+							isPin:true
 						})
 					}
 				})

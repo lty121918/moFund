@@ -158,7 +158,8 @@ export default {
       classId: '',
       numData: 0,
       shareImg: null,
-      campusOther: {}
+      campusOther: {},
+      isPin:false
     }
   },
   onShow() {
@@ -171,6 +172,7 @@ export default {
       console.log('返回的数据', e)
       this.classId = e.classId
       this.wxUserId = e.wxUserId
+      this.isPin = e.isPin
       this.SET_STORAGE({
         str: 'shareInfo',
         data: e
@@ -215,7 +217,8 @@ export default {
       path === 'pages/class/course-detail/course-detail' &&
       path2 &&
       path2 !== 'pages/class/order-info/order-info' &&
-      path2 !== 'pages/tab-bar/map/map'
+      path2 !== 'pages/tab-bar/map/map' && 
+      this.isPin
     ) {
       // this.$utils.router.navBack(2)
       this.$utils.router.swtTo(this.$page.Home)
