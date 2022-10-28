@@ -56,12 +56,11 @@
 		data() {
 			return {
 				data: [],
-				dataList:[]
+				dataList: []
 			}
 		},
 
-		computed: {
-		},
+		computed: {},
 		onShow() {
 			this.getMounted()
 		},
@@ -72,11 +71,32 @@
 				this.getMounted()
 			})
 		},
+		// 分享给朋友
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title: '班级',
+				path: `${this.$page.Class}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: '班级',
+				path: `${this.$page.Class}` //分享默认打开是小程序首页
+			}
+		},
 		methods: {
 			getMounted: debounce(function() {
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					// this.$utils.userInfo.login('this')
+					return false
+				}
 				this.search({
 					isTeach: this.isTeach
 				})
@@ -125,7 +145,7 @@
 							this.data = data
 						}
 
-						
+
 						const date2 = new Date().getTime()
 						console.log(`执行时间:${(date2-date1)/1000}秒`);
 					}

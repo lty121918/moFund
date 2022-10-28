@@ -21,8 +21,10 @@
 				</uni-forms-item>
 			</uni-forms>
 		</view>
+		
 		<view class="add-student-footer2" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
 		<view class="add-student-footer">
+			<view class="add-student-tip">提示： 收集您孩子信息用于拼课。</view>
 			<view class="add-student-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }"
 				@click="submit('customForm')">
 				提 交
@@ -107,6 +109,7 @@
 		},
 		onReady() {
 			// 设置自定义表单校验规则，必须在节点渲染完毕后执行
+			this.onLaunch()
 			this.$refs.customForm.setRules(this.customRules)
 			this.endTime = this.$utils.dateTime.getLocalTime()
 		},
@@ -186,12 +189,18 @@
 			height: 92rpx;
 			padding: 32rpx 30rpx;
 		}
+		&-tip{
+			font-size: 22rpx;
+			text-align: center;
+			padding-bottom: 16rpx;
+			color: red;
+		}
 
 		&-footer {
 			position: fixed;
 			bottom: 0;
 			width: 750rpx;
-			padding: 32rpx 30rpx;
+			padding: 16rpx 30rpx 32rpx 30rpx;
 			box-sizing: border-box;
 			background: #FFFFFF;
 			box-shadow: 0rpx 0rpx 8rpx 0rpx rgba(0, 0, 0, 0.1);

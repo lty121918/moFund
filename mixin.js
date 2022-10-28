@@ -4,12 +4,16 @@ import {
 	mapMutations,
 	mapGetters
 } from 'vuex'
+import {
+	utils
+} from '@/utils/index.js';
 const minxin = {
 	data() {
 		return {
 			isIphoneX: false,
 			safeAreaInsetBottom: true, //底部高度
 			isTeach: '', // 是否教练 1是2不是
+			authorization: null
 		}
 	},
 	watch: {
@@ -36,6 +40,7 @@ const minxin = {
 		},
 	},
 	onShow() {
+		this.authorization = utils.util.getCache('Authorization');
 		this.SET_STORAGE({
 			str: 'campus'
 		})
@@ -51,8 +56,15 @@ const minxin = {
 		this.getTeach()
 		this.Ginit()
 	},
+	onload(e) {
+		console.log('1222', e)
 
+	},
 	created() {
+		wx.showShareMenu({
+			// withShareTicket: true,
+			menus: ["shareAppMessage", 'shareTimeline']
+		})
 		const res = uni.getSystemInfoSync()
 		const {
 			model,
@@ -66,9 +78,26 @@ const minxin = {
 			this.isIphoneX = true
 		}
 	},
+	// 分享给朋友
+	onShareAppMessage(res) {
+		if (res.from === 'button') { // 来自页面内分享按钮
+			console.log(res.target)
+		}
+		return {
+			// title:'订单列表',
+			path: `/${this.$mp.page.route}`
+		}
+	},
+	onShareTimeline(res) { //分享到朋友圈
+		return {
+			// title: '订单列表',
+			path: `/${this.$mp.page.route}` //分享默认打开是小程序首页
+		}
+	},
 	methods: {
 		Ginit() {
 			// 空壳
+			console.log('路由', uni.getLaunchOptionsSync());
 		},
 		...mapMutations(['SET_TEACH', 'SET_STORAGE']),
 		getTeach() {
@@ -78,6 +107,7 @@ const minxin = {
 				this.isTeach = 2
 				this.$utils.util.setCache('role', this.isTeach)
 			} else {
+				isTeach == 1 ? uni.hideShareMenu() : ''
 				this.isTeach = isTeach
 			}
 			this.SET_TEACH(this.isTeach)
@@ -283,7 +313,7 @@ const minxin = {
 								'scope.userLocation']) {
 							// 用户拒绝了授权
 							resolve(1)
-							
+
 
 						} else {
 							resolve(3)
@@ -291,6 +321,60 @@ const minxin = {
 					}
 				});
 			})
+		},
+
+
+
+		onLaunch(val) {
+			return new Promise(async (resolve) => {
+				const {
+					Login,
+					Home,
+					Map,
+					Course,
+					CourseDetail,
+					Evaluate,
+					PieceList,
+					Search,
+					OrderInfo,
+					Mine
+				} = this.$config.ROUTER_LIST
+				const currentList = [
+					Mine,Login, Home, Map, Course, 
+					CourseDetail, Evaluate, PieceList, Search, OrderInfo,
+				]
+				let routes = getCurrentPages() //获取当前页面栈
+				let curRoute = routes[routes.length - 1].route //获取当前页面的路由
+				let isLogin = currentList.indexOf(`/${curRoute}`) > -1
+				console.log(isLogin, 'isLogin');
+				const Authorization = utils.util.getCache('Authorization');
+				if (Authorization || isLogin) {
+					let isTeach = utils.util.getCache('role')
+					if (isTeach == 1) {
+						await this.setTeachApp()
+					}
+					resolve()
+				} else {
+					uni.reLaunch({
+						url: '/pages/login/login'
+					})
+				}
+			})
+
+		},
+		async setTeachApp(url, str) {
+			const res = await this.$http['mine'].roleSwitching()
+			if (res.code == 200) {
+				let isTeach = res.data.isCoach ? 1 : 2
+				this.isTeach = this.$utils.util.setCache('role', isTeach)
+				this.isTeach = isTeach
+				this.SET_TEACH(isTeach)
+				this.SET_STORAGE({
+					str: 'Authorization',
+					data: res.data.accessToken
+				})
+
+			}
 		}
 
 	},

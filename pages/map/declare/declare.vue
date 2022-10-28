@@ -14,7 +14,9 @@
 </template>
 
 <script>
+	import mixin from '@/mixin.js'
 	export default {
+		mixins: [mixin],
 		data() {
 			return {
 				data: []
@@ -25,7 +27,9 @@
 
 		},
 		mounted() {
-			this.search()
+			this.onLaunch().then(res => {
+				this.search()
+			})
 		},
 		methods: {
 			// 模拟请求数据

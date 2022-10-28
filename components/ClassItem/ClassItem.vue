@@ -78,7 +78,7 @@
 						this.$utils.router.navTo(this.$page.ClassDetail,{classId: this.data.classId})
 					}
 				} else if(this.type==3){
-					this.$utils.router.navTo(this.$page.CourseDetail,{productId: this.data.productId})
+					this.$utils.router.navTo(this.$page.CourseDetail,{productId: this.data.productId,campusId: this.data.campusId})
 				}
 			}
 		}
@@ -91,8 +91,10 @@
 			margin:0 32rpx 32rpx  32rpx;
 			padding: 0 32rpx 32rpx 32rpx;
 			// min-height: 344rpx;
-			background: #FFFFFF;
+			// background: #FFFFFF;
 			border-radius: 16rpx;
+			background-image: url('~@/static/class/class-item.png');
+			background-size: 100%;
 			&-top{
 				display: flex;
 				justify-content: space-between;

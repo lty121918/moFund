@@ -93,18 +93,17 @@
 			}
 		},
 		onLoad(e) {
-			console.log('返回的数据', e);
-			this.classId = e.classId
-			this.wxUserId = e.wxUserId
-			this.SET_STORAGE({
-				str: 'shareInfo',
-				data: e
+			this.onLaunch().then(res => {
+				console.log('返回的数据', e);
+				this.classId = e.classId
+				this.wxUserId = e.wxUserId
+				this.SET_STORAGE({
+					str: 'shareInfo',
+					data: e
+				})
+				this.getMineSpellClass()
 			})
-			wx.showShareMenu({
-				withShareTicket: true,
-				menus: ["shareAppMessage"]
-			})
-			this.getMineSpellClass()
+			
 		},
 		// 分享给朋友
 		onShareAppMessage(res) {
@@ -112,16 +111,34 @@
 				console.log(res.target)
 			}
 			return {
-				title: this.data.productName,
-				desc: '',
-				path: `/pages/class/order-info/order-info?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
+				title: '快来和我一起运动吧!',// this.data.productName,
+				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}`
+			}
+		},
+		onShareTimeline(res) { //分享到朋友圈
+			return {
+				title: '快来和我一起运动吧!',//this.share.title,
+				path: `${this.$page.OrderInfo}?classId=${this.classId}&wxUserId=${this.data.wxUserId}` //分享默认打开是小程序首页
 			}
 		},
 		onUnload: function() {
 			// wx.reLaunch({
 			// 	url: this.$page.Home
 			// })
-			this.$utils.router.navBack(3)
+			let pages = getCurrentPages(); //页面对象
+			let prevpage = pages[pages.length - 2]; //上一个页面对象
+			let prevpage2 = pages[pages.length - 3]; //上一个页面对象
+			let path = prevpage.route;
+			let path2 =prevpage2 == 'undefined'? null : prevpage2.route;
+			console.log('上个页面','path:',path,prevpage2);
+			if(path == 'pages/class/course-detail/course-detail' && path2 && path2 !='pages/class/order-info/order-info'){
+				this.$utils.router.navBack(2)
+				
+			} else if(path2 && path2 =='pages/class/order-info/order-info'){
+				this.$utils.router.swtTo(this.$page.Home)
+			} else {
+			}
+			
 		},
 		methods: {
 			getMineSpellClass() {
@@ -144,7 +161,7 @@
 						res.data['weekCodeName'] = this.$utils.dateTime.filteDay(res.data.weekCode)
 						res.data.weChatUserList = res.data.weChatUserList || []
 						res.data.weChatUserList.forEach(item => {
-							if (item.avatar&&item.avatar.indexOf('http') == -1) {
+							if (item.avatar && item.avatar.indexOf('http') == -1) {
 								item.avatar = this.$url + item.avatar
 							}
 							if (!item.avatar) {
@@ -169,11 +186,21 @@
 			},
 			// 联系团长
 			handlePhone(phone) {
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				wx.makePhoneCall({
 					phoneNumber: phone //仅为示例，并非真实的电话号码
 				})
 			},
 			handleAdd() {
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				this.data.weChatUserList = this.data.weChatUserList || []
 				const ls = this.data.weChatUserList.map(item => item.studentId)
 				this.$refs.popupAddStu.handleShow(this.classId, ls, this.data)
@@ -208,6 +235,11 @@
 			// 删除学员
 			handleDel(val) {
 				const self = this
+				const authorization = this.$utils.util.getCache('Authorization');
+				if(!authorization){
+					this.$utils.userInfo.login('this')
+					return false
+				}
 				self.$utils.model.showMsgModal({
 					content: '确定要删除该团员',
 					showCancel: true,

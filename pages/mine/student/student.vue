@@ -49,7 +49,10 @@
 		},
 		computed: {},
 		onShow() {
-			this.search()
+			this.onLaunch().then(res => {
+				this.search()
+			})
+			
 		},
 		methods: {
 			submit() {

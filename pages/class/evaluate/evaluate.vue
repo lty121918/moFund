@@ -24,6 +24,11 @@
 						<view class="course-detail-evaluate-text">{{item.content || ""}}</view>
 					</view>
 				</view>
+				<view class="default-empty" v-if="productEvaluate.length===0">
+					<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
+					</image>
+					<view class="">暂无数据</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -199,5 +204,9 @@
 			}
 		}
 
+	}
+	.default-empty{
+		margin-top: 0;
+		height: 80vh;
 	}
 </style>

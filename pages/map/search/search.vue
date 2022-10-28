@@ -47,11 +47,15 @@
 		},
 		created() {},
 		methods: {
+			Ginit(){
+				uni.hideShareMenu()
+			},
 		   async search() {
 				// 获取社区
 				this.SET_STORAGE({
 					str: 'location'
 				})
+				console.log('this.location',this.location);
 				let res2 = await this.$http['map'].getSearchList({
 					lat: this.location.latitude,
 					lng: this.location.longitude,

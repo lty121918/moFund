@@ -37,6 +37,9 @@
 			this.getClassMien()
 		},
 		methods: {
+			Ginit(){
+				uni.hideShareMenu()
+			},
 			getClassMien() {
 				const {
 					getClassStuMien,

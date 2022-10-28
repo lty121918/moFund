@@ -32,6 +32,9 @@
 
 <script>
 	import mixin from '@/mixin.js'
+	import {
+		debounce
+	} from "@/utils/lodash.js";
 	export default {
 		mixins: [mixin],
 		data() {
@@ -40,10 +43,15 @@
 			}
 		},
 		mounted() {
-			this.search()
+			this.onLaunch().then(res => {
+				this.getInit()
+			})
 		},
 		methods: {
-			async search() {
+			getInit() {
+				this.search()
+			},
+			 search:debounce(async function()   {
 				const self = this
 				let data = []
 				// 获取当前社区拼班
@@ -69,7 +77,7 @@
 					})
 				}
 				self.data = data
-			}
+			})
 		}
 	}
 </script>

@@ -101,6 +101,7 @@
 			}
 		},
 		onReady() {
+			this.onLaunch()
 			// 设置自定义表单校验规则，必须在节点渲染完毕后执行
 			this.$refs.customForm.setRules(this.customRules)
 			

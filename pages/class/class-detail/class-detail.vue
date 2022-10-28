@@ -141,7 +141,7 @@
 		<!-- 课表弹窗 -->
 		<popup-date ref="popupDate" @attendance="getAttendance"></popup-date>
 		<!-- 教练评论弹窗 -->
-		<popup-eval ref="popupEval" @change="getClassDetail"/>
+		<popup-eval ref="popupEval" @change="getClassDetail" />
 		<!-- 会员查看评论弹窗 -->
 		<popup-eval2 ref="popupEval2" />
 	</view>
@@ -204,7 +204,8 @@
 
 			}
 		},
-		async onLoad(e) {
+		onLoad(e) {
+			console.log('接收数据',e);
 			this.getTeach()
 			this.classId = e.classId //|| '39fffa311d849b8719aa8293bd302397'
 			this.getClassDetail()
@@ -229,6 +230,16 @@
 					classId: this.classId
 				}).then(res => {
 					if (res.code == 200) {
+						if(!res.data){
+							if (this.isTeach == 1) {
+								// 教练
+								this.$utils.router.swtTo(this.$page.Class)
+							} else {
+								// 家长
+								this.$utils.router.swtTo(this.$page.Home)
+							}
+							return false
+						}
 						this.isHead = res.data.isBoss
 						res.data.startPeriod = this.$utils.dateTime.getLocalTime(
 							`2022-01-01 ${res.data.startPeriod}`, 'hh:mm')
@@ -238,10 +249,10 @@
 							5 || res.data.classStatus == 6) {
 							res.data.nextCLassTime = -1
 						}
-						if (res.data.coverImage.indexOf('http') == -1) {
+						if (res.data.coverImage && res.data.coverImage.indexOf('http') == -1) {
 							res.data.coverImage = this.$url + res.data.coverImage
 						}
-						if (res.data.avatar.indexOf('http') == -1) {
+						if (res.data.avatar && res.data.avatar.indexOf('http') == -1) {
 							res.data.avatar = this.$url + res.data.avatar
 						}
 						if (!res.data.avatar) {
@@ -282,7 +293,7 @@
 				if (this.isTeach == 1) {
 					// 教练评价
 					let isCheck = false
-					if(item.isEvaluate){
+					if (item.isEvaluate) {
 						isCheck = true
 					}
 					this.$refs.popupEval.handleShow({
