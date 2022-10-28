@@ -72,3 +72,5 @@ export const ClassStudentUploadMien = params => post(apis._wx_organization_class
 export const getCustomerWx = params => get(apis._wx_common_getCustomerWx, params)
 // 取消拼班中的班级
 export const cancelClass = params => post(apis._wx_user_class_cancel_class, params)
+// 通讯录
+export const getClassInfo = params => get(apis._wx_user_address_book_list, params)

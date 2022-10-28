@@ -21,7 +21,7 @@ export const getTrade = params => get(apis._wx_user_purse_trade_list, params)
 // 充值发起
 export const setRecharge = amount => get(apis._wx_user_purse_recharge, {amount})
 // 提现发起
-export const setCashOut = amount => get(apis._wx_user_purse_cash_out, {amount})
+export const setCashOut = amount => post(apis._wx_user_purse_cash_out, {amount})
 // 支付结果查询
 export const getPayStatus = params => get(apis._wx_user_purse_query_pay_status, params)
 // 全部订单

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import ClassItem from '@/components/ClassItem/ClassItem.vue'
+import ClassItem from '@/components/class-item/class-item.vue'
 import mixin from '@/mixin.js'
 export default {
   mixins: [mixin],

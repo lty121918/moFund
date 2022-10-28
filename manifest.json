@@ -1,6 +1,6 @@
 {
     "name" : "teacher-side2",
-    "appid" : "__UNI__C80F8D3",
+    "appid" : "__UNI__DC0161F",
     "description" : "应用描述",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -93,7 +93,7 @@
         "versionCode" : 100
     },
     "mp-weixin" : {
-        "appid" : "wx607c7993c6743df6",
+        "appid" : "wx3da6defd6747f3d7",
         "setting" : {
             "urlCheck" : false,
             "minified" : true

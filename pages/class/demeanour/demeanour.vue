@@ -1,9 +1,9 @@
 <template>
-	<view class="demeanour">
+	<view class="demeanor">
 		<custom-waterfalls-flow @imageClick="imageClick" :value="list"></custom-waterfalls-flow>
-		<view class="demeanour-footer2" v-if="isTeach==1" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
-		<view class="demeanour-footer" v-if="isTeach==1">
-			<view class="demeanour-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
+		<view class="demeanor-footer2" v-if="isTeach==1" :style="{ marginBottom: `${safeAreaHeight}px` }"></view>
+		<view class="demeanor-footer" v-if="isTeach==1">
+			<view class="demeanor-footer-button" :style="{ marginBottom: `${safeAreaHeight}px` }" @click="submit">
 				上传素材
 			</view>
 		</view>
@@ -18,6 +18,7 @@
 <script>
 	import mixin from '@/mixin.js'
 	export default {
+		name:'demeanor',
 		mixins: [mixin],
 		data() {
 			return {
@@ -53,10 +54,11 @@
 					classId: this.classId
 				}).then(res => {
 					if (res.code == 200) {
-						res.data.forEach(item => {
+						let data = res.data || []
+						data.forEach(item => {
 							item.image = this.$url + item.imgUrl
 						})
-						this.list = res.data || []
+						this.list = data || []
 					}
 				})
 			},
@@ -143,7 +145,7 @@
 </script>
 
 <style scoped lang="scss">
-	.demeanour {
+	.demeanor {
 		min-height: 100vh;
 		background: #EEF1FA;
 		padding: 32rpx;

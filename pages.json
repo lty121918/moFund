@@ -80,13 +80,20 @@
 			}
 
 		}, {
+			"path": "class-detail/class-info",
+			"style": {
+				"navigationBarTitleText": "通讯录",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
 			"path": "piece-list/piece-list",
 			"style": {
 				"navigationBarTitleText": "社区拼班",
 				"enablePullDownRefresh": false
 			}
 
-		}, {
+		},{
 			"path": "my-class/my-class",
 			"style": {
 				"navigationBarTitleText": "我的拼班",

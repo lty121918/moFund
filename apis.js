@@ -16,6 +16,14 @@ const APIS_LIST = {
   "_SectionsBy": '/SectionsBy', // 运营端新增专属节次下拉
   "_account_relative_auth_menu_tree_platform": '/account-relative/auth-menu-tree-platform', // 用户系统菜单权限树
   "_account_relative_update_pwd": '/account-relative/update-pwd', // 首次登录更改密码
+  "_api_log_exportLoginLog": '/api/log/exportLoginLog', // 根据查询条件导出登录日志
+  "_api_log_exportOperLog": '/api/log/exportOperLog', // 根据查询条件导出操作日志
+  "_api_log_getLoginLogByPage": '/api/log/getLoginLogByPage', // 获取登录退出日志
+  "_api_log_getLoginStatus": '/api/log/getLoginStatus', // 获取登陆状态
+  "_api_log_getLoginType": '/api/log/getLoginType', // 获取登陆类型
+  "_api_log_getOperLogByPage": '/api/log/getOperLogByPage', // 获取操作日志
+  "_api_log_getOperStatus": '/api/log/getOperStatus', // 获取操作状态
+  "_api_log_getOperType": '/api/log/getOperType', // 获取操作类型
   "_auth_login": '/auth/login', // 用户密码登录
   "_auth_logout": '/auth/logout', // 登出
   "_auth_wx_login": '/auth/wx/login', // 微信授权登录
@@ -69,6 +77,7 @@ const APIS_LIST = {
   "_wx_organization_class_student_mien": '/wx/organization/class-student/mien', // 班级风采
   "_wx_organization_class_student_page": '/wx/organization/class-student/page', // 班级列表分页
   "_wx_organization_class_student_uploadMien": '/wx/organization/class-student/uploadMien', // 上传素材
+  "_wx_user_address_book_list": '/wx/user/address-book/list', // 通讯录
   "_wx_user_center_detail": '/wx/user/center/detail', // 当前登录用户学生集合
   "_wx_user_center_get_apply": '/wx/user/center/get-apply', // 我的申报
   "_wx_user_center_role_switching": '/wx/user/center/role-switching', // 切换角色

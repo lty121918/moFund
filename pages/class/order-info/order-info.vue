@@ -131,27 +131,23 @@
     <popup-add-stu
       ref="popupAddStu"
       @change="getMineSpellClass"
-      @recharge="recharge"
     ></popup-add-stu>
-    <!-- 充值 -->
-    <recharge ref="recharge" />
+
     <!-- 画布分享 -->
     <!-- <share-canvas></share-canvas> -->
   </view>
 </template>
 <script>
 import mixin from '@/mixin.js'
-import ClassItem from '@/components/ClassItem/ClassItem.vue'
+import ClassItem from '@/components/class-item/class-item.vue'
 import PopupShare from '../components/PopupShare/PopupShare.vue'
-import PopupAddStu from '../components/PopupAddStu/PopupAddStu.vue'
-import Recharge from '@/components/Recharge/Recharge.vue'
+import PopupAddStu from '../components/popup-add-stu/popup-add-stu.vue'
 import ShareCanvas from '../components/ShareCanvas/ShareCanvas.vue'
 export default {
   components: {
     ClassItem,
     PopupShare,
     PopupAddStu,
-    Recharge,
     ShareCanvas
   },
   mixins: [mixin],
@@ -242,7 +238,7 @@ export default {
               IsFormData: true
             })
             .then(res => {
-              if (res.code == 200) {
+              if (res.code === 200) {
                 setTimeout(() => {
                   self.$utils.router.swtTo(self.$page.Home)
                 }, 1000)
@@ -251,59 +247,7 @@ export default {
         }
       })
     },
-    getMineSpellClass() {
-      this.$http['classes']
-        .getMineSpellClass({ classInfoId: this.classId })
-        .then(async res => {
-          if (res.code == 200) {
-            console.log(res.data)
-            this.isHead = res.data.regimentalCommander
-            if (
-              res.data.coverImage &&
-              res.data.coverImage.indexOf('http') == -1
-            ) {
-              res.data.coverImage = this.$url + res.data.coverImage
-            }
-            if (res.data.avatar && res.data.avatar.indexOf('http') == -1) {
-              res.data.avatar = this.$url + res.data.avatar
-            }
-            if (!res.data.avatar) {
-              res.data.avatar = this.avatar
-            }
 
-            res.data['weekCodeName'] = this.$utils.dateTime.filteDay(
-              res.data.weekCode
-            )
-            res.data.weChatUserList = res.data.weChatUserList || []
-            res.data.weChatUserList.forEach(item => {
-              if (item.avatar && item.avatar.indexOf('http') == -1) {
-                item.avatar = this.$url + item.avatar
-              }
-              if (!item.avatar) {
-                item.avatar = this.avatar
-              }
-            })
-            let courseDateList = res.data.courseDate || []
-            let CourseDateName = this.$utils.dateTime.filteDate(
-              courseDateList,
-              res.data.startDate,
-              res.data.endDate
-            )
-            this.data = res.data
-            this.data.CourseDateName = CourseDateName
-            uni.setNavigationBarTitle({ title: this.isHead ? '我的拼班' : '加入拼班' })
-            this.SET_STORAGE({
-              str: 'shareInfo',
-              data: {}
-            })
-            this.numData++
-            // if(res.data.classStatus!=0){
-            // 	this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
-            // }
-            this.$refs.shareCanvas.getData()
-          }
-        })
-    },
     // 联系团长
     handlePhone(phone) {
       const authorization = this.$utils.util.getCache('Authorization')
@@ -311,8 +255,7 @@ export default {
         this.$utils.userInfo.login('this')
         return false
       }
-      wx.makePhoneCall({ phoneNumber: phone //仅为示例，并非真实的电话号码
-      })
+      wx.makePhoneCall({ phoneNumber: phone })
     },
     handleAdd() {
       const authorization = this.$utils.util.getCache('Authorization')
@@ -322,13 +265,11 @@ export default {
       }
       this.data.weChatUserList = this.data.weChatUserList || []
       const ls = this.data.weChatUserList.map(item => item.studentId)
+      console.log(this.classId)
       this.$refs.popupAddStu.handleShow(this.classId, ls, this.data)
       console.log('添加学员')
     },
-    // 调起充值界面
-    recharge() {
-      this.$refs.recharge.handleShow()
-    },
+
     // 执行解散班级
     handleDisolution() {
       // const ls = this.data.weChatUserList.map(item => item.studentId)
@@ -338,7 +279,7 @@ export default {
           // studentIds: ls
         })
         .then(res => {
-          if (res.code == 200) {
+          if (res.code === 200) {
             this.submit()
           }
         })
@@ -376,20 +317,74 @@ export default {
               wxUserId: val.wxUserId
             })
             .then(res => {
-              if (res.code == 200) {
+              if (res.code === 200) {
                 self.getMineSpellClass()
               }
             })
         }
       })
     },
+    handleGetImg(val) {
+      this.shareImg = val
+    },
+    getMineSpellClass() {
+      this.$http['classes']
+        .getMineSpellClass({ classInfoId: this.classId })
+        .then(async res => {
+          if (res.code === 200) {
+            console.log(res.data)
+            this.isHead = res.data.regimentalCommander
+            if (
+              res.data.coverImage &&
+              res.data.coverImage.indexOf('http') === -1
+            ) {
+              res.data.coverImage = this.$url + res.data.coverImage
+            }
+            if (res.data.avatar && res.data.avatar.indexOf('http') === -1) {
+              res.data.avatar = this.$url + res.data.avatar
+            }
+            if (!res.data.avatar) {
+              res.data.avatar = this.avatar
+            }
+
+            res.data['weekCodeName'] = this.$utils.dateTime.filteDay(
+              res.data.weekCode
+            )
+            res.data.weChatUserList = res.data.weChatUserList || []
+            res.data.weChatUserList.forEach(item => {
+              if (item.avatar && item.avatar.indexOf('http') === -1) {
+                item.avatar = this.$url + item.avatar
+              }
+              if (!item.avatar) {
+                item.avatar = this.avatar
+              }
+            })
+            let courseDateList = res.data.courseDate || []
+            let CourseDateName = this.$utils.dateTime.filteDate(
+              courseDateList,
+              res.data.startDate,
+              res.data.endDate
+            )
+            this.data = {...res.data,classId: this.classId}
+            this.data.CourseDateName = CourseDateName
+            uni.setNavigationBarTitle({ title: this.isHead ? '我的拼班' : '加入拼班' })
+            this.SET_STORAGE({
+              str: 'shareInfo',
+              data: {}
+            })
+            this.numData++
+            // if(res.data.classStatus!=0){
+            // 	this.$utils.router.redTo(this.$page.ClassDetail,{classId: this.classId})
+            // }
+            this.$refs.shareCanvas.getData()
+          }
+        })
+    },
     // 返回上一页
     submit() {
       this.$utils.router.navBackData()
     },
-    handleGetImg(val) {
-      this.shareImg = val
-    }
+  
   }
 }
 </script>

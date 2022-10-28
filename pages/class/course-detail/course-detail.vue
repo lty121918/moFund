@@ -264,8 +264,8 @@ export default {
       this.productId = e.productId
       if ((e.lat && e.lng) || e.campusId) {
         let res = await this.$http['map'].getSearchList({
-          lat: e.lat,
-          lng: e.lng,
+          lat: e.lat || this.latitude,
+          lng: e.lng || this.longitude,
           productId: e.productId
         })
         if (res.code == 200) {
