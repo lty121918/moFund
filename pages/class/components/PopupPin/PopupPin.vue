@@ -20,11 +20,17 @@
 								</image>
 								<text>周期: {{data.startDate}}~ {{data.endDate}}</text>
 							</view>
-							<view class="popup-nearby-content-cycle" v-if="data.courseType==1">
+							<view class="popup-nearby-content-cycle " v-if="data.courseType==1">
+								<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png"
+									mode="widthFix">
+								</image> 
+								<text>按星期: {{data.weekCodeName}}</text>
+							</view>
+							<view class="popup-nearby-content-cycle" v-if="data.courseType==2">
 								<image class="popup-nearby-content-cycle-img" src="/static/class/cycle.png"
 									mode="widthFix">
 								</image>
-								<text >按星期: {{data.weekCodeName}}</text>
+								<text class="o-over" style="width:330rpx;display: inline-block;">按日期: {{data.CourseDateName}}</text>
 							</view>
 							<!-- 上课时段 -->
 							<view class="popup-nearby-content-cycle" v-if="data.startPeriod&&data.endPeriod">
@@ -135,7 +141,6 @@
 					return false
 				}
 				console.log('aa',JSON.stringify(this.data));
-				// return false
 				this.$http['classes'].getInitiateSpellClass(this.data).then(res => {
 					if (res.code == 200) {
 						this.$utils.router.navTo(this.$page.OrderInfo, {
@@ -153,6 +158,11 @@
 					this.data.totalNum = res.data.number
 					res.data.courseDateList = res.data.courseDateList || []
 					this.courseDateList = res.data.courseDateList.map(item=>item.courseDate)
+					this.data.CourseDateName = this.$utils.dateTime.filteDate(
+						this.courseDateList,
+						this.data.startDate,
+						this.data.endDate
+					)
 				}
 			},
 			// 查看周期
@@ -183,7 +193,7 @@
 			},
 			// 选择拼班方式
 			handleSpellType(item) {
-				if (item.spellType == this.data.spellType) {
+				if (item.productSellPriceRelId == this.data.productSellPriceRelId) {
 					return false
 				}
 				Object.assign(this.data, item)

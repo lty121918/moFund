@@ -90,6 +90,14 @@
 			"path": "my-class/my-class",
 			"style": {
 				"navigationBarTitleText": "我的拼班",
+				"enablePullDownRefresh": false, // 设置参数为true
+				"onReachBottomDistance": 20 // 距离底部多远时触发 单位为px
+			}
+
+		}, {
+			"path": "class-detail/class-detail-attendance",
+			"style": {
+				"navigationBarTitleText": "班级详情",
 				"enablePullDownRefresh": false
 			}
 
@@ -123,7 +131,8 @@
 			"path": "order/order",
 			"style": {
 				"navigationBarTitleText": "订单列表",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false, //设置参数为true
+				"onReachBottomDistance": 20 //距离底部多远时触发 单位为px
 			}
 
 		}, {
@@ -157,7 +166,8 @@
 			"path": "wallet/wallet",
 			"style": {
 				"navigationBarTitleText": "我的钱包",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false, //设置参数为true
+				"onReachBottomDistance": 20 //距离底部多远时触发 单位为px
 			}
 
 		}, {

@@ -1,6 +1,6 @@
 <template>
 	<view class="class-content" @click="handleNextTo(item)">
-		<view class="class-content-top">
+		<view class="class-content-top"> 
 			<text class="fwb">订单编号：{{item.tradeNo || item.orderNo}}</text>
 			<view class="flex-ec" >
 				<text class="color fw4">{{item.type=='consume'?'消费订单':'充值订单'}}</text>
@@ -22,7 +22,7 @@
 		</view>
 		<view class="flex-bc class-content-flex" v-if="item.type=='consume'">
 			<view class="class-content-stutas">{{orderStatus[item.orderStatus] || ''}}</view>
-			<view class="class-content-eval" v-if="item.orderStatus=='2'" @click.stop="handleChange(item)">评价</view>
+			<view class="class-content-eval" v-if="item.orderStatus=='2' && !item.isEvaluation" @click.stop="handleChange(item)">评价</view>
 		</view>
 		<view class="class-content-bottom" v-if="item.type!='consume'">
 			<view class="class-content-left2">

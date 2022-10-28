@@ -28,14 +28,24 @@
 
 		</view>
 		<view v-if="isTeach==2">
-			<view v-for="(item,index) in data" :key="index">
-				<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
-			</view>
+			<!-- <YList :data="data" :isMore="isMore" scrollClass="scroll-class1" @lower="handleLower"> -->
+				<view v-for="(item,index) in data" :key="index">
+					<class-item :data="item" :classStatus="classStatus" :isTeach="isTeach"></class-item>
+				</view>
+				<view class="default-more" v-if="isMore && data.length!=0">暂无更多数据</view>
+			<!-- </YList> -->
 		</view>
 		<view class="default-empty" v-if="(isTeach==2&& data.length===0) || isTeach==1&& dataList.length===0">
 			<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 			</image>
 			<view class="">暂无数据</view>
+		</view>
+		<view class="home-official" v-if="isTeach==1"
+			:style="{'bottom':isIphoneX?`calc(50px + ${safeAreaHeight}px)`:'50px' }">
+			<official-account></official-account>
+		</view>
+		<view v-if="officialAccount && isTeach==1"
+			:style="{'height':isIphoneX?`calc(84px + ${safeAreaHeight}px)`:'84px' }">
 		</view>
 		<page-tabpars></page-tabpars>
 	</view>
@@ -46,7 +56,8 @@
 	import mixin from '@/mixin.js'
 	import bus from '@/utils/bus.js'
 	import {
-		debounce
+		debounce,
+		throttle
 	} from "@/utils/lodash.js";
 	export default {
 		mixins: [mixin],
@@ -56,7 +67,7 @@
 		data() {
 			return {
 				data: [],
-				dataList: []
+				dataList: [],
 			}
 		},
 
@@ -68,6 +79,11 @@
 			bus.$on('getMounted2', () => {
 				console.log('执行');
 				this.getTeach()
+				if (this.isTeach == 1) {
+					setTimeout(() => {
+						this.init();
+					}, 800)
+				}
 				this.getMounted()
 			})
 		},
@@ -87,75 +103,99 @@
 				path: `${this.$page.Class}` //分享默认打开是小程序首页
 			}
 		},
+		onReachBottom() {
+			console.log('已触底');
+			this.handleLower()
+		},
 		methods: {
 			getMounted: debounce(function() {
 				uni.setNavigationBarTitle({
 					title: '班级'
 				})
 				const authorization = this.$utils.util.getCache('Authorization');
-				if(!authorization){
+				if (!authorization) {
 					// this.$utils.userInfo.login('this')
 					return false
 				}
-				this.search({
-					isTeach: this.isTeach
-				})
+				this.queryParams.pages = 1
+				this.search()
 			}),
-			// 模拟请求数据
-			search(val) {
-				const date1 = new Date().getTime()
-				const self = this
-				console.log('class请求');
-				const {
-					getClassStudentPage,
-					getClassList
-				} = self.$http['classes']
-				let getData = getClassList
-				if (val.isTeach == 1) {
-					getData = getClassStudentPage
+			handleLower(){
+				if(this.isTeach==2){
+					this.lower()
 				}
-				getData({
-					...val
-				}).then(res => {
-					let data = []
-					if (res.code == 200) {
-						data = res.data || []
-						let list = []
-						if (val.isTeach == 1) {
-							data.forEach(item => {
-								item.classWxPageVOList = item.classWxPageVOList || []
-								item['wait'] = 0
-								item['conduct'] = 0
-								item.classWxPageVOList.forEach(row => {
-									row = self.setItem(row)
-								})
-								const wait = item.classWxPageVOList.filter(ls => ls.classStatus == 1)
-								const conduct = item.classWxPageVOList.filter(ls => ls.classStatus == 3)
-								item['wait'] = wait.length
-								item['conduct'] = conduct.length
+			},
+			// 模拟请求数据
+			search() {
+				let isTeach = this.isTeach
+				const self = this
+				return new Promise(async (resolve, reject) => {
+					const date1 = new Date().getTime()
+					console.log('class请求');
+					const {
+						getClassStudentPage,
+						getClassList
+					} = self.$http['classes']
+					let getData = getClassList
+					if (isTeach == 1) {
+						getData = getClassStudentPage
+					}
+					getData({
+						...self.queryParams,
+						classStatus:'0,1,3'
+					}).then(res => {
+						let data = []
+						if (res.code == 200) {
+							let list = []
+							if (isTeach == 1) {
+								data = res.data || []
+								data.forEach(item => {
+									item.classWxPageVOList = item.classWxPageVOList || []
+									item['wait'] = 0
+									item['conduct'] = 0
+									item.classWxPageVOList.forEach(row => {
+										row = self.setItem(row)
+									})
+									const wait = item.classWxPageVOList.filter(ls => ls
+										.classStatus == 1)
+									const conduct = item.classWxPageVOList.filter(ls => ls
+										.classStatus == 3)
+									item['wait'] = wait.length
+									item['conduct'] = conduct.length
 
-							})
-							this.dataList = data
-						} else {
-							// data = data.filter(item => item.classStatus == 0 || item.classStatus ==
-							// 	1 || item.classStatus == 3)
-							data.forEach(item => {
-								item = self.setItem(item)
-							})
-							this.data = data
+								})
+								self.dataList = data
+							} else {
+								data = res.data.records || []
+								// data = data.filter(item => item.classStatus == 0 || item.classStatus ==
+								// 	1 || item.classStatus == 3)
+								data.forEach(item => {
+									item = self.setItem(item)
+								})
+								// this.data = data
+								let tempList = self.data
+								if (self.queryParams.page == 1) {
+									tempList = data
+								} else {
+									tempList = tempList.concat(data)
+								}
+								self.queryParams.total = res.data.total
+								self.data = tempList
+								self.$forceUpdate() //二维数组，开启强制渲染
+								resolve(tempList)
+								
+							}
+							const date2 = new Date().getTime()
+							console.log(`执行时间:${(date2-date1)/1000}秒`);
 						}
 
 
-						const date2 = new Date().getTime()
-						console.log(`执行时间:${(date2-date1)/1000}秒`);
-					}
-
-
+					})
 				})
 			},
 			setItem(item) {
 				const self = this
-				if (item.coverImage.indexOf('http') == -1) {
+				if (item.coverImage && item.coverImage.indexOf('http') == -1) {
 					item.coverImage = self.$url + item.coverImage
 				}
 				item.startPeriod = self.$utils.dateTime.getLocalTime(
@@ -164,8 +204,7 @@
 					`2022-01-01 ${item.endPeriod}`,
 					'hh:mm')
 				item['weekCodeName'] = self.$utils.dateTime.filteDay(item.weekCode)
-				if (item.classStatus == 2 || item.classStatus == 4 || item.classStatus ==
-					5 || item.classStatus == 6) {
+				if (item.classStatus != 0 && item.classStatus != 1 && item.classStatus != 3) {
 					item.nextCLassTime = -1
 				}
 				if (item.nextCLassTime && item.nextCLassTime != -1) {
@@ -173,6 +212,11 @@
 						item.nextCLassTime,
 						'yyyy-MM-dd hh:mm')
 				}
+				item.CourseDateName = this.$utils.dateTime.filteDate(
+					item.courseDate,
+					item.startDate,
+					item.endDate
+				)
 				return item
 			}
 
@@ -202,5 +246,20 @@
 
 	.home-title {
 		padding-top: 0;
+	}
+
+	.home-official {
+		position: fixed;
+		z-index: 999;
+		left: 0;
+		width: 100%;
+	}
+	.default-more {
+		width: 100%;
+		height: 88rpx;
+		line-height: 88rpx;
+		text-align: center;
+		font-size: 28rpx;
+		color: #6A6A6A;
 	}
 </style>

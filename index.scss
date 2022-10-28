@@ -234,8 +234,9 @@
 	justify-content: center;
 	flex-flow: column;
 	height: 100%;
-	margin-top: 25%;
-	margin-bottom: 25%;
+	padding-top: 25%;
+	padding-bottom: 25%;
+	box-sizing:border-box;
 	font-size: 28rpx;
 	font-family: SourceHanSansSC-Regular, SourceHanSansSC;
 	font-weight: 400;

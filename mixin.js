@@ -7,13 +7,22 @@ import {
 import {
 	utils
 } from '@/utils/index.js';
+import {
+		debounce,throttle
+	} from "@/utils/lodash.js";
 const minxin = {
 	data() {
 		return {
 			isIphoneX: false,
 			safeAreaInsetBottom: true, //底部高度
 			isTeach: '', // 是否教练 1是2不是
-			authorization: null
+			authorization: null,
+			officialAccount:false,
+			queryParams: {
+				row: 10,
+				page: 1, //第几页
+			},
+			isMore:false
 		}
 	},
 	watch: {
@@ -38,6 +47,9 @@ const minxin = {
 		safeAreaHeight() {
 			return this.isIphoneX && this.safeAreaInsetBottom ? SAFE_AREA_INSET_BOTTOM : 0 // 苹果X等机型安全区高度
 		},
+		CONFIG(){
+			return this.$config
+		}
 	},
 	onShow() {
 		this.authorization = utils.util.getCache('Authorization');
@@ -97,12 +109,12 @@ const minxin = {
 	methods: {
 		Ginit() {
 			// 空壳
-			console.log('路由', uni.getLaunchOptionsSync());
+			// console.log('路由', uni.getLaunchOptionsSync());
 		},
 		...mapMutations(['SET_TEACH', 'SET_STORAGE']),
 		getTeach() {
 			let isTeach = this.$utils.util.getCache('role')
-			console.log('1是2否教练', isTeach);
+			console.log('Mixin->1是2否教练', isTeach);
 			if (isTeach == null || isTeach == '') {
 				this.isTeach = 2
 				this.$utils.util.setCache('role', this.isTeach)
@@ -231,7 +243,7 @@ const minxin = {
 						})
 					},
 					fail: function(e) {
-						console.log(e);
+						console.log('报错信息',e);
 						uni.getSetting({
 							success: res => {
 								if (typeof(res.authSetting['scope.userLocation']) !=
@@ -281,6 +293,7 @@ const minxin = {
 											}
 										});
 									} else {
+										
 										self.SET_STORAGE({
 											data: {
 												latitude: '30.555175310610363',
@@ -293,7 +306,27 @@ const minxin = {
 											longitude: '114.31188993115236'
 										})
 									}
-
+								} else {
+									const LOCATiION = self.SET_STORAGE({
+										str: 'location'
+									})
+									if(LOCATiION&&LOCATiION.latitude){
+										resolve(LOCATiION)
+									} else {
+										self.SET_STORAGE({
+											data: {
+												latitude: '30.555175310610363',
+												longitude: '114.31188993115236'
+											},
+											str: 'location'
+										})
+										resolve({
+											latitude: '30.555175310610363',
+											longitude: '114.31188993115236'
+										})
+									}
+									
+									
 								}
 							}
 						});
@@ -375,8 +408,60 @@ const minxin = {
 				})
 
 			}
-		}
-
+		},
+		
+		getAttention(){
+			
+		},
+		init() {
+			let self = this;
+			const query = uni.createSelectorQuery().in(this);
+			query.select('#official_account').boundingClientRect(data => {
+				if (data&&data.width && data.height) {
+					self.officialAccount = true
+				} else {
+					self.officialAccount = false;
+				}
+			}).exec();
+		},
+		// 加载数据
+		lower: throttle(function(e) {
+			if (this.queryParams.page * this.queryParams.row >= this.queryParams.total) {
+				this.isMore = true
+				console.log(`暂无更多加载`) //current
+				return false
+			}
+			uni.showLoading({
+				title: '加载中',
+				mask: true
+			})
+			this.isRequest().then((res) => {
+				console.log(`加载成功`) //current
+				this.$forceUpdate() //二维数组，开启强制渲染
+			})
+		}, 1000),
+		// 其他请求事件 当然刷新和其他请求可以写一起 多一层判断。
+		isRequest() {
+			return new Promise((resolve, reject) => {
+				var that = this
+				setTimeout(async () => {
+					if (this.queryParams.page * this.queryParams.row >= this.queryParams
+						.total) {
+						this.isMore = true
+					} else {
+						this.queryParams.page++
+						await this.search()
+						if (this.queryParams.page * this.queryParams.row >= this.queryParams
+							.total) {
+							this.isMore = true
+						} 
+					}
+					uni.hideLoading()
+					resolve()
+				}, 1000)
+			})
+		},
+		
 	},
 }
 

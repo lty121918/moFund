@@ -48,6 +48,9 @@ export const disbandClass = params => post(apis._wx_user_class_disband_class, pa
 export const exitClass = params => post(apis._wx_user_class_exit, params)
 // 班级详情-查看课表
 export const courseScheduleView = params => get(apis._wx_user_wx_course_schedule_view, params)
+// 班级详情-考勤课表
+// export const coachStuAttendance = params => get(apis._wx_user_wx_course_schedule_view, params)
+export const coachStuAttendance = params => get(apis._wx_user_wx_course_schedule_coach_stu_attendance, params)
 // 教练查看-班级详情-查看课表-学员信息 
 export const coachScheduleStuInfo = params => get(apis._wx_user_wx_course_schedule_coach_schedule_stu_info, params)
 // 会员查看-班级详情-查看课表-学员信息 
@@ -65,3 +68,7 @@ export const scheduleAttendance = params => post(apis._wx_user_wx_course_schedul
 export const shareGenerateUrlLink = params => post(apis._wx_user_share_generate_url_link, params)
 // 上传素材
 export const ClassStudentUploadMien = params => post(apis._wx_organization_class_student_uploadMien, params)
+// 获取客服微信二维码图片
+export const getCustomerWx = params => get(apis._wx_common_getCustomerWx, params)
+// 取消拼班中的班级
+export const cancelClass = params => post(apis._wx_user_class_cancel_class, params)

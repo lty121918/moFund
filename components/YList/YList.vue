@@ -1,7 +1,7 @@
 <template>
-	<view>
+	<view style="width:100%">
 		<scroll-view :class="scrollClass" scroll-y="true" @scrolltolower="lower1" scroll-with-animation
-			:scroll-top="scrollTop">
+			:scroll-top="scrollTop" @scroll="scroll">
 			<!-- 内容模块 -->
 			<slot :data="data"></slot>
 			<view class="default-more" v-if="isMore && data.length!=0">暂无更多数据</view>
@@ -12,8 +12,8 @@
 			</view>
 			<view :style="{ height: `${safeAreaHeight}px` }" @click="submit">
 			</view>
-
 		</scroll-view>
+
 	</view>
 </template>
 
@@ -21,9 +21,7 @@
 	import {
 		throttle
 	} from '@/utils/lodash.js'
-	import mixin from '@/mixin.js'
 	export default {
-		mixins: [mixin],
 		name: "y-list",
 		props: {
 			setData: {
@@ -33,100 +31,59 @@
 				default: 'scroll-class'
 			},
 			params: {
-				default: ()=>{
+				default: () => {
 					return {}
+				}
+			},
+			isMore: false,
+			data: {
+				default: () => {
+					return []
 				}
 			},
 		},
 		data() {
 			return {
-				data: [],
 				scrollTop: 0,
-				isMore: false,
-				queryParams: {
-					page: 1,
-					row: 10
-				},
+				old: {
+					scrollTop: 0
+				}
 			};
 		},
+		components: {},
 		methods: {
-			// 初始化
-			init(val) {
-				console.log('初始化列表');
-				this.queryParams = {
-					page: 1,
-					row: 10,
-					...val
-				}
-				this.search()
+			// 返回顶部
+			scroll: function(e) {
+				this.old.scrollTop = e.detail.scrollTop
+			},
+			handleGoTop: function(e) {
+				// 解决view层不同步的问题
+				this.scrollTop = this.old.scrollTop
+				this.$nextTick(function() {
+					this.scrollTop = 0
+				});
 			},
 			/**
 			 * @function 搜索列表数据
 			 */
 			// 加载更多 util.throttle为防抖函数
 			lower1: throttle(function(e) {
-				if (this.queryParams.page * this.queryParams.row >= this.queryParams.total) {
-					this.isMore = true
-					console.log(`暂无更多加载`) //current
-					return false
-				}
-				uni.showLoading({
-					title: '加载中',
-					mask: true
-				})
-				this.isRequest().then((res) => {
-					console.log(`加载成功`) //current
-					this.$forceUpdate() //二维数组，开启强制渲染
-				})
+				this.$emit('lower')
 			}, 1000),
-			// 其他请求事件 当然刷新和其他请求可以写一起 多一层判断。
-			isRequest() {
-				return new Promise((resolve, reject) => {
-					var that = this
-					setTimeout(async () => {
-						uni.hideLoading()
-						if (this.queryParams.page * this.queryParams.row >= this.queryParams.total) {
-							this.isMore = true
-						} else {
-							this.queryParams.page++
-							await this.search()
-						}
-						resolve()
-					}, 1000)
-				})
-			},
-			// 搜索数据
-			search() {
-				return new Promise(async (resolve, reject) => {
-					this.isMore = false
-					const formData = {
-						...this.queryParams,
-						...this.params
-					}
-					const res = await this.setData(formData)
-					console.log('数据', res);
-					let list = res
-					list.data = list.data || []
-					let data = this.data
-					if (this.queryParams.page == 1) {
-						data = list.data
-					} else {
-						data = data.concat(list.data)
-					}
-					this.data = [...data]
-					this.queryParams.total = list.totalRows
-					this.$forceUpdate() //二维数组，开启强制渲染
-					resolve(data)
-					// 这里返回数据
-				})
-			},
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.scroll-class {
-		height: calc(100vh - 50px);
+		height: calc(100vh - 64rpx);
+	}
+	.scroll-class1 {
+		height: calc(100vh - 155rpx);
+	}
+	// 订单样式
+	.scroll-class2 {
+		height: calc(100vh - 115rpx)
 	}
 
 	.default-more {

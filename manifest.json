@@ -113,6 +113,11 @@
             "enable" : false
         }
     },
+    "networkTimeout" : {
+        "request" : 60000,
+        "uploadFile" : 60000,
+        "downloadFile" : 60000
+    },
     "mp-alipay" : {
         "usingComponents" : true
     },

@@ -77,6 +77,16 @@
 				<text class="ml12">{{listData.studentName}}</text>
 			</view>
 		</view>
+		<view class="order-detail-center" v-if="listData.refundTime">
+			<view class="order-detail-center-item">
+				<text>退款时间:</text>
+				<text class="ml12">{{listData.refundTime}}</text>
+			</view>
+			<view class="order-detail-center-item">
+				<text>退款金额:</text>
+				<text class="ml12">{{listData.refundAmount}}元</text>
+			</view>
+		</view>
 	</view>
 </template>
 

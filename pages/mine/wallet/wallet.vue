@@ -17,6 +17,11 @@
 					<text>￥</text>
 					<text>{{userInfo.noRemainingSum}}</text>
 				</view>
+				<view class="wallet-mony-detail-item">
+					<text>冻结金额:</text>
+					<text>￥</text>
+					<text>{{userInfo.frozenAmount}}</text>
+				</view>
 			</view>
 			<view class="mt28 flex-cc" v-if="isTeach==2">
 				<view class="wallet-mony-button" @click="handleWithdrawal">
@@ -44,6 +49,7 @@
 			<view v-for="(item,index) in data" :key="index">
 				<wallet-item :item="item" @change="handleShow"></wallet-item>
 			</view>
+			<view class="default-more" v-if="isMore && data.length!=0">暂无更多数据</view>
 			<view class="default-empty" v-if="data.length===0">
 				<image class="default-empty-image" :src="require('@/static/notData.png')" mode="widthFix">
 				</image>
@@ -79,8 +85,11 @@
 		onLoad() {
 			this.getData()
 		},
+		onReachBottom() {
+			console.log('已触底');
+			this.lower()
+		},
 		methods: {
-
 			getData() {
 				console.log('获取我的数据');
 				this.$http['mine'].getUserInfo().then(res => {
@@ -91,6 +100,7 @@
 							avatar: res.data.avatar,
 							name: res.data.name,
 							remainingSum: res.data.remainingSum,
+							frozenAmount: res.data.frozenAmount,
 							roleName: res.data.roleName,
 						}
 						this.SET_STORAGE({
@@ -104,6 +114,7 @@
 			// 选择tab操作
 			handleTab(val) {
 				this.active = val
+				this.queryParams.page = 1
 				this.search()
 			},
 			// 打开充值弹窗
@@ -117,20 +128,32 @@
 			// 模拟请求数据
 			async search() {
 				const self = this
-				let data = []
-				let income = ''
-				if (this.active == 2) {
-					income = false
-				} else if (this.active == 3) {
-					income = true
-				}
-				const res = await self.$http['mine'].getTrade({
-					income
+				return new Promise(async (resolve, reject) => {
+					let data = []
+					let income = ''
+					if (self.active == 2) {
+						income = false
+					} else if (self.active == 3) {
+						income = true
+					}
+					const res = await self.$http['mine'].getTrade({
+						income,
+						...this.queryParams
+					})
+					// if (res.code == 200) {
+						data = res.data.records
+					// }
+					let tempList = self.data
+					if (self.queryParams.page == 1) {
+						tempList = data
+					} else {
+						tempList = tempList.concat(data)
+					}
+					self.queryParams.total = res.data.total
+					self.data = tempList
+					self.$forceUpdate() //二维数组，开启强制渲染
+					resolve(tempList)
 				})
-				if (res.code == 200) {
-					data = res.data
-				}
-				this.data = data
 			},
 		}
 	}
@@ -151,7 +174,9 @@
 
 		// background-position: 0 -170rpx;
 		&-mony {
-			height: 400rpx;
+			min-height: 400rpx;
+			padding-bottom: 32rpx;
+			box-sizing: border-box;
 			color: #FFFFFF;
 
 			&-text {
@@ -191,7 +216,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			
+
 			&-item {
 				margin: 0 12px;
 			}
@@ -235,5 +260,14 @@
 				border-radius: 14rpx;
 			}
 		}
+	}
+	
+	.default-more {
+		width: 100%;
+		height: 88rpx;
+		line-height: 88rpx;
+		text-align: center;
+		font-size: 28rpx;
+		color: #6A6A6A;
 	}
 </style>
