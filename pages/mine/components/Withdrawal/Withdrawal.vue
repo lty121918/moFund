@@ -32,7 +32,7 @@
 		data() {
 			return {
 				amount: '',
-				remainingSum: null
+				overallSum: null
 			};
 		},
 		methods: {
@@ -56,16 +56,17 @@
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
 			},
-			handleShow(remainingSum) {
-				this.remainingSum = remainingSum
+			handleShow(overallSum) {
+				this.amount = ''
+				this.overallSum = overallSum
 				this.$refs.popup.open('bottom')
 			},
 			close() {
 				this.$refs.popup.close('bottom')
 			},
 			handleConfirm(){
-				if(this.remainingSum || this.remainingSum==0 ) {
-					if(this.amount>this.remainingSum){
+				if(this.overallSum || this.overallSum==0 ) {
+					if(this.amount>this.overallSum){
 						this.$utils.model.showToast('已超出当前可提现金额')
 						return false
 					}

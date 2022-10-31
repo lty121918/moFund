@@ -82,36 +82,36 @@
 </template>
 
 <script>
-import WalletItem from './wallet-item.vue'
-import Recharge from '@/components/Recharge/Recharge.vue'
-import Withdrawal from '../components/Withdrawal/Withdrawal.vue'
-import mixin from '@/mixin.js'
+import WalletItem from "./wallet-item.vue";
+import Recharge from "@/components/Recharge/Recharge.vue";
+import Withdrawal from "../components/Withdrawal/Withdrawal.vue";
+import mixin from "@/mixin.js";
 export default {
   mixins: [mixin],
   components: {
     WalletItem,
     Recharge,
-    Withdrawal
+    Withdrawal,
   },
   data() {
     return {
       active: 1, //  1 2 3
       data: [], //数据列表
       isTeach: false,
-    }
+    };
   },
   onLoad() {
-    this.getData()
+    this.getData();
   },
   onReachBottom() {
-    console.log('已触底')
-    this.lower()
+    console.log("已触底");
+    this.lower();
   },
   methods: {
     getData() {
-      console.log('获取我的数据')
-      this.$http['mine'].getUserInfo().then(res => {
-        console.log(res)
+      console.log("获取我的数据");
+      this.$http["mine"].getUserInfo().then((res) => {
+        console.log(res);
         if (res.code == 200) {
           const result = {
             ...this.userInfo,
@@ -119,65 +119,67 @@ export default {
             name: res.data.name,
             remainingSum: res.data.remainingSum,
             frozenAmount: res.data.frozenAmount,
-            roleName: res.data.roleName
-          }
+            roleName: res.data.roleName,
+            overallSum: res.data.overallSum,
+            noRemainingSum: res.data.noRemainingSum,
+          };
           this.SET_STORAGE({
-            str: 'userInfo',
-            data: result
-          })
-          this.handleTab(1)
+            str: "userInfo",
+            data: result,
+          });
+          this.handleTab(1);
         }
-      })
+      });
     },
     // 选择tab操作
     handleTab(val) {
-      this.active = val
-      this.queryParams.page = 1
-      this.search()
+      this.active = val;
+      this.queryParams.page = 1;
+      this.search();
     },
     // 打开充值弹窗
     handleRecharge() {
       // this.$utils.model.showToast(
       //   '您充值金额将用于约课自动缴费，如未退出班级，上课后不再退费。'
       // )
-      this.$refs.recharge.handleShow()
+      this.$refs.recharge.handleShow();
     },
     // 打开提现弹窗
     handleWithdrawal() {
-      this.$refs.withdrawal.handleShow(this.userInfo.remainingSum)
+      this.$refs.withdrawal.handleShow(this.userInfo.overallSum);
     },
     // 模拟请求数据
     async search() {
-      const self = this
+      const self = this;
       return new Promise(async (resolve, reject) => {
-        let data = []
-        let income = ''
+        let data = [];
+        let income = "";
         if (self.active == 2) {
-          income = false
+          income = false;
         } else if (self.active == 3) {
-          income = true
+          income = true;
         }
-        const res = await self.$http['mine'].getTrade({
+        const res = await self.$http["mine"].getTrade({
           income,
-          ...this.queryParams
-        })
+          ...this.queryParams,
+        });
         // if (res.code == 200) {
-        data = res.data.records
+        data = res.data.records;
         // }
-        let tempList = self.data
+        let tempList = self.data;
         if (self.queryParams.page == 1) {
-          tempList = data
+          tempList = data;
         } else {
-          tempList = tempList.concat(data)
+          tempList = tempList.concat(data);
         }
-        self.queryParams.total = res.data.total
-        self.data = tempList
-        self.$forceUpdate() //二维数组，开启强制渲染
-        resolve(tempList)
-      })
-    }
-  }
-}
+        self.queryParams.total = res.data.total;
+        self.data = tempList;
+        self.$forceUpdate(); //二维数组，开启强制渲染
+        resolve(tempList);
+      });
+    },
+  },
+};
 </script>
 <style>
 .wallet-scroll {
@@ -189,7 +191,7 @@ export default {
   min-height: 100vh;
   background: #eef1fa;
   box-sizing: border-box;
-  background-image: url('~@/static/mine/bg-wallet.png');
+  background-image: url("~@/static/mine/bg-wallet.png");
   background-repeat: no-repeat;
   background-size: 100% 456rpx;
 
@@ -258,7 +260,7 @@ export default {
       color: #de501f;
 
       &:before {
-        content: '';
+        content: "";
         position: absolute;
         left: 50%;
         bottom: 20rpx;
