@@ -9,14 +9,14 @@
 		}, {
 			"path": "pages/tab-bar/class/class",
 			"style": {
-				"navigationBarTitleText": "班级",
+				"navigationBarTitleText": "我的课程",
 				"enablePullDownRefresh": false
 			}
 
 		}, {
 			"path": "pages/tab-bar/map/map",
 			"style": {
-				"navigationBarTitleText": "地图",
+				"navigationBarTitleText": "我的周边",
 				"enablePullDownRefresh": false
 			}
 

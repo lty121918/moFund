@@ -16,14 +16,14 @@ const state = {
 		},
 		{
 			name: "class",
-			text: "班级",
+			text: "我的课程",
 			icon: "/static/tab-bar/class.png",
 			iconActive: "/static/tab-bar/class-hl.png",
 			path: "/pages/tab-bar/class/class",
 		},
 		{
 			name: "map",
-			text: "地图",
+			text: "我的周边",
 			icon: "/static/tab-bar/map.png",
 			iconActive: "/static/tab-bar/map-hl.png",
 			path: "/pages/tab-bar/map/map",
