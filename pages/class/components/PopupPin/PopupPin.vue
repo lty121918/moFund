@@ -145,7 +145,7 @@
 					if (res.code == 200) {
 						this.$utils.router.navTo(this.$page.OrderInfo, {
 							classId: res.data.classInfoId,
-							isPin:true
+							isPin:1
 						})
 					}
 				})

@@ -166,6 +166,7 @@ export default {
     if (this.numData) {
       this.getMineSpellClass()
     }
+    this.isPin = this.isPin==2?1:3
   },
   onLoad(e) {
     this.onLaunch().then(res => {
@@ -182,6 +183,7 @@ export default {
   },
   // 分享给朋友
   onShareAppMessage(res) {
+    this.isPin = this.isPin==1?2:3
     if (res.from === 'button') {
       // 来自页面内分享按钮
       console.log(res.target)
@@ -195,6 +197,7 @@ export default {
     }
   },
   onShareTimeline(res) {
+    this.isPin = this.isPin==1?2:3
     //分享到朋友圈
     return {
       title: '快来和我一起运动吧!', //this.share.title,
@@ -218,11 +221,13 @@ export default {
       path2 &&
       path2 !== 'pages/class/order-info/order-info' &&
       path2 !== 'pages/tab-bar/map/map' && 
-      this.isPin
+      this.isPin == 1
     ) {
-      // this.$utils.router.navBack(2)
+      // this.$utils.router.navBack(2)、
+      console.log('分享1',path2,path);
       this.$utils.router.swtTo(this.$page.Home)
     } else if (path2 && path2 === 'pages/class/order-info/order-info') {
+      console.log('分享2',path2);
       this.$utils.router.swtTo(this.$page.Home)
     } else {
     }
