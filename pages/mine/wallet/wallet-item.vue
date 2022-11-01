@@ -2,16 +2,20 @@
   <view class="wallet-content">
     <view class="wallet-content-top">
       <text class="fwb">流水号：{{ item.tradeNo }}</text>
-      <text class="color fw4" v-if="item.income">收入</text>
-      <text class="color2 fw4" v-if="!item.income">支出</text>
+      <view
+        v-if="item.tradeType == 2"
+        @click="handleTrad"
+        :class="item.processingStatus"
+        class="flex-ec fz28"
+      >
+        {{ status[item.processingStatus] }}
+        <image class="wallet-image" v-if="item.processingStatus==='FAIL'" src="../../../static/mine/processing-status.png" mode="" />
+      </view>
+      <!-- <text class="color fw4" v-if="item.income">收入</text>
+      <text class="color2 fw4" v-if="!item.income">支出</text> -->
     </view>
     <view class="mt32 fz28">
-      <view class="flex-bc">
-        <view>变动时间：{{ item.operateTime }} </view>
-        <view v-if="item.tradeType == 2" @click="handleTrad">
-          {{ status[item.processingStatus] }}
-        </view>
-      </view>
+      <view>变动时间：{{ item.operateTime }} </view>
       <view class="mt16">交易类型：{{ tradeTypeData[item.tradeType] }}</view>
       <view class="mt16" v-if="item.orderNo"
         >订单编号：{{ item.orderNo || "" }}</view
@@ -50,10 +54,10 @@ export default {
         8: "课程退款",
       },
       status: {
-        PROCESSING: "转账中",
-        SUCCESS: "转账成功",
-        FAIL: "转账失败",
-        CLOSED: "已关闭",
+        PROCESSING: "提现中",
+        SUCCESS: "提现成功",
+        FAIL: "失败",
+        CLOSED: "",
       },
     };
   },
@@ -71,6 +75,11 @@ export default {
 
 <style lang="scss" scoped>
 .wallet {
+  &-image{
+    margin-left:10rpx;
+    width:28rpx;
+    height:28rpx;
+  }
   &-content {
     position: relative;
     margin: 0 32rpx 32rpx 32rpx;
@@ -107,5 +116,21 @@ export default {
       color: #fe8c19;
     }
   }
+}
+// 转账中
+.PROCESSING {
+  color:#DE501F;
+}
+// 转账成功
+.SUCCESS {
+  color:#10BA54; 
+}
+// 转账失败
+.FAIL {
+  color:#838899;
+}
+// 已关闭
+.CLOSED {
+  color:#838899;
 }
 </style>
