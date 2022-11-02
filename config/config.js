@@ -51,7 +51,9 @@ module.exports = {
     Search: '/pages/map/search/search', //搜索校区
     PieceList: '/pages/class/piece-list/piece-list', //社区拼班
     OrderInfo: '/pages/class/order-info/order-info', //当前拼单or加入拼单
-    MyClass: '/pages/class/my-class/my-class' //我的拼班
+    MyClass: '/pages/class/my-class/my-class', //我的拼班
+    // 1,2
+    Coupon:'/pages/coupon/index/index'
 
   }
 }
