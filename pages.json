@@ -1,220 +1,232 @@
 {
-	"pages": [{
-			"path": "pages/tab-bar/home/home",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": false
-			}
+  "pages": [{
+      "path": "pages/tab-bar/home/home",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "pages/tab-bar/class/class",
-			"style": {
-				"navigationBarTitleText": "我的课程",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "pages/tab-bar/class/class",
+      "style": {
+        "navigationBarTitleText": "我的课程",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "pages/tab-bar/map/map",
-			"style": {
-				"navigationBarTitleText": "我的周边",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "pages/tab-bar/map/map",
+      "style": {
+        "navigationBarTitleText": "我的周边",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "pages/tab-bar/mine/mine",
-			"style": {
-				"navigationBarTitleText": "我的",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "pages/tab-bar/mine/mine",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "登录"
-			}
-		}
+    }, {
+      "path": "pages/login/login",
+      "style": {
+        "navigationBarTitleText": "登录"
+      }
+    }
 
-	],
-	"subPackages": [{
-		"root": "pages/class",
-		"pages": [{
-			"path": "course-list/course-list",
-			"style": {
-				"navigationBarTitleText": "课程列表",
-				"enablePullDownRefresh": false
-			}
+  ],
+  "subPackages": [{
+    "root": "pages/coupon",
+    "pages": [{
+                    "path" : "index/index",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "领券中心",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
+  }, {
+    "root": "pages/class",
+    "pages": [{
+      "path": "course-list/course-list",
+      "style": {
+        "navigationBarTitleText": "课程列表",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "course-detail/course-detail",
-			"style": {
-				"navigationBarTitleText": "课程详情",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "course-detail/course-detail",
+      "style": {
+        "navigationBarTitleText": "课程详情",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "evaluate/evaluate",
-			"style": {
-				"navigationBarTitleText": "更多评价",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "evaluate/evaluate",
+      "style": {
+        "navigationBarTitleText": "更多评价",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "order-info/order-info",
-			"style": {
-				"navigationBarTitleText": "我的拼班",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "order-info/order-info",
+      "style": {
+        "navigationBarTitleText": "我的拼班",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "demeanour/demeanour",
-			"style": {
-				"navigationBarTitleText": "班级风采",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "demeanour/demeanour",
+      "style": {
+        "navigationBarTitleText": "班级风采",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "class-detail/class-detail",
-			"style": {
-				"navigationBarTitleText": "班级详情",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "class-detail/class-detail",
+      "style": {
+        "navigationBarTitleText": "班级详情",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "class-detail/class-info",
-			"style": {
-				"navigationBarTitleText": "通讯录",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "class-detail/class-info",
+      "style": {
+        "navigationBarTitleText": "通讯录",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "piece-list/piece-list",
-			"style": {
-				"navigationBarTitleText": "社区拼班",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "piece-list/piece-list",
+      "style": {
+        "navigationBarTitleText": "社区拼班",
+        "enablePullDownRefresh": false
+      }
 
-		},{
-			"path": "my-class/my-class",
-			"style": {
-				"navigationBarTitleText": "我的拼班",
-				"enablePullDownRefresh": false, // 设置参数为true
-				"onReachBottomDistance": 20 // 距离底部多远时触发 单位为px
-			}
+    }, {
+      "path": "my-class/my-class",
+      "style": {
+        "navigationBarTitleText": "我的拼班",
+        "enablePullDownRefresh": false, // 设置参数为true
+        "onReachBottomDistance": 20 // 距离底部多远时触发 单位为px
+      }
 
-		}, {
-			"path": "class-detail/class-detail-attendance",
-			"style": {
-				"navigationBarTitleText": "班级详情",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "class-detail/class-detail-attendance",
+      "style": {
+        "navigationBarTitleText": "班级详情",
+        "enablePullDownRefresh": false
+      }
 
-		}]
-	}, {
-		"root": "pages/map",
-		"pages": [{
-			"path": "declare/declare",
-			"style": {
-				"navigationBarTitleText": "社区申报",
-				"enablePullDownRefresh": false
-			}
-		}, {
-			"path": "add-declare/add-declare",
-			"style": {
-				"navigationBarTitleText": "社区申报",
-				"enablePullDownRefresh": false
-			}
+    }]
+  }, {
+    "root": "pages/map",
+    "pages": [{
+      "path": "declare/declare",
+      "style": {
+        "navigationBarTitleText": "社区申报",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "add-declare/add-declare",
+      "style": {
+        "navigationBarTitleText": "社区申报",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "search/search",
-			"style": {
-				"navigationBarTitleText": "搜索校区",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "search/search",
+      "style": {
+        "navigationBarTitleText": "搜索校区",
+        "enablePullDownRefresh": false
+      }
 
-		}]
-	}, {
-		"root": "pages/mine",
-		"pages": [{
-			"path": "order/order",
-			"style": {
-				"navigationBarTitleText": "订单列表",
-				"enablePullDownRefresh": false, //设置参数为true
-				"onReachBottomDistance": 20 //距离底部多远时触发 单位为px
-			}
+    }]
+  }, {
+    "root": "pages/mine",
+    "pages": [{
+      "path": "order/order",
+      "style": {
+        "navigationBarTitleText": "订单列表",
+        "enablePullDownRefresh": false, //设置参数为true
+        "onReachBottomDistance": 20 //距离底部多远时触发 单位为px
+      }
 
-		}, {
-			"path": "coach/coach",
-			"style": {
-				"navigationBarTitleText": "成为教练",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "coach/coach",
+      "style": {
+        "navigationBarTitleText": "成为教练",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "coach/add-coach",
-			"style": {
-				"navigationBarTitleText": "成为教练",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "coach/add-coach",
+      "style": {
+        "navigationBarTitleText": "成为教练",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "student/student",
-			"style": {
-				"navigationBarTitleText": "我的学员",
-				"enablePullDownRefresh": false
-			}
-		}, {
-			"path": "student/add-student",
-			"style": {
-				"navigationBarTitleText": "添加学员",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "student/student",
+      "style": {
+        "navigationBarTitleText": "我的学员",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "student/add-student",
+      "style": {
+        "navigationBarTitleText": "添加学员",
+        "enablePullDownRefresh": false
+      }
 
-		}, {
-			"path": "wallet/wallet",
-			"style": {
-				"navigationBarTitleText": "我的钱包",
-				"enablePullDownRefresh": false, //设置参数为true
-				"onReachBottomDistance": 20 //距离底部多远时触发 单位为px
-			}
+    }, {
+      "path": "wallet/wallet",
+      "style": {
+        "navigationBarTitleText": "我的钱包",
+        "enablePullDownRefresh": false, //设置参数为true
+        "onReachBottomDistance": 20 //距离底部多远时触发 单位为px
+      }
 
-		}, {
-			"path": "order-detail/order-detail",
-			"style": {
-				"navigationBarTitleText": "订单详情",
-				"enablePullDownRefresh": false
-			}
+    }, {
+      "path": "order-detail/order-detail",
+      "style": {
+        "navigationBarTitleText": "订单详情",
+        "enablePullDownRefresh": false
+      }
 
-		}]
-	}],
-	"globalStyle": {
-		"pageOrientation": "portrait",
-		"navigationBarTextStyle": "white",
-		"navigationBarTitleText": "向日葵体育",
-		"navigationBarBackgroundColor": "#DE501F",
-		"backgroundColor": "#DE501F",
-		"backgroundColorTop": "#DE501F",
-		"backgroundColorBottom": "#003920",
-		"usingComponenets": {
-			"van-image": "/wxcomponents/vant/image/index"
-		}
-	},
-	"tabBar": {
-		"color": "#141D3D",
-		"selectedColor": "#141D3D",
-		"borderStyle": "white",
-		"backgroundColor": "#FFFFFF",
-		"list": [{
-			"pagePath": "pages/tab-bar/home/home",
-			"text": ""
-		}, {
-			"pagePath": "pages/tab-bar/class/class",
-			"text": ""
-		}, {
-			"pagePath": "pages/tab-bar/map/map",
-			"text": ""
-		}, {
-			"pagePath": "pages/tab-bar/mine/mine",
-			"text": ""
-		}]
-	}
+    }]
+  }],
+  "globalStyle": {
+    "pageOrientation": "portrait",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "向日葵体育",
+    "navigationBarBackgroundColor": "#DE501F",
+    "backgroundColor": "#DE501F",
+    "backgroundColorTop": "#DE501F",
+    "backgroundColorBottom": "#003920",
+    "usingComponenets": {
+      "van-image": "/wxcomponents/vant/image/index"
+    }
+  },
+  "tabBar": {
+    "color": "#141D3D",
+    "selectedColor": "#141D3D",
+    "borderStyle": "white",
+    "backgroundColor": "#FFFFFF",
+    "list": [{
+      "pagePath": "pages/tab-bar/home/home",
+      "text": ""
+    }, {
+      "pagePath": "pages/tab-bar/class/class",
+      "text": ""
+    }, {
+      "pagePath": "pages/tab-bar/map/map",
+      "text": ""
+    }, {
+      "pagePath": "pages/tab-bar/mine/mine",
+      "text": ""
+    }]
+  }
 }

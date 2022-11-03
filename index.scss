@@ -51,6 +51,11 @@
 	justify-content: space-between;
 	align-items: center;
 }
+.flex-bs{
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
 .flex-sc{
 	display: flex;
 	justify-content: flex-start;
@@ -106,6 +111,9 @@
 .fz40{
 	font-size: 40rpx;
 }
+.fz60{
+	font-size: 60rpx;
+}
 .fz76{
 	font-size: 76rpx;
 }
@@ -125,10 +133,18 @@
 .pt16{
 	padding-top: 16rpx;
 }
+.pt26{
+	padding-top: 26rpx;
+}
 .pt32{
 	padding-top: 32rpx;
 }
-
+.pb22{
+	padding-bottom: 22rpx;
+}
+.pb24{
+	padding-bottom: 24rpx;
+}
 .mt32{
 	margin-top: 32rpx;
 }
@@ -140,6 +156,9 @@
 }
 .mt12{
 	margin-top: 12rpx;
+}
+.mt6{
+	margin-top: 6rpx;
 }
 .mt0{
 	margin-top: 0rpx !important;
@@ -161,6 +180,9 @@
 }
 .ml12{
 	margin-left: 12rpx;
+}
+.mb32{
+	margin-bottom: 32rpx;
 }
 	
 .o-over{
