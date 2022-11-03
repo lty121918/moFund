@@ -1,10 +1,10 @@
 <template>
-  <view class="progress_box">
-    <canvas class="progress_bg" canvas-id="cpbg"></canvas>
-    <canvas class="progress_bar" canvas-id="cpbar"></canvas>
-    <view class="progress_txt">
-      <view class="progress_info">已抢{{ progress_txt }}%</view>
-    </view>
+  <view class="progress-box">
+    <canvas class="progress-bg" canvas-id="cpbg"></canvas>
+    <canvas class="progress-bar" canvas-id="cpbar"></canvas>
+    <cover-view class="progress-txt">
+      <cover-view class="progress-info">已抢{{ progressTxt }}%</cover-view>
+    </cover-view>
   </view>
 </template>
 
@@ -29,7 +29,7 @@ export default {
       var ctx = uni.createCanvasContext("cpbg", this);
       ctx.setLineWidth(9); // 设置圆环的宽度
       ctx.setStrokeStyle("#DE501F"); // 设置圆环的颜色
-      ctx.setLineCap("round"); // 设置圆环端点的形状
+      // ctx.setLineCap("round"); // 设置圆环端点的形状
       ctx.beginPath(); //开始一个新的路径
       ctx.arc(width, height, r, 0.75 * Math.PI, 0.25 * Math.PI, false);
       //设置一个原点(110,110)，半径为100的圆的路径到当前路径
@@ -47,7 +47,7 @@ export default {
       gradient.addColorStop("1.0", "#141D3D");
       ctx.setLineWidth(9);
       ctx.setStrokeStyle(gradient);
-      ctx.setLineCap("round");
+      // ctx.setLineCap("round");
       ctx.beginPath();
       // 参数step 为绘制的百分比
       step = 0.015 * step + 0.75;
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style>
-.progress_box {
+.progress-box {
   position: relative;
   width: 124rpx;
   height: 124rpx;
@@ -72,19 +72,19 @@ export default {
   justify-content: center;
   text-align: center;
 }
-.progress_bg {
+.progress-bg {
   position: absolute;
   width: 124rpx;
   height: 124rpx;
 }
-.progress_bar {
+.progress-bar {
   width: 124rpx;
   height: 124rpx;
 }
-.progress_txt {
+.progress-txt {
   position: absolute;
   z-index: 999;
-  bottom:-17rpx;
+  bottom:-10rpx;
   width: 124rpx;
   height: 34rpx;
   background: #ffffff;
@@ -92,7 +92,7 @@ export default {
   border: 2rpx solid #de501f;
   text-align: center;
 }
-.progress_info {
+.progress-info {
   font-size: 24rpx;
   font-family: SourceHanSansSC-Normal, SourceHanSansSC;
   font-weight: 400;
