@@ -214,7 +214,11 @@
 				})
 				// 
 				console.log('调取');
-			
+				this.getDate( {
+					startTime: item.startTime, //	上课开始时段
+					endTime: item.endTime, // 上课结束时段
+					scheduleId: this.data.scheduleId,
+				})
 				this.$forceUpdate()
 			},
 			//  选择周期
@@ -249,11 +253,7 @@
 				}
 				
 				this.handlePeriod(periodList)
-				this.getDate( {
-					startTime: periodList.startTime, //	上课开始时段
-					endTime: periodList.endTime, // 上课结束时段
-					scheduleId: this.data.scheduleId,
-				})
+				
 			},
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
