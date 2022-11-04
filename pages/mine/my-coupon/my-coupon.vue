@@ -85,13 +85,16 @@ export default {
 	align-items: center;
 	&-tab-background {
 		width: 100%;
-		height: 47rpx;
-		position: absolute;
-		top: 0;
+		height: 57rpx;
+		position: fixed;
+		top: -10rpx;
 		background: #de501f;
+		z-index: 99;
 	}
 	&-tab {
 		display: flex;
+		position: sticky;
+		top: 0;
 		justify-content: space-between;
 		padding: 0 36rpx;
 		align-items: center;
@@ -99,7 +102,7 @@ export default {
 		background: #ffffff;
 		box-shadow: 0px 8px 16px 0px rgba(119, 57, 0, 0.06);
 		border-radius: 32rpx;
-		z-index: 999;
+		z-index: 9999;
 		&-item {
 			height: 94rpx;
 			line-height: 94rpx;
@@ -107,10 +110,12 @@ export default {
 			font-size: 24rpx;
 			font-family: SourceHanSansSC-Regular, SourceHanSansSC;
 			color: #838899;
+			z-index: 9999;
 		}
 		&-active {
 			position: relative;
 			color: #de501f;
+			z-index: 9999;
 			&:before {
 				content: "";
 				position: absolute;
